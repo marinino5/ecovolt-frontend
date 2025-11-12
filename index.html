@@ -188,46 +188,55 @@
       </div>
     </div>
 
-    <!-- Tarjetas IoT -->
-    <div class="panel__grid" id="panelGrid">
+  <!-- Tarjetas IoT -->
+<div class="panel__grid" id="panelGrid">
 
-      <div class="slot" data-key="temperature">
-        <div class="slot__title">
-          <span class="dot dot--cyan"></span> Temperatura
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="power">
-        <div class="slot__title">
-          <span class="dot dot--violet"></span> Potencia
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="voltage">
-        <div class="slot__title">
-          <span class="dot dot--amber"></span> Voltaje
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="last">
-        <div class="slot__title">
-          <span class="dot dot--green"></span> Última carga
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="battery">
-        <div class="slot__title">
-          <span class="dot dot--blue"></span> Batería
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
+  <div class="slot" data-key="temperature">
+    <div class="slot__title">
+      <span class="dot dot--cyan"></span> Temperatura
     </div>
-  </section>
+    <div class="slot__body">
+      <span class="skeleton" data-iot="temp">-- °C</span>
+    </div>
+  </div>
+
+  <div class="slot" data-key="power">
+    <div class="slot__title">
+      <span class="dot dot--violet"></span> Potencia
+    </div>
+    <div class="slot__body">
+      <span class="skeleton" data-iot="power">-- kW</span>
+    </div>
+  </div>
+
+  <div class="slot" data-key="voltage">
+    <div class="slot__title">
+      <span class="dot dot--yellow"></span> Voltaje
+    </div>
+    <div class="slot__body">
+      <span class="skeleton" data-iot="voltage">-- V</span>
+    </div>
+  </div>
+
+  <div class="slot" data-key="last-charge">
+    <div class="slot__title">
+      <span class="dot dot--green"></span> Última carga
+    </div>
+    <div class="slot__body">
+      <span class="skeleton" data-iot="last-charge">-- min</span>
+    </div>
+  </div>
+
+  <div class="slot" data-key="battery">
+    <div class="slot__title">
+      <span class="dot dot--blue"></span> Batería
+    </div>
+    <div class="slot__body">
+      <span class="skeleton" data-iot="battery">-- %</span>
+    </div>
+  </div>
+
+</div>
 
 
   <!-- ===== PRECIOS ===== -->
@@ -330,6 +339,7 @@
   </footer>
 
 </html>
+
 
 
 
