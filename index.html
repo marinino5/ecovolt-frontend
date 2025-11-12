@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Estilos -->
   <link rel="stylesheet" href="styles.css">
 
   <!-- Scripts -->
@@ -27,7 +28,8 @@
           <svg viewBox="0 0 64 64">
             <defs>
               <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#22d3ee"/>
+                <stop offset="0" stop-color="#2dd4bf"/>
+                <stop offset="1" stop-color="#22d3ee"/>
               </linearGradient>
             </defs>
             <circle cx="32" cy="32" r="28" fill="url(#g1)" opacity=".18"/>
@@ -61,8 +63,15 @@
 
     <div class="hero__inner">
       <div class="hero__copy">
-        <h1>Movilidad <span class="grad">Sostenible</span> para un <span class="grad">Futuro Mejor</span></h1>
-        <p>Descubre la red de vehículos eléctricos más amplia de la ciudad. Reserva, usa y contribuye al medio ambiente en cada viaje.</p>
+        <h1>
+          Movilidad <span class="grad">Sostenible</span> para un 
+          <span class="grad">Futuro Mejor</span>
+        </h1>
+        <p>
+          Descubre la red de vehículos eléctricos más amplia de la ciudad. 
+          Reserva, usa y contribuye al medio ambiente en cada viaje.
+        </p>
+
         <div class="hero__actions">
           <a class="btn btn--outline" href="#how">Ver Cómo Funciona</a>
         </div>
@@ -77,7 +86,9 @@
               <stop offset="100%" stop-color="rgba(255,255,255,0)" />
             </radialGradient>
           </defs>
+
           <ellipse cx="260" cy="160" rx="220" ry="120" fill="url(#halo)" />
+
           <g transform="translate(150,60)" fill="#ffffff">
             <rect x="0" y="30" width="160" height="170" rx="26" opacity="0.92"/>
             <rect x="-8" y="195" width="176" height="18" rx="9" opacity="0.92"/>
@@ -97,8 +108,11 @@
     <div class="how2__head">
       <h2>¿Cómo Funciona?</h2>
       <div class="how2__line"></div>
-      <p class="how2__sub">Empieza en minutos y muévete con micromovilidad eléctrica de forma segura y sostenible.</p>
+      <p class="how2__sub">
+        Empieza en minutos y muévete con micromovilidad eléctrica de forma segura y sostenible.
+      </p>
     </div>
+
     <div class="how2__grid">
       <article class="step2">
         <div class="step2__bar"></div>
@@ -106,18 +120,21 @@
         <h3>Regístrate</h3>
         <p>Crea tu cuenta y accede a toda nuestra red de vehículos eléctricos disponibles 24/7.</p>
       </article>
+
       <article class="step2">
         <div class="step2__bar"></div>
         <span class="step2__num">2</span>
         <h3>Encuentra</h3>
         <p>Localiza la estación más cercana y revisa la disponibilidad en tiempo real desde la app.</p>
       </article>
+
       <article class="step2">
         <div class="step2__bar"></div>
         <span class="step2__num">3</span>
         <h3>Desbloquea</h3>
         <p>Escanea el código o usa tu smartphone para iniciar el viaje de forma segura e instantánea.</p>
       </article>
+
       <article class="step2">
         <div class="step2__bar"></div>
         <span class="step2__num">4</span>
@@ -127,70 +144,66 @@
     </div>
   </section>
 
-<!-- ==== PANEL INTERACTIVO (SLOTS) ==== -->
-<section id="panel" class="panel">
-  <div class="section__head">
-    <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
-    <p class="section__sub">Visualiza los datos en tiempo real de nuestras estaciones inteligentes.</p>
-  </div>
-
-  <!-- Bloques IoT (últimos datos y tiempo real) -->
-  <div class="panel__intro">
-    <div class="iot-block">
-      <div class="iot-block-title">📊 Últimos datos IoT</div>
-      <pre id="data">Conectando con servidor...</pre>
+  <!-- ===== PANEL IoT ===== -->
+  <section id="panel" class="panel">
+    <div class="section__head">
+      <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
+      <p class="section__sub">Visualiza los datos en tiempo real de nuestras estaciones inteligentes.</p>
     </div>
 
-    <div class="iot-block">
-      <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
-      <pre id="log">Esperando conexión...</pre>
-    </div>
-  </div>
-
-  <!-- Cuadrícula de tarjetas IoT -->
-  <div class="panel__grid" id="panelGrid">
-
-    <!-- Temperatura -->
-    <div class="slot" data-key="temperature">
-      <div class="slot__title">
-        <span class="dot dot--cyan"></span> Temperatura
+    <!-- Bloques IoT -->
+    <div class="panel__intro">
+      <div class="iot-block">
+        <div class="iot-block-title">📊 Últimos datos IoT</div>
+        <pre id="data">Conectando con servidor...</pre>
       </div>
-      <div class="slot__body"><span class="skeleton"></span></div>
+
+      <div class="iot-block">
+        <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
+        <pre id="log">Esperando conexión...</pre>
+      </div>
     </div>
 
-    <!-- Potencia -->
-    <div class="slot" data-key="power">
-      <div class="slot__title">
-        <span class="dot dot--violet"></span> Potencia
-      </div>
-      <div class="slot__body"><span class="skeleton"></span></div>
-    </div>
+    <!-- Tarjetas IoT -->
+    <div class="panel__grid" id="panelGrid">
 
-    <!-- Voltaje -->
-    <div class="slot" data-key="voltage">
-      <div class="slot__title">
-        <span class="dot dot--amber"></span> Voltaje
+      <div class="slot" data-key="temperature">
+        <div class="slot__title">
+          <span class="dot dot--cyan"></span> Temperatura
+        </div>
+        <div class="slot__body"><span class="skeleton"></span></div>
       </div>
-      <div class="slot__body"><span class="skeleton"></span></div>
-    </div>
 
-    <!-- Última carga -->
-    <div class="slot" data-key="last">
-      <div class="slot__title">
-        <span class="dot dot--green"></span> Última carga
+      <div class="slot" data-key="power">
+        <div class="slot__title">
+          <span class="dot dot--violet"></span> Potencia
+        </div>
+        <div class="slot__body"><span class="skeleton"></span></div>
       </div>
-      <div class="slot__body"><span class="skeleton"></span></div>
-    </div>
 
-    <!-- Batería -->
-    <div class="slot" data-key="battery">
-      <div class="slot__title">
-        <span class="dot dot--blue"></span> Batería
+      <div class="slot" data-key="voltage">
+        <div class="slot__title">
+          <span class="dot dot--amber"></span> Voltaje
+        </div>
+        <div class="slot__body"><span class="skeleton"></span></div>
       </div>
-      <div class="slot__body"><span class="skeleton"></span></div>
+
+      <div class="slot" data-key="last">
+        <div class="slot__title">
+          <span class="dot dot--green"></span> Última carga
+        </div>
+        <div class="slot__body"><span class="skeleton"></span></div>
+      </div>
+
+      <div class="slot" data-key="battery">
+        <div class="slot__title">
+          <span class="dot dot--blue"></span> Batería
+        </div>
+        <div class="slot__body"><span class="skeleton"></span></div>
+      </div>
+
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- ===== PRECIOS ===== -->
   <section id="precios" class="pricing">
@@ -198,24 +211,42 @@
       <h2>Precios</h2>
       <div class="underline"></div>
     </div>
+
     <div class="pricing__grid">
       <article class="price">
         <h3>Básico</h3>
         <div class="price__num">$9<span>/mes</span></div>
-        <ul><li>30 min gratis diarios</li><li>Acceso a bicicletas</li><li>Soporte básico</li><li>App móvil</li></ul>
+        <ul>
+          <li>30 min gratis diarios</li>
+          <li>Acceso a bicicletas</li>
+          <li>Soporte básico</li>
+          <li>App móvil</li>
+        </ul>
         <button class="btn btn--light">Elegir Plan</button>
       </article>
+
       <article class="price price--featured">
         <div class="badge">Más popular</div>
         <h3>Premium</h3>
         <div class="price__num">$19<span>/mes</span></div>
-        <ul><li>60 min gratis diarios</li><li>Acceso a bicicletas y scooters</li><li>Reservas prioritarias</li><li>Soporte 24/7</li></ul>
+        <ul>
+          <li>60 min gratis diarios</li>
+          <li>Acceso a bicicletas y scooters</li>
+          <li>Reservas prioritarias</li>
+          <li>Soporte 24/7</li>
+        </ul>
         <button class="btn btn--cta">Elegir Plan</button>
       </article>
+
       <article class="price">
         <h3>Enterprise</h3>
         <div class="price__num">$49<span>/mes</span></div>
-        <ul><li>Viajes ilimitados</li><li>Gestión de equipos</li><li>Reportes detallados</li><li>Soporte dedicado</li></ul>
+        <ul>
+          <li>Viajes ilimitados</li>
+          <li>Gestión de equipos</li>
+          <li>Reportes detallados</li>
+          <li>Soporte dedicado</li>
+        </ul>
         <button class="btn btn--light">Contactar Ventas</button>
       </article>
     </div>
@@ -225,10 +256,14 @@
   <footer class="footerX">
     <div class="footerX__wrap">
       <div class="footerX__grid">
+
         <div class="fcol fcol--brand">
           <h4 class="fcol__title">EcoVolt</h4>
           <span class="fcol__line"></span>
-          <p>Revolucionando la movilidad urbana con soluciones sostenibles y tecnología de vanguardia.</p>
+          <p>
+            Revolucionando la movilidad urbana con soluciones sostenibles 
+            y tecnología de vanguardia.
+          </p>
         </div>
 
         <div class="fcol">
@@ -257,9 +292,13 @@
             <li>Universidad Autónoma, Bucaramanga</li>
           </ul>
         </div>
+
       </div>
+
       <hr class="fsep" />
+
       <div class="fcopy">© 2025 EcoVolt. Todos los derechos reservados.</div>
+
     </div>
   </footer>
 
