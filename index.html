@@ -178,12 +178,13 @@
     <div class="panel__intro">
       <div class="iot-block">
         <div class="iot-block-title">📊 Últimos datos IoT</div>
-        <pre id="data">Conectando con servidor...</pre>
+       <p class="panel-text" data-iot="last-log">Conectando con servidor...</p>
       </div>
 
       <div class="iot-block">
         <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
-        <pre id="log">Esperando conexión...</pre>
+  <p class="panel-text" data-iot="ws-log">Esperando conexión...</p>
+
       </div>
     </div>
 
@@ -228,30 +229,6 @@
     </div>
   </section>
 
-  <!-- Últimos datos IoT -->
-<p class="panel-text" data-iot="last-log">
-  Conectando con servidor...
-</p>
-
-<!-- Tiempo real (WebSocket) -->
-<p class="panel-text" data-iot="ws-log">
-  Esperando conexión...
-</p>
-
-<!-- Tarjeta Temperatura -->
-<p class="metric-value" data-iot="temp">-- °C</p>
-
-<!-- Tarjeta Potencia -->
-<p class="metric-value" data-iot="power">-- kW</p>
-
-<!-- Tarjeta Voltaje -->
-<p class="metric-value" data-iot="voltage">-- V</p>
-
-<!-- Tarjeta Última carga -->
-<p class="metric-value" data-iot="last-charge">-- min</p>
-
-<!-- Tarjeta Batería -->
-<p class="metric-value" data-iot="battery">-- %</p>
 
   <!-- ===== PRECIOS ===== -->
   <section id="precios" class="pricing">
@@ -353,6 +330,7 @@
   </footer>
 
 </html>
+
 
 
 
