@@ -127,53 +127,70 @@
     </div>
   </section>
 
-  <!-- ===== PANEL INTERACTIVO IoT ===== -->
-  <section id="panel" class="panel">
-    <div class="section__head">
-      <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
+<!-- ==== PANEL INTERACTIVO (SLOTS) ==== -->
+<section id="panel" class="panel">
+  <div class="section__head">
+    <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
+    <p class="section__sub">Visualiza los datos en tiempo real de nuestras estaciones inteligentes.</p>
+  </div>
+
+  <!-- Bloques IoT (últimos datos y tiempo real) -->
+  <div class="panel__intro">
+    <div class="iot-block">
+      <div class="iot-block-title">📊 Últimos datos IoT</div>
+      <pre id="data">Conectando con servidor...</pre>
     </div>
 
-    <!-- Bloques de datos IoT -->
-    <div class="panel__intro">
-      <div class="iot-block">
-        <div class="iot-block-title">📊 Últimos datos IoT</div>
-        <pre id="data"></pre>
-      </div>
+    <div class="iot-block">
+      <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
+      <pre id="log">Esperando conexión...</pre>
+    </div>
+  </div>
 
-      <div class="iot-block">
-        <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
-        <pre id="log"></pre>
+  <!-- Cuadrícula de tarjetas IoT -->
+  <div class="panel__grid" id="panelGrid">
+
+    <!-- Temperatura -->
+    <div class="slot" data-key="temperature">
+      <div class="slot__title">
+        <span class="dot dot--cyan"></span> Temperatura
       </div>
+      <div class="slot__body"><span class="skeleton"></span></div>
     </div>
 
-    <!-- Cuadros dinámicos -->
-    <div class="panel__grid" id="panelGrid">
-      <div class="slot" data-key="temperature">
-        <div class="slot__title"><span class="dot dot--cyan"></span> Temperatura</div>
-        <div class="slot__body"><span class="skeleton"></span></div>
+    <!-- Potencia -->
+    <div class="slot" data-key="power">
+      <div class="slot__title">
+        <span class="dot dot--violet"></span> Potencia
       </div>
-
-      <div class="slot" data-key="power">
-        <div class="slot__title"><span class="dot dot--violet"></span> Home power</div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="voltage">
-        <div class="slot__title"><span class="dot dot--amber"></span> Voltage</div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="last">
-        <div class="slot__title"><span class="dot dot--green"></span> Last charge</div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
-
-      <div class="slot" data-key="battery">
-        <div class="slot__title"><span class="dot dot--blue"></span> Battery</div>
-        <div class="slot__body"><span class="skeleton"></span></div>
-      </div>
+      <div class="slot__body"><span class="skeleton"></span></div>
     </div>
-  </section>
+
+    <!-- Voltaje -->
+    <div class="slot" data-key="voltage">
+      <div class="slot__title">
+        <span class="dot dot--amber"></span> Voltaje
+      </div>
+      <div class="slot__body"><span class="skeleton"></span></div>
+    </div>
+
+    <!-- Última carga -->
+    <div class="slot" data-key="last">
+      <div class="slot__title">
+        <span class="dot dot--green"></span> Última carga
+      </div>
+      <div class="slot__body"><span class="skeleton"></span></div>
+    </div>
+
+    <!-- Batería -->
+    <div class="slot" data-key="battery">
+      <div class="slot__title">
+        <span class="dot dot--blue"></span> Batería
+      </div>
+      <div class="slot__body"><span class="skeleton"></span></div>
+    </div>
+  </div>
+</section>
 
   <!-- ===== PRECIOS ===== -->
   <section id="precios" class="pricing">
@@ -248,6 +265,7 @@
 
 </body>
 </html>
+
 
 
 
