@@ -500,5 +500,129 @@ html {
   gap: 6px;
 }
 
+/* ============================
+   BLOQUES IoT (integrados al diseño actual)
+   ============================ */
+
+.panel__intro {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+  padding-inline: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjetas IoT, mismas esquinas y sombra que el resto */
+.iot-block {
+  background: #ffffff;
+  border: 1px solid #e5e9ef;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  padding: 20px 22px;
+  transition: transform 0.2s ease;
+}
+.iot-block:hover {
+  transform: translateY(-2px);
+}
+
+.iot-block-title {
+  font-weight: 700;
+  color: #101828;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Área de logs/datos, igual tipografía que tus cajas actuales */
+#data,
+#log {
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #edf0f4;
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  color: #1e293b;
+  line-height: 1.5;
+  min-height: 60px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Panel general */
+.panel {
+  padding-block: 40px 60px;
+  background-color: #f9fbfd;
+}
+
+/* Slots individuales del grid IoT */
+.panel__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.slot {
+  background: #ffffff;
+  border: 1px solid #e5e9ef;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  padding: 18px 20px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.slot:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.slot__title {
+  font-weight: 600;
+  color: #101828;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.slot__body {
+  color: #475569;
+  font-size: 15px;
+  min-height: 24px;
+}
+
+/* Puntos de color */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot--cyan { background-color: #06b6d4; }
+.dot--amber { background-color: #fbbf24; }
+.dot--violet { background-color: #8b5cf6; }
+.dot--green { background-color: #22c55e; }
+.dot--blue { background-color: #3b82f6; }
+
+/* Animación "skeleton" para datos vacíos */
+.skeleton {
+  display: inline-block;
+  height: 10px;
+  width: 120px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eef1f5 25%, #f6f7f9 37%, #eef1f5 63%);
+  background-size: 400% 100%;
+  animation: ev-skeleton 1.2s ease-in-out infinite;
+}
+@keyframes ev-skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
 
 
