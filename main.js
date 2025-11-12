@@ -1,13 +1,20 @@
 // main.js
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ main.js CARGADO");
+
   const config = window.ECOVOLT_CONFIG || {};
   const BACKEND_HTTP = config.BACKEND_HTTP;
 
-  const dataPre = document.getElementById("data"); // Últimos datos IoT
-  const logPre  = document.getElementById("log");  // Tiempo real (solo texto por ahora)
+  const dataPre = document.getElementById("data");
+  const logPre  = document.getElementById("log");
 
-  // --- 1. Pintar datos en los slots IoT ---
+  // 0. Comprobación visual inmediata
+  if (dataPre) {
+    dataPre.textContent = "✅ JS funcionando, preparando solicitud al backend...";
+  }
+
+  // --- 1. Función para pintar datos en los slots ---
   function renderSlots(payload) {
     if (!payload) return;
 
@@ -42,17 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- 2. Crear datos simulados (hasta que tengas endpoints reales) ---
-  function buildFakeIoTPayload() {
+  // --- 2. Datos IoT simulados (para que el panel se vea vivo) ---
+  function fakeIoT() {
     const now = new Date();
-
     return {
-      temperature: 24 + Math.random() * 2 - 1,
-      power:       300 + Math.random() * 50 - 25,
-      voltage:     220 + Math.random() * 5 - 2,
-      battery:     Math.round(60 + Math.random() * 40),
-      last:        now.toLocaleTimeString(),
-    };
-  }
-
-  // --- 3.
+      temperature: 23 + Math.random() * 3,
+      power:       300 + Math.random() * 20,
+      voltage:     2
