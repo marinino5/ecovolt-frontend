@@ -118,7 +118,11 @@ h1,h2,h3{margin:0}
 .panel__cta{display:flex;gap:12px;justify-content:center;margin-top:18px}
 
 /* ===== Precios ===== */
-.pricing{max-width:1200px;margin:60px auto 0;padding:0 20px}
+.pricing {
+  max-width: 1200px;
+  margin: 60px auto 60px;  
+  padding: 0 20px 60px;    
+}
 .pricing__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
 .price{background:var(--card);border:1px solid var(--stroke);border-radius:22px;box-shadow:var(--shadow);padding:18px 18px 20px;position:relative}
 .price--featured{outline:3px solid var(--green)}
@@ -623,6 +627,7 @@ html {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
 }
+
 
 
 
