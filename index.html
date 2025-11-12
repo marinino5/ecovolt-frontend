@@ -16,14 +16,7 @@
 
 </head>
 <body>
-  
-<body style="font-family:system-ui; max-width:900px; margin:24px auto;">
-  <!-- Bloques de prueba visibles -->
-  <h2>📊 Últimos datos IoT</h2>
-  <pre id="data" style="background:#eee;padding:10px;border-radius:8px;"></pre>
 
-  <h2>💬 Tiempo real (WebSocket)</h2>
-  <pre id="log" style="background:#eef;padding:10px;border-radius:8px;min-height:100px;"></pre>
 
   <!-- ...tu contenido existente debajo... -->
 
@@ -190,19 +183,37 @@
 </section>
 
 
-  <!-- ===== PANEL INTERACTIVO (SLOTS) ===== -->
-  <section id="panel" class="panel">
-    <div class="section__head">
-   <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
+       <!-- ==== PANEL INTERACTIVO (SLOTS) ==== -->
+<!-- Bloque de datos IoT -->
+<div class="iot-block">
+  <div class="iot-block-title">📊 Últimos datos IoT</div>
+  <pre id="data"></pre>
+</div>
 
+<!-- Bloque de datos en tiempo real -->
+<div class="iot-block">
+  <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
+  <pre id="log"></pre>
+</div>
 
-    <div class="panel__grid" id="panelGrid">
-      <div class="slot" data-key="temperature">
-        <div class="slot__title">
-          <span class="dot dot--cyan"></span> Temperature
-        </div>
-        <div class="slot__body"><span class="skeleton"></span></div>
+<!-- Panel interactivo principal -->
+<section id="panel" class="panel">
+  <div class="section__head">
+    <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
+  </div>
+
+  <div class="panel__grid" id="panelGrid">
+
+    <!-- Slot de temperatura -->
+    <div class="slot" data-key="temperature">
+      <div class="slot__title">
+        <span class="dot dot--cyan"></span>
+        Temperatura
       </div>
+      <div class="slot__body">
+        <span class="skeleton"></span>
+      </div>
+    </div>
 
       <div class="slot" data-key="power">
         <div class="slot__title">
@@ -397,6 +408,7 @@
   </div>
 </footer>
 </html>
+
 
 
 
