@@ -256,8 +256,37 @@ h1,h2,h3{margin:0}
   font-weight:800; font-size:.9rem; color:#083344;
   background:#e6fff7; border:1px solid #bff3e8;
 }
-.step2 h3{ text-align:center; margin:8px 0 6px; font-size:1.1rem }
-.step2 p{ color:#5b728b; text-align:center; margin:0 }
+/* Icono circular en cada paso */
+.step2__icon{
+  width:86px;
+  height:86px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  margin:26px auto 12px;      /* separa del borde superior y del título */
+  box-shadow:0 12px 28px rgba(15,23,42,.10);
+}
+
+/* Variantes de fondo para cada paso */
+.step2__icon--a{
+  background:radial-gradient(circle,#e9fff8,#d7f6ff);
+}
+.step2__icon--b{
+  background:radial-gradient(circle,#e8fbff,#def2ff);
+}
+.step2__icon--c{
+  background:radial-gradient(circle,#f0ecff,#e6e1ff);
+}
+.step2__icon--d{
+  background:radial-gradient(circle,#fff7e5,#ffefc5);
+}
+
+/* El ícono en sí (emoji por ahora) */
+.step2__icon-glyph{
+  font-size:2.1rem;
+  color:#16a34a;  /* verde fuerte para que resalte */
+}
+
 
 /* ===== Título IoT ===== */
 .iot-title {
@@ -558,6 +587,7 @@ h1,h2,h3{margin:0}
   .fcol__line{margin-left:auto;margin-right:auto}
   .socialdots{justify-content:center}
 }
+
 
 
 
