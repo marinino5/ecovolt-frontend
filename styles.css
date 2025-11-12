@@ -500,3 +500,144 @@ html {
   gap: 6px;
 }
 
+:root{
+  --ev-bg-card: #ffffff;
+  --ev-bg-code: #f8f9fa;
+  --ev-bd: #e9ecef;
+  --ev-shadow: 0 2px 6px rgba(0,0,0,.06);
+  --ev-text: #222;
+  --ev-muted: #667085;
+  --ev-cyan: #06b6d4;
+  --ev-amber: #f59e0b;
+  --ev-violet: #8b5cf6;
+  --ev-green: #22c55e;
+  --ev-blue: #3b82f6;
+}
+
+/* ====== Intro del panel (contenedor de los 2 bloques) ====== */
+.panel__intro{
+  max-width: 1100px;
+  margin: 0 auto 24px;
+  padding-inline: 12px;
+}
+
+/* ====== Tarjetas IoT (REST + WS) ====== */
+.iot-block{
+  background: var(--ev-bg-card);
+  border: 1px solid var(--ev-bd);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  box-shadow: var(--ev-shadow);
+}
+
+.iot-block-title{
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ev-text);
+}
+
+/* Áreas de texto para datos */
+#data, #log{
+  margin: 0;
+  background: var(--ev-bg-code);
+  border-radius: 8px;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #334155;
+  min-height: 32px;
+}
+
+/* ====== Panel (grid de “slots”) ====== */
+.panel{
+  padding-block: 24px 32px;
+}
+
+.section__head{
+  max-width: 1100px;
+  margin: 0 auto 10px;
+  padding-inline: 12px;
+}
+
+.iot-title{
+  font-size: clamp(1.35rem, 1.1rem + 1vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+/* Grid responsive de tarjetas IoT */
+.panel__grid{
+  max-width: 1100px;
+  margin: 8px auto 0;
+  padding: 0 12px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+/* Tarjeta individual (“slot”) */
+.slot{
+  grid-column: span 12;
+  background: var(--ev-bg-card);
+  border: 1px solid var(--ev-bd);
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  box-shadow: var(--ev-shadow);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.slot:hover{ transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+
+.slot__title{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--ev-text);
+  margin-bottom: 8px;
+}
+
+.slot__body{
+  min-height: 28px;
+  color: var(--ev-muted);
+  font-size: 14px;
+}
+
+/* Punticos de color */
+.dot{
+  width: 10px; height: 10px; border-radius: 999px; display: inline-block;
+}
+.dot--cyan   { background: var(--ev-cyan); }
+.dot--amber  { background: var(--ev-amber); }
+.dot--violet { background: var(--ev-violet); }
+.dot--green  { background: var(--ev-green); }
+.dot--blue   { background: var(--ev-blue); }
+
+/* Estado de carga (placeholder) */
+.skeleton{
+  display: inline-block;
+  height: 10px; width: 120px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eef1f5 25%, #f6f7f9 37%, #eef1f5 63%);
+  background-size: 400% 100%;
+  animation: ev-skeleton 1.15s ease-in-out infinite;
+}
+@keyframes ev-skeleton{
+  0%{ background-position: 100% 0; }
+  100%{ background-position: 0 0; }
+}
+
+/* ====== Breakpoints ====== */
+@media (min-width: 640px){
+  .slot{ grid-column: span 6; }
+}
+@media (min-width: 1024px){
+  .slot{ grid-column: span 4; }
+}
+
