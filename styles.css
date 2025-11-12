@@ -627,6 +627,16 @@ html {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
 }
+/* Separación forzada entre Precios y Footer */
+#precios {
+  padding-bottom: 80px !important;
+  margin-bottom: 80px !important;
+}
+
+.footerX {
+  margin-top: 60px !important;
+}
+
 
 
 
