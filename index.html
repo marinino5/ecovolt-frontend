@@ -11,8 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
-  <script src="./config.js"></script>
-  <script src="./main.js"></script>
+  <script src="./config.js" defer></script>
+<script src="./main.js" defer></script>
+
 </head>
 <body>
 
@@ -180,6 +181,12 @@
 
 
   <!-- ===== PANEL INTERACTIVO (SLOTS) ===== -->
+  <h2>📊 Últimos datos IoT</h2>
+<pre id="data" style="background:#eee;padding:10px;border-radius:8px;"></pre>
+
+<h2>💬 Tiempo real (WebSocket)</h2>
+<pre id="log" style="background:#eef;padding:10px;border-radius:8px;min-height:100px;"></pre>
+
   <section id="panel" class="panel">
     <div class="section__head">
    <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
@@ -383,5 +390,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
