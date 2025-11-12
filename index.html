@@ -16,6 +16,16 @@
 
 </head>
 <body>
+  
+<body style="font-family:system-ui; max-width:900px; margin:24px auto;">
+  <!-- Bloques de prueba visibles -->
+  <h2>📊 Últimos datos IoT</h2>
+  <pre id="data" style="background:#eee;padding:10px;border-radius:8px;"></pre>
+
+  <h2>💬 Tiempo real (WebSocket)</h2>
+  <pre id="log" style="background:#eef;padding:10px;border-radius:8px;min-height:100px;"></pre>
+
+  <!-- ...tu contenido existente debajo... -->
 
   <!-- ===== NAVBAR ===== -->
   <header class="nav">
@@ -181,12 +191,6 @@
 
 
   <!-- ===== PANEL INTERACTIVO (SLOTS) ===== -->
-  <h2>📊 Últimos datos IoT</h2>
-<pre id="data" style="background:#eee;padding:10px;border-radius:8px;"></pre>
-
-<h2>💬 Tiempo real (WebSocket)</h2>
-<pre id="log" style="background:#eef;padding:10px;border-radius:8px;min-height:100px;"></pre>
-
   <section id="panel" class="panel">
     <div class="section__head">
    <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
@@ -333,7 +337,14 @@
   </div>
 </section>
 
-<footer class="footerX">
+
+  <script src="app.js"></script>
+</body>
+<script src="./config.js" defer></script>
+<script src="./main.js" defer></script>
+</body>
+  <footer>
+  <footer class="footerX">
   <div class="footerX__wrap">
     <div class="footerX__grid">
       <!-- Col 1 -->
@@ -385,11 +396,8 @@
     <div class="fcopy">© 2025 EcoVolt. Todos los derechos reservados.</div>
   </div>
 </footer>
-
-
-  <script src="app.js"></script>
-</body>
 </html>
+
 
 
 
