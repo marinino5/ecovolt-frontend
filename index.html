@@ -533,6 +533,45 @@
     simulateLiveUpdates();
   });
 </script>
+<!-- Popup / Modal de telemetría IoT -->
+<div id="iot-modal-backdrop" class="iot-modal-backdrop is-hidden">
+  <div class="iot-modal">
+    <div class="iot-modal-header">
+      <div>
+        <h3 id="iot-modal-title" class="iot-modal-title">Telemetría del sensor</h3>
+        <p id="iot-modal-subtitle" class="iot-modal-subtitle">
+          Datos históricos en las últimas lecturas.
+        </p>
+      </div>
+      <button id="iot-modal-close" class="iot-modal-close" aria-label="Cerrar">
+        ✕
+      </button>
+    </div>
+
+    <div class="iot-modal-body">
+      <div class="iot-modal-stats">
+        <div>
+          <span class="iot-modal-stat-label">Actual</span>
+          <span id="iot-modal-current" class="iot-modal-stat-value">–</span>
+        </div>
+        <div>
+          <span class="iot-modal-stat-label">Mín</span>
+          <span id="iot-modal-min" class="iot-modal-stat-value">–</span>
+        </div>
+        <div>
+          <span class="iot-modal-stat-label">Máx</span>
+          <span id="iot-modal-max" class="iot-modal-stat-value">–</span>
+        </div>
+        <div>
+          <span class="iot-modal-stat-label">Prom</span>
+          <span id="iot-modal-avg" class="iot-modal-stat-value">–</span>
+        </div>
+      </div>
+
+      <div id="iot-modal-chart" class="iot-modal-chart"></div>
+    </div>
+  </div>
+</div>
 
 
 </body>
@@ -588,6 +627,7 @@
   </footer>
 
 </html>
+
 
 
 
