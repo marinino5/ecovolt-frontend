@@ -1,19 +1,17 @@
-// 🔗 Backend IoT en el servidor del profesor (Coolify)
-const API_BASE_URL = "http://howks88k0os80888co4sc8c4.20.246.73.238.sslip.io:30081";
-const HEALTH_URL   = `${API_BASE_URL}/health`;
-
 // =====================================================
 // main.js – Panel IoT Ecovolt
-// - Simulación de datos en tiempo real
-// - Historial por sensor (para métricas)
+// - Conectado al backend IoT del profesor (Coolify)
+// - Simulación de datos en tiempo real (digital twin)
+// - Historial por sensor (para métricas en cada card)
 // - Control ("retroceso") en la card de batería
 // =====================================================
 
-// URL de health-check del backend (puedes dejarla vacía si aún no lo usas)
-const HEALTH_URL = "https://lanny-unintensified-guadalupe.ngrok-free.dev/health";
+// 🔗 Backend IoT en el servidor del profesor (puerto 30081 mapeado al 3000 del contenedor)
+const API_BASE_URL =
+  "http://howks88k0os80888co4sc8c4.20.246.73.238.sslip.io:30081";
 
-// (Opcional) URL del backend propio para comandos, etc.
-const API_BASE_URL = ""; // Ej: "https://mi-backend-ecovolt.coolify.app"
+// Endpoint de health-check del backend
+const HEALTH_URL = `${API_BASE_URL}/health`;
 
 // ---- Elementos principales del panel ----
 const elLastLog = document.querySelector('[data-iot="last-log"]');
@@ -87,7 +85,10 @@ function pushHistorySample(timestamp = Date.now()) {
   history.power.push({ t: timestamp, v: iotState.power });
   history.voltage.push({ t: timestamp, v: iotState.voltage });
   history.battery.push({ t: timestamp, v: iotState.battery });
-  history.lastChargeMinutes.push({ t: timestamp, v: iotState.lastChargeMinutes });
+  history.lastChargeMinutes.push({
+    t: timestamp,
+    v: iotState.lastChargeMinutes
+  });
 
   // Si pasa del límite, quitamos los más viejos
   Object.keys(history).forEach((key) => {
@@ -118,15 +119,17 @@ function calcularMetricas(arr) {
   };
 }
 
-// Crea dinámicamente las líneas de min/max/promedio y el botón de control
+// Crea dinámicamente las líneas de min/max/prom y el botón de control
 function inicializarMetaYControles() {
   // Helper para añadir min/max/prom a una tarjeta
   function addMeta(sensorKey, unidad) {
-    const slot = document.querySelector(`.slot[data-key="${sensorKey}"] .slot__body`);
+    const slot = document.querySelector(
+      `.slot[data-key="${sensorKey}"] .slot__body`
+    );
     if (!slot) return;
 
     const meta = document.createElement("div");
-    meta.className = "slot__meta"; // no tiene estilos, pero se verá en una segunda línea
+    meta.className = "slot__meta"; // segunda línea bajo el valor principal
     meta.innerHTML = `
       <small data-iot="${sensorKey}-min">Min: -- ${unidad}</small> ·
       <small data-iot="${sensorKey}-max">Max: -- ${unidad}</small> ·
@@ -141,7 +144,9 @@ function inicializarMetaYControles() {
   addMeta("battery", "%");
 
   // Botón de "retroceso" en la tarjeta de batería (simula un comando al cargador)
-  const batterySlotBody = document.querySelector('.slot[data-key="battery"] .slot__body');
+  const batterySlotBody = document.querySelector(
+    '.slot[data-key="battery"] .slot__body'
+  );
   if (batterySlotBody) {
     const actions = document.createElement("div");
     actions.className = "slot__actions";
@@ -173,7 +178,7 @@ async function aplicarRetrocesoCarga() {
   pushHistorySample();
   actualizarUI();
 
-  // 2) (Opcional) avisamos al backend que dispare el comando real
+  // 2) Avisamos al backend que dispare el comando real (si está configurado)
   if (API_BASE_URL) {
     try {
       await fetch(`${API_BASE_URL}/api/command`, {
@@ -227,7 +232,7 @@ function actualizarUI() {
       `última carga hace ${iotState.lastChargeMinutes} min.`;
   }
 
-  // Log de "Tiempo real (WebSocket)" (aunque aquí usamos setInterval, actúa como flujo en vivo)
+  // Log de "Tiempo real (WebSocket)" (aquí usamos setInterval, actúa como flujo en vivo)
   if (elWsLog) {
     const now = new Date();
     const hh = String(now.getHours()).padStart(2, "0");
@@ -236,7 +241,9 @@ function actualizarUI() {
 
     elWsLog.textContent =
       `[${hh}:${mm}:${ss}] Nuevo dato recibido: ` +
-      `${iotState.temp.toFixed(1)} °C, batería ${iotState.battery.toFixed(0)} %`;
+      `${iotState.temp.toFixed(1)} °C, batería ${iotState.battery.toFixed(
+        0
+      )} %`;
   }
 
   // ---- Métricas de historial en cada tarjeta ----
@@ -293,8 +300,8 @@ function simularNuevoDato() {
 // Inicia el "stream" simulado de datos IoT
 function iniciarSimuladorIoT() {
   // 1. Llenamos el historial inicial como si fuera 1 día de datos antiguos
-  for (let i = 0; i < 24 * 6; i++) {  // 24h * 6 (cada 10 min)
-    simularNuevoDato();
+  for (let i = 0; i < 24 * 6; i++) {
+    simularNuevoDato(); // 24h * 6 (cada 10 min simulado)
   }
 
   // 2. A partir de ahora, cada 5 segundos simulamos 10 min nuevos
