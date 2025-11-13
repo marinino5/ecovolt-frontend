@@ -187,51 +187,59 @@
 
       </div>
     </div>
-
 <div class="panel__grid" id="panelGrid">
 
-  <div class="slot" data-key="temperature">
+  <!-- Temperatura -->
+  <div class="slot js-sensor-card" data-key="temperature">
     <div class="slot__title">
       <span class="dot dot--cyan"></span> Temperatura
     </div>
     <div class="slot__body">
       <span class="skeleton slot__value" data-iot="temp">-- °C</span>
+      <!-- NUEVO: contenedor sparkline -->
+      <div class="slot__sparkline"></div>
     </div>
   </div>
 
-  <div class="slot" data-key="power">
+  <!-- Potencia -->
+  <div class="slot js-sensor-card" data-key="power">
     <div class="slot__title">
       <span class="dot dot--violet"></span> Potencia
     </div>
     <div class="slot__body">
       <span class="skeleton slot__value" data-iot="power">-- kW</span>
+      <!-- NUEVO -->
+      <div class="slot__sparkline"></div>
     </div>
   </div>
 
-  <div class="slot" data-key="voltage">
+  <div class="slot js-sensor-card" data-key="voltage">
     <div class="slot__title">
       <span class="dot dot--yellow"></span> Voltaje
     </div>
     <div class="slot__body">
       <span class="skeleton slot__value" data-iot="voltage">-- V</span>
+      <div class="slot__sparkline"></div>
     </div>
   </div>
 
-  <div class="slot" data-key="last-charge">
+  <div class="slot js-sensor-card" data-key="last-charge">
     <div class="slot__title">
       <span class="dot dot--green"></span> Última carga
     </div>
     <div class="slot__body">
       <span class="skeleton slot__value" data-iot="last-charge">-- min</span>
+      <div class="slot__sparkline"></div>
     </div>
   </div>
 
-  <div class="slot" data-key="battery">
+  <div class="slot js-sensor-card" data-key="battery">
     <div class="slot__title">
       <span class="dot dot--blue"></span> Batería
     </div>
     <div class="slot__body">
       <span class="skeleton slot__value" data-iot="battery">-- %</span>
+      <div class="slot__sparkline"></div>
     </div>
   </div>
 
@@ -580,6 +588,7 @@
   </footer>
 
 </html>
+
 
 
 
