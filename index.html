@@ -323,216 +323,139 @@
   </div>
 </div>
 
-<!-- 👇 AQUÍ va el script -->
 <script>
   console.log("🚀 Telemetría Ecovolt JS cargado");
 
-  // 1. Sensores (claves = data-key)
-  const sensors = {
-    temperature: {
-      name: "Temperatura",
-      unit: "°C",
-      description: "Seguimiento de la temperatura ambiente de la estación.",
-      history: []
-    },
-    power: {
-      name: "Potencia",
-      unit: "kW",
-      description: "Potencia instantánea consumida/entregada por la estación.",
-      history: []
-    },
-    voltage: {
-      name: "Voltaje",
-      unit: "V",
-      description: "Voltaje medido en el sistema de carga.",
-      history: []
-    },
-    battery: {
-      name: "Batería",
-      unit: "%",
-      description: "Nivel de batería de la estación o vehículo conectado.",
-      history: []
-    },
-    lastCharge: {
-      name: "Última carga",
-      unit: "min",
-      description: "Tiempo desde la última sesión de carga.",
-      history: []
-    }
-  };
+<script>
+// Configuración de sensores
+const sensors = {
+  temperature: {
+    name: "Temperatura",
+    unit: "°C",
+    description: "Temperatura ambiente de la estación",
+    history: [],
+    color: "#ef4444"
+  },
+  power: {
+    name: "Potencia", 
+    unit: "kW",
+    description: "Potencia consumida por la estación",
+    history: [],
+    color: "#8b5cf6"
+  },
+  voltage: {
+    name: "Voltaje",
+    unit: "V", 
+    description: "Voltaje del sistema de carga",
+    history: [],
+    color: "#eab308"
+  },
+  battery: {
+    name: "Batería",
+    unit: "%",
+    description: "Nivel de batería disponible",
+    history: [],
+    color: "#22c55e"
+  },
+  lastCharge: {
+    name: "Última carga",
+    unit: "min",
+    description: "Tiempo desde la última carga completa",
+    history: [],
+    color: "#3b82f6"
+  }
+};
 
-  // Valores fake iniciales
-  Object.keys(sensors).forEach((id) => {
-    const base = { temperature: 26.5, power: 1.4, voltage: 221, battery: 40, lastCharge: 1511 }[id] ?? 50;
-    for (let i = 0; i < 24; i++) {
-      const jitter = (Math.random() - 0.5) * 3;
-      sensors[id].history.push(Math.max(0, base + jitter));
+// Inicializar con datos de ejemplo
+Object.keys(sensors).forEach(sensorId => {
+  const base = { 
+    temperature: 24.5, 
+    power: 1.47, 
+    voltage: 220, 
+    battery: 77, 
+    lastCharge: 41 
+  }[sensorId];
+  
+  for (let i = 0; i < 24; i++) {
+    const jitter = (Math.random() - 0.5) * 2;
+    sensors[sensorId].history.push(Math.max(0, base + jitter));
+  }
+});
+
+// Actualizar UI en tiempo real
+function updateSensorUI() {
+  Object.keys(sensors).forEach(sensorId => {
+    const sensor = sensors[sensorId];
+    const card = document.querySelector(`.ha-card[data-key="${sensorId}"]`);
+    
+    if (card) {
+      // Actualizar valor principal
+      const valueEl = card.querySelector('.ha-card__value');
+      const currentValue = sensor.history[sensor.history.length - 1];
+      valueEl.textContent = `${currentValue.toFixed(1)} ${sensor.unit}`;
+      
+      // Actualizar timestamp
+      const timeEl = card.querySelector('.ha-card__timestamp');
+      timeEl.textContent = 'Hace 2 min';
+      
+      // Actualizar sparkline
+      const sparklineEl = card.querySelector('.ha-card__sparkline');
+      renderSparkline(sparklineEl, sensor.history, sensor.color);
     }
   });
+}
 
-  // ===== Sparkline pequeña =====
-  function renderSparkline(container, data) {
-    if (!container || !data || data.length === 0) return;
+// Render sparkline function
+function renderSparkline(container, data, color) {
+  if (!container || data.length < 2) return;
+  
+  const width = container.clientWidth || 200;
+  const height = 40;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  
+  const points = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * width;
+    const y = height - ((value - min) / range) * height;
+    return `${x},${y}`;
+  }).join(' ');
+  
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="grad-${color}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" 
+            fill="url(#grad-${color})"/>
+      <polyline points="${points}" fill="none" stroke="${color}" 
+                stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `;
+}
 
-    const width = container.clientWidth || 160;
-    const height = 28;
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const range = max - min || 1;
-
-    const points = data
-      .map((value, index) => {
-        const x = (index / (data.length - 1 || 1)) * width;
-        const y = height - ((value - min) / range) * height;
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-    container.innerHTML = `
-      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="sparkGradient" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#22d3ee" />
-            <stop offset="100%" stop-color="#0ea5e9" />
-          </linearGradient>
-        </defs>
-        <polyline
-          points="${points}"
-          fill="none"
-          stroke="url(#sparkGradient)"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    `;
-  }
-
-  // ===== Modal =====
-  const modalBackdrop = document.getElementById("iot-modal-backdrop");
-  const modalTitle = document.getElementById("iot-modal-title");
-  const modalSubtitle = document.getElementById("iot-modal-subtitle");
-  const modalCurrent = document.getElementById("iot-modal-current");
-  const modalMin = document.getElementById("iot-modal-min");
-  const modalMax = document.getElementById("iot-modal-max");
-  const modalAvg = document.getElementById("iot-modal-avg");
-  const modalChart = document.getElementById("iot-modal-chart");
-  const modalClose = document.getElementById("iot-modal-close");
-
-  function statsFromHistory(data) {
-    if (!data || data.length === 0) return { current: "-", min: "-", max: "-", avg: "-" };
-    const current = data[data.length - 1];
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const avg = data.reduce((a, b) => a + b, 0) / data.length;
-    return { current, min, max, avg };
-  }
-
-  function renderHistoryChart(sensorId, container) {
+// Simular datos en tiempo real
+setInterval(() => {
+  Object.keys(sensors).forEach(sensorId => {
     const sensor = sensors[sensorId];
-    if (!sensor || !container) return;
-    const data = sensor.history;
-    if (!data || data.length === 0) {
-      container.innerHTML = "<p style='padding:1rem;font-size:0.85rem;'>Sin datos suficientes.</p>";
-      return;
-    }
-
-    const width = container.clientWidth || 320;
-    const height = 170;
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const range = max - min || 1;
-
-    const points = data
-      .map((value, index) => {
-        const x = (index / (data.length - 1 || 1)) * width;
-        const y = height - ((value - min) / range) * height;
-        return `${x},${y}`;
-      })
-      .join(" ");
-
-    container.innerHTML = `
-      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="rgba(34,211,238,0.5)" />
-            <stop offset="100%" stop-color="rgba(14,165,233,0)" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M0,${height} L${points.replace(/ /g, " L")} L${width},${height} Z"
-          fill="url(#historyGradient)"
-          stroke="none"
-        ></path>
-        <polyline
-          points="${points}"
-          fill="none"
-          stroke="#22d3ee"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    `;
-  }
-
-  function openTelemetryModal(sensorId) {
-    const sensor = sensors[sensorId];
-    if (!sensor) return;
-
-    const { current, min, max, avg } = statsFromHistory(sensor.history);
-
-    modalTitle.textContent = sensor.name;
-    modalSubtitle.textContent = sensor.description;
-    modalCurrent.textContent = `${current.toFixed ? current.toFixed(1) : current} ${sensor.unit}`;
-    modalMin.textContent = `${min.toFixed ? min.toFixed(1) : min} ${sensor.unit}`;
-    modalMax.textContent = `${max.toFixed ? max.toFixed(1) : max} ${sensor.unit}`;
-    modalAvg.textContent = `${avg.toFixed ? avg.toFixed(1) : avg} ${sensor.unit}`;
-
-    renderHistoryChart(sensorId, modalChart);
-    modalBackdrop.classList.remove("is-hidden");
-  }
-
-  function closeTelemetryModal() {
-    modalBackdrop.classList.add("is-hidden");
-  }
-
-  if (modalClose && modalBackdrop) {
-    modalClose.addEventListener("click", closeTelemetryModal);
-    modalBackdrop.addEventListener("click", (e) => {
-      if (e.target === modalBackdrop) closeTelemetryModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeTelemetryModal();
-    });
-  }
-
-  // ===== Vincular slots =====
-  function initSlotsTelemetry() {
-    const cards = document.querySelectorAll(".slot.js-sensor-card");
-    console.log("🔍 slots encontrados:", cards.length);
-
-    cards.forEach((card) => {
-      const sensorId = card.dataset.key; // temperature, power, etc.
-      const sensor = sensors[sensorId];
-      if (!sensor) return;
-
-      card.style.cursor = "pointer";
-
-      const spark = card.querySelector(".slot__sparkline");
-      if (spark) renderSparkline(spark, sensor.history);
-
-      card.addEventListener("click", () => {
-        console.log("🖱 click en", sensorId);
-        openTelemetryModal(sensorId);
-      });
-    });
-  }
-
-  // ===== Inicializar cuando cargue todo =====
-  window.addEventListener("DOMContentLoaded", () => {
-    initSlotsTelemetry();
+    const lastValue = sensor.history[sensor.history.length - 1];
+    const change = (Math.random() - 0.5) * 0.5;
+    const newValue = Math.max(0, lastValue + change);
+    
+    sensor.history.push(newValue);
+    if (sensor.history.length > 24) sensor.history.shift();
   });
+  
+  updateSensorUI();
+}, 5000);
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+  updateSensorUI();
+});
 </script>
 
 </body>
@@ -588,6 +511,7 @@
   </footer>
 
 </html>
+
 
 
 
