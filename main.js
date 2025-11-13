@@ -1,22 +1,27 @@
-// -------------------------
-// CONFIGURACIÓN
-// -------------------------
+// =====================================================
+// main.js – Panel IoT Ecovolt (simulación + health-check)
+// =====================================================
 
-// (Opcional) URL de tu backend para health-check
+// URL de health-check del backend (si no la usas, deja el string vacío)
 const HEALTH_URL = "https://lanny-unintensified-guadalupe.ngrok-free.dev/health";
 
-// Elementos del panel IoT
-const elLastLog    = document.querySelector('[data-iot="last-log"]');
-const elWsLog      = document.querySelector('[data-iot="ws-log"]');
+// ---- Referencias a elementos del DOM ----
+
+// Cards de arriba
+const elLastLog = document.querySelector('[data-iot="last-log"]');
+const elWsLog   = document.querySelector('[data-iot="ws-log"]');
+
+// Tarjetas IoT
 const elTemp       = document.querySelector('[data-iot="temp"]');
 const elPower      = document.querySelector('[data-iot="power"]');
 const elVoltage    = document.querySelector('[data-iot="voltage"]');
 const elBattery    = document.querySelector('[data-iot="battery"]');
 const elLastCharge = document.querySelector('[data-iot="last-charge"]');
 
-// -------------------------
-// HEALTH CHECK (simple)
-// -------------------------
+// =====================================================
+// HEALTH CHECK SENCILLO
+// =====================================================
+
 async function checkHealth() {
   if (!HEALTH_URL || !elLastLog) return;
 
@@ -43,30 +48,46 @@ async function checkHealth() {
   }
 }
 
-// -------------------------
-// SIMULADOR IoT EN TIEMPO REAL
-// -------------------------
+// =====================================================
+// SIMULADOR DE DATOS IoT EN TIEMPO REAL
+// =====================================================
 
-// Estado "fake" de la estación
+// Estado interno simulado
 const iotState = {
-  temp: 27.5,          // °C
-  power: 1.3,          // kW
-  voltage: 219,        // V
-  battery: 82,         // %
-  lastChargeMinutes: 35
+  temp: 27.3,            // °C
+  power: 1.47,           // kW
+  voltage: 220,          // V
+  battery: 77,           // %
+  lastChargeMinutes: 41  // minutos
 };
 
+// Actualiza los textos del panel con el estado actual
 function actualizarUI() {
-  if (elTemp)       elTemp.textContent       = `${iotState.temp.toFixed(1)} °C`;
-  if (elPower)      elPower.textContent      = `${iotState.power.toFixed(2)} kW`;
-  if (elVoltage)    elVoltage.textContent    = `${iotState.voltage.toFixed(0)} V`;
-  if (elBattery)    elBattery.textContent    = `${iotState.battery.toFixed(0)} %`;
-  if (elLastCharge) elLastCharge.textContent = `${iotState.lastChargeMinutes} min`;
+  if (elTemp) {
+    elTemp.textContent = `${iotState.temp.toFixed(1)} °C`;
+  }
+
+  if (elPower) {
+    elPower.textContent = `${iotState.power.toFixed(2)} kW`;
+  }
+
+  if (elVoltage) {
+    elVoltage.textContent = `${iotState.voltage.toFixed(0)} V`;
+  }
+
+  if (elBattery) {
+    elBattery.textContent = `${iotState.battery.toFixed(0)} %`;
+  }
+
+  if (elLastCharge) {
+    elLastCharge.textContent = `${iotState.lastChargeMinutes} min`;
+  }
 
   if (elLastLog) {
     elLastLog.textContent =
       `Última lectura: ${iotState.temp.toFixed(1)} °C, ` +
-      `${iotState.power.toFixed(2)} kW, ${iotState.voltage.toFixed(0)} V, ` +
+      `${iotState.power.toFixed(2)} kW, ` +
+      `${iotState.voltage.toFixed(0)} V, ` +
       `batería ${iotState.battery.toFixed(0)} %, ` +
       `última carga hace ${iotState.lastChargeMinutes} min.`;
   }
@@ -83,15 +104,16 @@ function actualizarUI() {
   }
 }
 
+// Genera nuevos datos simulados y vuelve a pintar
 function simularNuevoDato() {
-  // Cambios suaves para que parezca real
-  iotState.temp += (Math.random() - 0.5) * 0.4;          // +-0.2 °C
-  iotState.power += (Math.random() - 0.5) * 0.1;         // +-0.05 kW
-  iotState.voltage += (Math.random() - 0.5) * 1.5;       // +-0.75 V
-  iotState.battery += (Math.random() - 0.7) * 2;         // tiende a bajar
-  iotState.lastChargeMinutes += 1;                       // 1 min por tick
+  // Cambios suaves para que parezca sensor real
+  iotState.temp += (Math.random() - 0.5) * 0.4;      // ±0.2 °C
+  iotState.power += (Math.random() - 0.5) * 0.10;    // ±0.05 kW
+  iotState.voltage += (Math.random() - 0.5) * 1.5;   // ±0.75 V
+  iotState.battery += (Math.random() - 0.7) * 2;     // tiende a bajar
+  iotState.lastChargeMinutes += 1;                   // 1 min por ciclo
 
-  // Límites razonables
+  // Limitar rangos razonables
   if (iotState.temp < 20) iotState.temp = 20;
   if (iotState.temp > 40) iotState.temp = 40;
 
@@ -101,17 +123,18 @@ function simularNuevoDato() {
   if (iotState.voltage < 210) iotState.voltage = 210;
   if (iotState.voltage > 240) iotState.voltage = 240;
 
-  if (iotState.battery < 5)  iotState.battery = 5;
+  if (iotState.battery < 5) iotState.battery = 5;
   if (iotState.battery > 100) iotState.battery = 100;
 
   actualizarUI();
 }
 
+// Arranca el “stream” simulado en tiempo real
 function iniciarSimuladorIoT() {
-  // Primera actualización inmediata
+  // Primera pintura
   actualizarUI();
 
-  // Cada 5 segundos simulamos un nuevo paquete de datos
+  // Cada 5 segundos, nuevos datos
   setInterval(simularNuevoDato, 5000);
 
   if (elWsLog) {
@@ -119,16 +142,15 @@ function iniciarSimuladorIoT() {
   }
 }
 
-// -------------------------
-// INICIO
-// -------------------------
+// =====================================================
+// ARRANQUE DE LA PÁGINA
+// =====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Health simple del backend (opcional)
+  // Comprobar backend (opcional)
   checkHealth();
 
-  // Simulador IoT en tiempo real para el panel
+  // Empezar a simular datos IoT
   iniciarSimuladorIoT();
 });
-
 
