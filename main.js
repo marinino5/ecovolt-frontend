@@ -1,17 +1,22 @@
 // =====================================================
-// main.js – Panel IoT Ecovolt
-// - Conectado al backend IoT del profesor (Coolify)
-// - Simulación de datos en tiempo real (digital twin)
-// - Historial por sensor (para métricas en cada card)
-// - Control ("retroceso") en la card de batería
+// Configuración de backend (cuando el profe abra el puerto)
 // =====================================================
 
-// 🔗 Backend IoT en el servidor del profesor (puerto 30081 mapeado al 3000 del contenedor)
+// 🔗 Backend IoT en el servidor del profesor (Coolify)
 const API_BASE_URL =
   "http://howks88k0os80888co4sc8c4.20.246.73.238.sslip.io:30081";
 
-// Endpoint de health-check del backend
+// URL de health-check del backend
 const HEALTH_URL = `${API_BASE_URL}/health`;
+
+// =====================================================
+// main.js – Panel IoT Ecovolt
+// - Simulación de datos en tiempo real
+// - Historial por sensor (para métricas)
+// - Min/Max/Promedio en cada tarjeta
+// - Sparklines (mini-gráficas)
+// - Control ("retroceso") en la card de batería
+// =====================================================
 
 // ---- Elementos principales del panel ----
 const elLastLog = document.querySelector('[data-iot="last-log"]');
@@ -85,10 +90,7 @@ function pushHistorySample(timestamp = Date.now()) {
   history.power.push({ t: timestamp, v: iotState.power });
   history.voltage.push({ t: timestamp, v: iotState.voltage });
   history.battery.push({ t: timestamp, v: iotState.battery });
-  history.lastChargeMinutes.push({
-    t: timestamp,
-    v: iotState.lastChargeMinutes
-  });
+  history.lastChargeMinutes.push({ t: timestamp, v: iotState.lastChargeMinutes });
 
   // Si pasa del límite, quitamos los más viejos
   Object.keys(history).forEach((key) => {
@@ -119,23 +121,86 @@ function calcularMetricas(arr) {
   };
 }
 
-// Crea dinámicamente las líneas de min/max/prom y el botón de control
+// =====================================================
+// Sparklines (mini-gráficas SVG)
+// =====================================================
+
+function drawSparkline(sensorKey, arr, fixedMin, fixedMax) {
+  const container = document.querySelector(`.slot__sparkline--${sensorKey}`);
+  if (!container) return;
+
+  const points = (arr || []).slice(-30); // últimos 30 puntos
+  if (points.length < 2) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const width = 120;
+  const height = 32;
+  const padding = 2;
+
+  let min = fixedMin ?? points[0].v;
+  let max = fixedMax ?? points[0].v;
+
+  if (fixedMin == null || fixedMax == null) {
+    points.forEach((p) => {
+      if (p.v < min) min = p.v;
+      if (p.v > max) max = p.v;
+    });
+  }
+
+  if (max === min) {
+    max = min + 1;
+  }
+
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  let d = "";
+  const n = points.length;
+  points.forEach((p, idx) => {
+    const x = padding + (idx / (n - 1)) * (width - padding * 2);
+    const ratio = (p.v - min) / (max - min);
+    const y = height - padding - ratio * (height - padding * 2);
+
+    d += idx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+  });
+
+  const path = document.createElementNS(svgNS, "path");
+  path.setAttribute("d", d);
+  svg.appendChild(path);
+
+  container.innerHTML = "";
+  container.appendChild(svg);
+}
+
+// =====================================================
+// Crea dinámicamente min/max/prom y las sparklines + botón
+// =====================================================
+
 function inicializarMetaYControles() {
-  // Helper para añadir min/max/prom a una tarjeta
+  // Helper para añadir min/max/prom a una tarjeta + contenedor de sparkline
   function addMeta(sensorKey, unidad) {
     const slot = document.querySelector(
       `.slot[data-key="${sensorKey}"] .slot__body`
     );
     if (!slot) return;
 
+    // Línea de min/max/prom
     const meta = document.createElement("div");
-    meta.className = "slot__meta"; // segunda línea bajo el valor principal
+    meta.className = "slot__meta";
     meta.innerHTML = `
       <small data-iot="${sensorKey}-min">Min: -- ${unidad}</small> ·
       <small data-iot="${sensorKey}-max">Max: -- ${unidad}</small> ·
       <small data-iot="${sensorKey}-avg">Prom: -- ${unidad}</small>
     `;
     slot.appendChild(meta);
+
+    // Contenedor de sparkline
+    const spark = document.createElement("div");
+    spark.className = `slot__sparkline slot__sparkline--${sensorKey}`;
+    slot.appendChild(spark);
   }
 
   addMeta("temperature", "°C");
@@ -143,7 +208,7 @@ function inicializarMetaYControles() {
   addMeta("voltage", "V");
   addMeta("battery", "%");
 
-  // Botón de "retroceso" en la tarjeta de batería (simula un comando al cargador)
+  // Botón de "retroceso" en la tarjeta de batería
   const batterySlotBody = document.querySelector(
     '.slot[data-key="battery"] .slot__body'
   );
@@ -170,7 +235,10 @@ function inicializarMetaYControles() {
   }
 }
 
-// Aplica un comando de "retroceso" (control)
+// =====================================================
+// Retroceso (control) – botón de batería
+// =====================================================
+
 async function aplicarRetrocesoCarga() {
   // 1) Ajustamos el digital twin (front) para que se note el efecto
   iotState.battery = Math.min(100, iotState.battery + 20);
@@ -178,7 +246,7 @@ async function aplicarRetrocesoCarga() {
   pushHistorySample();
   actualizarUI();
 
-  // 2) Avisamos al backend que dispare el comando real (si está configurado)
+  // 2) (Opcional) avisamos al backend
   if (API_BASE_URL) {
     try {
       await fetch(`${API_BASE_URL}/api/command`, {
@@ -199,7 +267,10 @@ async function aplicarRetrocesoCarga() {
   }
 }
 
-// Actualiza los textos de la UI con el estado actual y las métricas
+// =====================================================
+// Actualiza textos, métricas y sparklines
+// =====================================================
+
 function actualizarUI() {
   // Valores actuales
   if (elTemp) {
@@ -232,7 +303,7 @@ function actualizarUI() {
       `última carga hace ${iotState.lastChargeMinutes} min.`;
   }
 
-  // Log de "Tiempo real (WebSocket)" (aquí usamos setInterval, actúa como flujo en vivo)
+  // Log de "Tiempo real (WebSocket)" (simulado)
   if (elWsLog) {
     const now = new Date();
     const hh = String(now.getHours()).padStart(2, "0");
@@ -241,9 +312,7 @@ function actualizarUI() {
 
     elWsLog.textContent =
       `[${hh}:${mm}:${ss}] Nuevo dato recibido: ` +
-      `${iotState.temp.toFixed(1)} °C, batería ${iotState.battery.toFixed(
-        0
-      )} %`;
+      `${iotState.temp.toFixed(1)} °C, batería ${iotState.battery.toFixed(0)} %`;
   }
 
   // ---- Métricas de historial en cada tarjeta ----
@@ -268,9 +337,18 @@ function actualizarUI() {
   setMeta("power", "kW", history.power);
   setMeta("voltage", "V", history.voltage);
   setMeta("battery", "%", history.battery);
+
+  // ---- Sparklines ----
+  drawSparkline("temperature", history.temperature, 20, 40);
+  drawSparkline("power", history.power, 0.4, 3.0);
+  drawSparkline("voltage", history.voltage, 210, 240);
+  drawSparkline("battery", history.battery, 0, 100);
 }
 
+// =====================================================
 // Genera un nuevo dato simulado y vuelve a pintar
+// =====================================================
+
 function simularNuevoDato() {
   // Cambios suaves para que parezca sensor real
   iotState.temp += (Math.random() - 0.5) * 0.4;      // ±0.2 °C
@@ -297,11 +375,14 @@ function simularNuevoDato() {
   actualizarUI();
 }
 
+// =====================================================
 // Inicia el "stream" simulado de datos IoT
+// =====================================================
+
 function iniciarSimuladorIoT() {
   // 1. Llenamos el historial inicial como si fuera 1 día de datos antiguos
-  for (let i = 0; i < 24 * 6; i++) {
-    simularNuevoDato(); // 24h * 6 (cada 10 min simulado)
+  for (let i = 0; i < 24 * 6; i++) {  // 24h * 6 (cada 10 min)
+    simularNuevoDato();
   }
 
   // 2. A partir de ahora, cada 5 segundos simulamos 10 min nuevos
@@ -317,7 +398,8 @@ function iniciarSimuladorIoT() {
 // =====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  checkHealth();                 // Comprueba backend /health
-  inicializarMetaYControles();   // Añade min/max/prom y botón de retroceso
+  checkHealth();                 // Comprueba backend /health (cuando esté accesible)
+  inicializarMetaYControles();   // Añade min/max/prom, sparklines y botón de retroceso
   iniciarSimuladorIoT();         // Comienza datos en tiempo real
 });
+
