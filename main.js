@@ -402,4 +402,242 @@ document.addEventListener("DOMContentLoaded", () => {
   inicializarMetaYControles();   // Añade min/max/prom, sparklines y botón de retroceso
   iniciarSimuladorIoT();         // Comienza datos en tiempo real
 });
+<script>
+  // 1. Configuración de sensores usando data-key
+  const sensors = {
+    temperature: {
+      name: "Temperatura",
+      unit: "°C",
+      description: "Seguimiento de la temperatura ambiente de la estación.",
+      history: []
+    },
+    power: {
+      name: "Potencia",
+      unit: "kW",
+      description: "Potencia instantánea consumida/entregada por la estación.",
+      history: []
+    },
+    voltage: {
+      name: "Voltaje",
+      unit: "V",
+      description: "Voltaje medido en el sistema de carga.",
+      history: []
+    },
+    battery: {
+      name: "Batería",
+      unit: "%",
+      description: "Nivel de batería de la estación o vehículo conectado.",
+      history: []
+    },
+    lastCharge: {
+      name: "Última carga",
+      unit: "min",
+      description: "Tiempo desde la última carga.",
+      history: []
+    }
+  };
+
+  // Valores iniciales fake mientras no hay backend real
+  Object.keys(sensors).forEach((id) => {
+    const base = { temperature: 28, power: 1.0, voltage: 225, battery: 40, lastCharge: 1500 }[id] ?? 50;
+    for (let i = 0; i < 24; i++) {
+      const jitter = (Math.random() - 0.5) * 4;
+      sensors[id].history.push(Math.max(0, base + jitter));
+    }
+  });
+
+  // Sparkline en cada .slot__sparkline
+  function renderSparkline(container, data) {
+    if (!container || !data || data.length === 0) return;
+    const width = container.clientWidth || 160;
+    const height = 28;
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1 || 1)) * width;
+        const y = height - ((value - min) / range) * height;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    container.innerHTML = `
+      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sparkGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#22d3ee" />
+            <stop offset="100%" stop-color="#0ea5e9" />
+          </linearGradient>
+        </defs>
+        <polyline
+          points="${points}"
+          fill="none"
+          stroke="url(#sparkGradient)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    `;
+  }
+
+  // Ref modal
+  const modalBackdrop = document.getElementById("iot-modal-backdrop");
+  const modalTitle = document.getElementById("iot-modal-title");
+  const modalSubtitle = document.getElementById("iot-modal-subtitle");
+  const modalCurrent = document.getElementById("iot-modal-current");
+  const modalMin = document.getElementById("iot-modal-min");
+  const modalMax = document.getElementById("iot-modal-max");
+  const modalAvg = document.getElementById("iot-modal-avg");
+  const modalChart = document.getElementById("iot-modal-chart");
+  const modalClose = document.getElementById("iot-modal-close");
+
+  function statsFromHistory(data) {
+    if (!data || data.length === 0) return { current: "-", min: "-", max: "-", avg: "-" };
+    const current = data[data.length - 1];
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const avg = data.reduce((a, b) => a + b, 0) / data.length;
+    return { current, min, max, avg };
+  }
+
+  function renderHistoryChart(sensorId, container) {
+    const sensor = sensors[sensorId];
+    if (!sensor || !container) return;
+    const data = sensor.history;
+    if (!data || data.length === 0) {
+      container.innerHTML = "<p style='padding:1rem;font-size:0.85rem;'>Sin datos suficientes.</p>";
+      return;
+    }
+
+    const width = container.clientWidth || 320;
+    const height = 170;
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1 || 1)) * width;
+        const y = height - ((value - min) / range) * height;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    container.innerHTML = `
+      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(34,211,238,0.5)" />
+            <stop offset="100%" stop-color="rgba(14,165,233,0)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,${height} L${points.replace(/ /g, " L")} L${width},${height} Z"
+          fill="url(#historyGradient)"
+          stroke="none"
+        ></path>
+        <polyline
+          points="${points}"
+          fill="none"
+          stroke="#22d3ee"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    `;
+  }
+
+  function openTelemetryModal(sensorId) {
+    const sensor = sensors[sensorId];
+    if (!sensor) return;
+
+    const { current, min, max, avg } = statsFromHistory(sensor.history);
+
+    modalTitle.textContent = sensor.name;
+    modalSubtitle.textContent = sensor.description;
+    modalCurrent.textContent = `${current.toFixed ? current.toFixed(1) : current} ${sensor.unit}`;
+    modalMin.textContent = `${min.toFixed ? min.toFixed(1) : min} ${sensor.unit}`;
+    modalMax.textContent = `${max.toFixed ? max.toFixed(1) : max} ${sensor.unit}`;
+    modalAvg.textContent = `${avg.toFixed ? avg.toFixed(1) : avg} ${sensor.unit}`;
+
+    renderHistoryChart(sensorId, modalChart);
+    modalBackdrop.classList.remove("is-hidden");
+  }
+
+  function closeTelemetryModal() {
+    modalBackdrop.classList.add("is-hidden");
+  }
+
+  if (modalClose && modalBackdrop) {
+    modalClose.addEventListener("click", closeTelemetryModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeTelemetryModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeTelemetryModal();
+    });
+  }
+
+  function initSlotsTelemetry() {
+    const cards = document.querySelectorAll(".js-sensor-card");
+    cards.forEach((card) => {
+      const sensorId = card.dataset.key; // temperature, power, etc.
+      const sensor = sensors[sensorId];
+      if (!sensor) return;
+
+      const spark = card.querySelector(".slot__sparkline");
+      if (spark) renderSparkline(spark, sensor.history);
+
+      // No tocamos tu lógica de data-iot, solo rellenamos si está vacío
+      const valueEl = card.querySelector(".slot__value");
+      if (valueEl && valueEl.textContent.trim().startsWith("--")) {
+        const last = sensor.history[sensor.history.length - 1];
+        valueEl.textContent = `${last.toFixed(1)} ${sensor.unit}`;
+      }
+
+      card.style.cursor = "pointer";
+      card.addEventListener("click", () => openTelemetryModal(sensorId));
+    });
+  }
+
+  // Simulación ligera para que se muevan las gráficas
+  function simulateLiveUpdates() {
+    setInterval(() => {
+      Object.keys(sensors).forEach((sensorId) => {
+        const sensor = sensors[sensorId];
+        const last = sensor.history[sensor.history.length - 1] || 50;
+        const jitter = (Math.random() - 0.5) * 3;
+        const next = last + jitter;
+
+        sensor.history.push(next);
+        if (sensor.history.length > 24) sensor.history.shift();
+
+        const card = document.querySelector(`.js-sensor-card[data-key="${sensorId}"]`);
+        if (card) {
+          const spark = card.querySelector(".slot__sparkline");
+          if (spark) renderSparkline(spark, sensor.history);
+
+          const valueEl = card.querySelector(".slot__value");
+          if (valueEl && valueEl.textContent.includes("--")) {
+            valueEl.textContent = `${next.toFixed(1)} ${sensor.unit}`;
+          }
+        }
+
+        if (!modalBackdrop.classList.contains("is-hidden") &&
+            modalTitle.textContent === sensor.name) {
+          renderHistoryChart(sensorId, modalChart);
+        }
+      });
+    }, 5000);
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    initSlotsTelemetry();
+    simulateLiveUpdates();
+  });
+</script>
 
