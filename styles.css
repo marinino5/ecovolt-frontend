@@ -676,6 +676,105 @@ h1,h2,h3{margin:0}
   display: none !important;
 }
 
+/* Mini–gráfica dentro de cada slot */
+.slot__sparkline {
+  width: 100%;
+  height: 28px;
+  margin-top: 0.5rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.08);
+  overflow: hidden;
+}
+
+/* El SVG de la sparkline ocupa todo el contenedor */
+.slot__sparkline svg {
+  width: 100%;
+  height: 28px;
+  display: block;
+}
+
+/* ===== Modal Telemetría IoT ===== */
+
+.iot-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.iot-modal {
+  width: min(480px, 92vw);
+  background: var(--bg, #f5f8fb);
+  color: var(--text, #0f172a);
+  border-radius: 1.25rem;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.25);
+}
+
+.iot-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.iot-modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.iot-modal-subtitle {
+  font-size: 0.85rem;
+  color: var(--muted, #64748b);
+  margin-top: 0.15rem;
+}
+
+.iot-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+  color: #64748b;
+}
+
+.iot-modal-body {
+  font-size: 0.9rem;
+}
+
+.iot-modal-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.iot-modal-stat-label {
+  font-size: 0.75rem;
+  color: var(--muted, #64748b);
+}
+
+.iot-modal-stat-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.iot-modal-chart {
+  width: 100%;
+  height: 170px;
+  border-radius: 1rem;
+  background: rgba(148, 163, 184, 0.12);
+  overflow: hidden;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
 
 
 
