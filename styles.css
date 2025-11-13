@@ -775,6 +775,197 @@ h1,h2,h3{margin:0}
   display: none !important;
 }
 
+/* ===== HOME ASSISTANT STYLE ===== */
+.ha-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ha-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--stroke);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.ha-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  border-color: var(--brand-1);
+}
+
+.ha-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.ha-card__title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.ha-card__timestamp {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.ha-card__value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin: 8px 0 16px 0;
+}
+
+.ha-card__sparkline {
+  width: 100%;
+  height: 40px;
+  background: rgba(148, 163, 184, 0.05);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.ha-card__actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--stroke);
+}
+
+.ha-btn {
+  background: var(--brand-1);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.ha-btn:hover {
+  background: var(--brand-2);
+  transform: translateY(-1px);
+}
+
+/* Sparklines mejoradas */
+.ha-card__sparkline svg {
+  width: 100%;
+  height: 40px;
+  display: block;
+}
+
+/* Estados de los sensores */
+.ha-card[data-key="temperature"] { border-left: 4px solid #ef4444; }
+.ha-card[data-key="power"] { border-left: 4px solid #8b5cf6; }
+.ha-card[data-key="voltage"] { border-left: 4px solid #eab308; }
+.ha-card[data-key="battery"] { border-left: 4px solid #22c55e; }
+.ha-card[data-key="lastCharge"] { border-left: 4px solid #3b82f6; }
+
+/* Modal Home Assistant */
+.ha-modal {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 0;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--stroke);
+  max-width: 500px;
+  width: 90vw;
+}
+
+.ha-modal__header {
+  padding: 24px 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.ha-modal__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.ha-modal__subtitle {
+  color: var(--muted);
+  margin: 4px 0 0 0;
+  font-size: 0.9rem;
+}
+
+.ha-modal__close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ha-modal__body {
+  padding: 20px 24px 24px;
+}
+
+.ha-modal__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.ha-modal__stat {
+  text-align: center;
+}
+
+.ha-modal__stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  display: block;
+}
+
+.ha-modal__stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  display: block;
+  margin-top: 4px;
+}
+
+.ha-modal__chart {
+  width: 100%;
+  height: 200px;
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+}
 
 
 
