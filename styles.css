@@ -588,47 +588,94 @@ h1,h2,h3{margin:0}
   .socialdots{justify-content:center}
 }
 
-/* ==== Sparklines en las tarjetas IoT ==== */
-
-.slot__meta {
-  margin-top: 4px;
-  font-size: 11px;
-  opacity: 0.8;
-}
-
-.slot__sparkline {
-  margin-top: 4px;
-}
-
-.slot__sparkline svg {
+/* =========================
+   Sparklines IoT
+   ========================= */
+.iot-sparkline {
   width: 100%;
-  height: 28px;
+  height: 40px;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.08);
+  overflow: hidden;
+}
+
+/* Ajuste para el SVG interno */
+.iot-sparkline svg {
+  width: 100%;
+  height: 40px;
   display: block;
 }
 
-/* Línea base común */
-.slot__sparkline path {
-  fill: none;
-  stroke-width: 1.5;
-  opacity: 0.9;
+/* =========================
+   Modal de historial IoT
+   ========================= */
+.iot-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 
-/* Colores por sensor (los puedes ajustar si quieres) */
-.slot__sparkline--temperature path {
-  stroke: #22d3ee; /* cyan */
+.iot-modal {
+  width: min(420px, 90vw);
+  background: var(--bg, #f5f8fb);
+  color: var(--text, #0f172a);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
 }
 
-.slot__sparkline--power path {
-  stroke: #a855f7; /* violeta */
+.iot-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.slot__sparkline--voltage path {
-  stroke: #facc15; /* amarillo */
+.iot-modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.slot__sparkline--battery path {
-  stroke: #22c55e; /* verde */
+.iot-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
 }
+
+.iot-modal-body {
+  font-size: 0.9rem;
+  color: var(--muted, #5b728b);
+}
+
+/* Contenedor de gráfica grande en el modal */
+.iot-modal-chart {
+  margin-top: 1rem;
+  width: 100%;
+  height: 160px;
+  border-radius: 1rem;
+  background: rgba(148, 163, 184, 0.12);
+  overflow: hidden;
+}
+
+.iot-modal-chart svg {
+  width: 100%;
+  height: 160px;
+  display: block;
+}
+
+/* Clase para ocultar el modal completamente */
+.is-hidden {
+  display: none !important;
+}
+
 
 
 
