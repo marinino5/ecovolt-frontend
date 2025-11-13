@@ -285,6 +285,24 @@
     </div>
   </section>
     <script src="./main.js" defer></script>
+    <!-- Modal de historial IoT (global, reutilizable) -->
+<div id="iot-modal-backdrop" class="iot-modal-backdrop is-hidden">
+  <div class="iot-modal">
+    <div class="iot-modal-header">
+      <h3 id="iot-modal-title" class="iot-modal-title">Historial del sensor</h3>
+      <button id="iot-modal-close" class="iot-modal-close" aria-label="Cerrar">
+        ✕
+      </button>
+    </div>
+    <div class="iot-modal-body">
+      <p id="iot-modal-description">
+        Visualización de las últimas lecturas reportadas por este dispositivo.
+      </p>
+      <div id="iot-modal-chart" class="iot-modal-chart"></div>
+    </div>
+  </div>
+</div>
+
 </body>
   
   <!-- ===== FOOTER ===== -->
@@ -338,6 +356,7 @@
   </footer>
 
 </html>
+
 
 
 
