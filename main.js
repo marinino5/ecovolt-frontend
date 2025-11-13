@@ -1,3 +1,7 @@
+// 🔗 Backend IoT en el servidor del profesor (Coolify)
+const API_BASE_URL = "http://howks88k0os80888co4sc8c4.20.246.73.238.sslip.io:30081";
+const HEALTH_URL   = `${API_BASE_URL}/health`;
+
 // =====================================================
 // main.js – Panel IoT Ecovolt
 // - Simulación de datos en tiempo real
