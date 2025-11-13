@@ -283,47 +283,39 @@
   </section>
     <script src="./main.js" defer></script>
     
-<!-- Modal de telemetría -->
-<div id="iot-modal-backdrop" class="iot-modal-backdrop is-hidden">
-  <div class="iot-modal">
-    <div class="iot-modal-header">
+<!-- Modal Home Assistant -->
+<div id="ha-modal" class="iot-modal-backdrop is-hidden">
+  <div class="ha-modal">
+    <div class="ha-modal__header">
       <div>
-        <h3 id="iot-modal-title" class="iot-modal-title">Telemetría del sensor</h3>
-        <p id="iot-modal-subtitle" class="iot-modal-subtitle">
-          Datos históricos en las últimas lecturas.
-        </p>
+        <h3 class="ha-modal__title" id="ha-modal-title">Sensor</h3>
+        <p class="ha-modal__subtitle" id="ha-modal-subtitle">Descripción del sensor</p>
       </div>
-      <button id="iot-modal-close" class="iot-modal-close" aria-label="Cerrar">
-        ✕
-      </button>
+      <button class="ha-modal__close" id="ha-modal-close">×</button>
     </div>
-
-    <div class="iot-modal-body">
-      <div class="iot-modal-stats">
-        <div>
-          <span class="iot-modal-stat-label">Actual</span>
-          <span id="iot-modal-current" class="iot-modal-stat-value">–</span>
+    <div class="ha-modal__body">
+      <div class="ha-modal__stats">
+        <div class="ha-modal__stat">
+          <span class="ha-modal__stat-label">Actual</span>
+          <span class="ha-modal__stat-value" id="ha-modal-current">--</span>
         </div>
-        <div>
-          <span class="iot-modal-stat-label">Mín</span>
-          <span id="iot-modal-min" class="iot-modal-stat-value">–</span>
+        <div class="ha-modal__stat">
+          <span class="ha-modal__stat-label">Mínimo</span>
+          <span class="ha-modal__stat-value" id="ha-modal-min">--</span>
         </div>
-        <div>
-          <span class="iot-modal-stat-label">Máx</span>
-          <span id="iot-modal-max" class="iot-modal-stat-value">–</span>
+        <div class="ha-modal__stat">
+          <span class="ha-modal__stat-label">Máximo</span>
+          <span class="ha-modal__stat-value" id="ha-modal-max">--</span>
         </div>
-        <div>
-          <span class="iot-modal-stat-label">Prom</span>
-          <span id="iot-modal-avg" class="iot-modal-stat-value">–</span>
+        <div class="ha-modal__stat">
+          <span class="ha-modal__stat-label">Promedio</span>
+          <span class="ha-modal__stat-value" id="ha-modal-avg">--</span>
         </div>
       </div>
-
-      <div id="iot-modal-chart" class="iot-modal-chart"></div>
+      <div class="ha-modal__chart" id="ha-modal-chart"></div>
     </div>
   </div>
 </div>
-
-<script>
   console.log("🚀 Telemetría Ecovolt JS cargado");
 
 <script>
@@ -511,6 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
   </footer>
 
 </html>
+
 
 
 
