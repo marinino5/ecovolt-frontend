@@ -263,7 +263,7 @@ h1,h2,h3{margin:0}
   border-radius:50%;
   display:grid;
   place-items:center;
-  margin:26px auto 12px;      /* separa del borde superior y del título */
+  margin:26px auto 12px;
   box-shadow:0 12px 28px rgba(15,23,42,.10);
 }
 
@@ -284,9 +284,8 @@ h1,h2,h3{margin:0}
 /* El ícono en sí (emoji por ahora) */
 .step2__icon-glyph{
   font-size:2.1rem;
-  color:#16a34a;  /* verde fuerte para que resalte */
+  color:#16a34a;
 }
-
 
 /* ===== Título IoT ===== */
 .iot-title {
@@ -312,470 +311,12 @@ h1,h2,h3{margin:0}
   to   { width: 80px; opacity: 1; }
 }
 
-/* ============================
-   BLOQUES IoT (panel)
-   ============================ */
-
+/* ===== PANEL IOT - HOME ASSISTANT STYLE ===== */
 .panel {
   padding-block: 40px 60px;
   background-color: #f9fbfd;
 }
 
-.panel__intro {
-  max-width: 1100px;
-  margin: 0 auto 40px;
-  padding-inline: 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  gap: 20px;
-}
-
-/* Tarjetas IoT */
-.iot-block {
-  background: #ffffff;
-  border: 1px solid #e5e9ef;
-  border-radius: 18px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-  padding: 20px 22px;
-  transition: transform 0.2s ease;
-}
-.iot-block:hover { transform: translateY(-2px); }
-
-.iot-block-title {
-  font-weight: 700;
-  color: #101828;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Área de logs/datos */
-#data,
-#log {
-  background: #f8fafc;
-  border-radius: 10px;
-  border: 1px solid #edf0f4;
-  padding: 12px 14px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 14px;
-  color: #1e293b;
-  line-height: 1.5;
-  min-height: 60px;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-/* Grid principal IoT */
-.panel__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.slot {
-  background: #ffffff;
-  border: 1px solid #e5e9ef;
-  border-radius: 16px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  padding: 18px 20px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.slot:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-.slot__title {
-  font-weight: 600;
-  color: #101828;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.slot__body {
-  color: #475569;
-  font-size: 15px;
-  min-height: 24px;
-}
-
-/* Puntos de color */
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.dot--cyan { background-color: #06b6d4; }
-.dot--amber{ background-color: #fbbf24; }
-.dot--violet{ background-color: #8b5cf6; }
-.dot--green{ background-color: #22c55e; }
-.dot--blue { background-color: #3b82f6; }
-
-/* Skeleton */
-.skeleton {
-  display: inline-block;
-  height: 10px;
-  width: 120px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #eef1f5 25%, #f6f7f9 37%, #eef1f5 63%);
-  background-size: 400% 100%;
-  animation: ev-skeleton 1.2s ease-in-out infinite;
-}
-@keyframes ev-skeleton {
-  0% { background-position: 100% 0; }
-  100% { background-position: 0 0; }
-}
-
-/* ===== Precios ===== */
-.pricing {
-  max-width: 1200px;
-  margin: 60px auto 80px;        /* aire arriba y abajo */
-  padding: 0 20px 40px;          /* espacio interno abajo */
-}
-.pricing__grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-  margin-top:18px;
-}
-.price{
-  background:var(--card);
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-  padding:18px 18px 20px;
-  position:relative;
-}
-.price--featured{outline:3px solid var(--green)}
-.badge{
-  position:absolute;
-  top:-10px;right:16px;
-  background:linear-gradient(90deg,var(--brand-2),var(--brand-3));
-  padding:.35rem .6rem;
-  border-radius:8px;
-  color:#06202a;
-  font-weight:800;
-}
-.price__top h3{font-size:1.4rem}
-.price__num{font-size:2.4rem;font-weight:800}
-.price__num span{font-size:1rem;color:var(--muted)}
-.price ul{list-style:none;padding:0;margin:14px 0 16px}
-.price li{
-  padding:6px 0;
-  border-bottom:1px dashed var(--stroke);
-  color:#2c3a4b;
-}
-
-/* ===== CTA (si la usas) ===== */
-.cta{
-  margin:70px 0 0;
-  background:linear-gradient(120deg,#0ea5a2,#1e90d6);
-  color:#fff;
-}
-.cta__inner{
-  max-width:1200px;
-  margin:0 auto;
-  padding:36px 20px;
-  text-align:center;
-}
-.cta__actions{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  margin-top:14px;
-}
-
-/* ===== Footer simple (no se usa en tu HTML actual) ===== */
-.foot{
-  padding:18px;
-  text-align:center;
-  color:#6b7c90;
-  border-top:1px solid var(--stroke);
-  background:#fff;
-}
-
-/* ===== FooterX ===== */
-.footerX{
-  background:#2b3f52;
-  color:#e6f4ff;
-  padding:40px 18px 26px;
-  margin-top:80px;     /* separación clara desde Precios */
-}
-.footerX__wrap{
-  max-width:1200px;
-  margin:0 auto;
-  background:#2b3f52;
-  border-radius:14px;
-}
-.footerX__grid{
-  display:grid;
-  gap:36px;
-  padding:22px;
-  grid-template-columns:repeat(4,1fr);
-}
-.fcol__title{
-  color:#34d399;
-  font-weight:800;
-  font-size:1.25rem;
-  margin:0 0 8px;
-}
-.fcol__line{
-  display:block;
-  width:60px;height:4px;
-  background:#34d399;
-  border-radius:3px;
-  margin-bottom:14px;
-}
-.fcol p{color:#cfe2f0;line-height:1.6;margin:0}
-.flist{list-style:none;margin:0;padding:0}
-.flist li{margin:10px 0;color:#d7e6f5}
-.flist a{
-  color:#eaf5ff;
-  text-decoration:none;
-  font-weight:600;
-}
-.flist a:hover{color:#34d399}
-.flist--contact li{line-height:1.5}
-
-.socialdots{
-  display:flex;
-  gap:12px;
-  margin-top:16px;
-}
-.socialdots span{
-  width:14px;height:14px;border-radius:50%;
-  background:#32495f;
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);
-}
-.fsep{
-  border:0;
-  border-top:1px solid rgba(255,255,255,.12);
-  margin:14px 22px;
-}
-.fcopy{
-  color:#a9bed0;
-  text-align:center;
-  padding:10px 22px;
-  font-size:.92rem;
-}
-
-/* ===== Responsive ===== */
-@media (max-width:1024px){
-  .hero__inner{grid-template-columns:1fr}
-  .how2__grid{grid-template-columns:repeat(2,1fr)}
-}
-@media (max-width:680px){
-  .menu{display:none}
-  .hamb{display:block}
-  .how2__grid{grid-template-columns:1fr}
-  .pricing__grid{grid-template-columns:1fr}
-  .panel__intro{grid-template-columns:1fr; padding-inline:16px;}
-  .panel__grid{padding:0 16px;}
-}
-@media (max-width:1000px){
-  .footerX__grid{grid-template-columns:repeat(2,1fr)}
-}
-@media (max-width:620px){
-  .footerX__grid{grid-template-columns:1fr;text-align:center}
-  .fcol__line{margin-left:auto;margin-right:auto}
-  .socialdots{justify-content:center}
-}
-
-/* =========================
-   Sparklines IoT
-   ========================= */
-.iot-sparkline {
-  width: 100%;
-  height: 40px;
-  margin-top: 0.75rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.08);
-  overflow: hidden;
-}
-
-/* Ajuste para el SVG interno */
-.iot-sparkline svg {
-  width: 100%;
-  height: 40px;
-  display: block;
-}
-
-/* =========================
-   Modal de historial IoT
-   ========================= */
-.iot-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.iot-modal {
-  width: min(420px, 90vw);
-  background: var(--bg, #f5f8fb);
-  color: var(--text, #0f172a);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
-}
-
-.iot-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.iot-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.iot-modal-close {
-  border: none;
-  background: transparent;
-  font-size: 1.25rem;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.iot-modal-body {
-  font-size: 0.9rem;
-  color: var(--muted, #5b728b);
-}
-
-/* Contenedor de gráfica grande en el modal */
-.iot-modal-chart {
-  margin-top: 1rem;
-  width: 100%;
-  height: 160px;
-  border-radius: 1rem;
-  background: rgba(148, 163, 184, 0.12);
-  overflow: hidden;
-}
-
-.iot-modal-chart svg {
-  width: 100%;
-  height: 160px;
-  display: block;
-}
-
-/* Clase para ocultar el modal completamente */
-.is-hidden {
-  display: none !important;
-}
-
-/* Mini–gráfica dentro de cada slot */
-.slot__sparkline {
-  width: 100%;
-  height: 28px;
-  margin-top: 0.5rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.08);
-  overflow: hidden;
-}
-
-/* El SVG de la sparkline ocupa todo el contenedor */
-.slot__sparkline svg {
-  width: 100%;
-  height: 28px;
-  display: block;
-}
-
-/* ===== Modal Telemetría IoT ===== */
-
-.iot-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.iot-modal {
-  width: min(480px, 92vw);
-  background: var(--bg, #f5f8fb);
-  color: var(--text, #0f172a);
-  border-radius: 1.25rem;
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.25);
-}
-
-.iot-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-
-.iot-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.iot-modal-subtitle {
-  font-size: 0.85rem;
-  color: var(--muted, #64748b);
-  margin-top: 0.15rem;
-}
-
-.iot-modal-close {
-  border: none;
-  background: transparent;
-  font-size: 1.25rem;
-  cursor: pointer;
-  line-height: 1;
-  color: #64748b;
-}
-
-.iot-modal-body {
-  font-size: 0.9rem;
-}
-
-.iot-modal-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.iot-modal-stat-label {
-  font-size: 0.75rem;
-  color: var(--muted, #64748b);
-}
-
-.iot-modal-stat-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.iot-modal-chart {
-  width: 100%;
-  height: 170px;
-  border-radius: 1rem;
-  background: rgba(148, 163, 184, 0.12);
-  overflow: hidden;
-}
-
-.is-hidden {
-  display: none !important;
-}
-
-/* ===== HOME ASSISTANT STYLE ===== */
 .ha-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -873,14 +414,24 @@ h1,h2,h3{margin:0}
   display: block;
 }
 
-/* Estados de los sensores */
+/* Estados de los sensores con bordes de color */
 .ha-card[data-key="temperature"] { border-left: 4px solid #ef4444; }
 .ha-card[data-key="power"] { border-left: 4px solid #8b5cf6; }
 .ha-card[data-key="voltage"] { border-left: 4px solid #eab308; }
 .ha-card[data-key="battery"] { border-left: 4px solid #22c55e; }
 .ha-card[data-key="lastCharge"] { border-left: 4px solid #3b82f6; }
 
-/* Modal Home Assistant */
+/* ===== MODAL HOME ASSISTANT ===== */
+.iot-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
 .ha-modal {
   background: var(--card);
   border-radius: 20px;
@@ -965,6 +516,137 @@ h1,h2,h3{margin:0}
   background: var(--bg);
   border-radius: 12px;
   overflow: hidden;
+}
+
+/* Clase para ocultar el modal completamente */
+.is-hidden {
+  display: none !important;
+}
+
+/* ===== Precios ===== */
+.pricing {
+  max-width: 1200px;
+  margin: 60px auto 80px;
+  padding: 0 20px 40px;
+}
+.pricing__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:18px;
+}
+.price{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:18px 18px 20px;
+  position:relative;
+}
+.price--featured{outline:3px solid var(--green)}
+.badge{
+  position:absolute;
+  top:-10px;right:16px;
+  background:linear-gradient(90deg,var(--brand-2),var(--brand-3));
+  padding:.35rem .6rem;
+  border-radius:8px;
+  color:#06202a;
+  font-weight:800;
+}
+.price__num{font-size:2.4rem;font-weight:800}
+.price__num span{font-size:1rem;color:var(--muted)}
+.price ul{list-style:none;padding:0;margin:14px 0 16px}
+.price li{
+  padding:6px 0;
+  border-bottom:1px dashed var(--stroke);
+  color:#2c3a4b;
+}
+
+/* ===== FooterX ===== */
+.footerX{
+  background:#2b3f52;
+  color:#e6f4ff;
+  padding:40px 18px 26px;
+  margin-top:80px;
+}
+.footerX__wrap{
+  max-width:1200px;
+  margin:0 auto;
+  background:#2b3f52;
+  border-radius:14px;
+}
+.footerX__grid{
+  display:grid;
+  gap:36px;
+  padding:22px;
+  grid-template-columns:repeat(4,1fr);
+}
+.fcol__title{
+  color:#34d399;
+  font-weight:800;
+  font-size:1.25rem;
+  margin:0 0 8px;
+}
+.fcol__line{
+  display:block;
+  width:60px;height:4px;
+  background:#34d399;
+  border-radius:3px;
+  margin-bottom:14px;
+}
+.fcol p{color:#cfe2f0;line-height:1.6;margin:0}
+.flist{list-style:none;margin:0;padding:0}
+.flist li{margin:10px 0;color:#d7e6f5}
+.flist a{
+  color:#eaf5ff;
+  text-decoration:none;
+  font-weight:600;
+}
+.flist a:hover{color:#34d399}
+.flist--contact li{line-height:1.5}
+
+.socialdots{
+  display:flex;
+  gap:12px;
+  margin-top:16px;
+}
+.socialdots span{
+  width:14px;height:14px;border-radius:50%;
+  background:#32495f;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);
+}
+.fsep{
+  border:0;
+  border-top:1px solid rgba(255,255,255,.12);
+  margin:14px 22px;
+}
+.fcopy{
+  color:#a9bed0;
+  text-align:center;
+  padding:10px 22px;
+  font-size:.92rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width:1024px){
+  .hero__inner{grid-template-columns:1fr}
+  .how2__grid{grid-template-columns:repeat(2,1fr)}
+  .ha-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:680px){
+  .menu{display:none}
+  .hamb{display:block}
+  .how2__grid{grid-template-columns:1fr}
+  .pricing__grid{grid-template-columns:1fr}
+  .ha-grid{grid-template-columns:1fr; padding:0 16px;}
+}
+@media (max-width:1000px){
+  .footerX__grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:620px){
+  .footerX__grid{grid-template-columns:1fr;text-align:center}
+  .fcol__line{margin-left:auto;margin-right:auto}
+  .socialdots{justify-content:center}
 }
 
 
