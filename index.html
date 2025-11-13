@@ -168,82 +168,70 @@
 
 
   <!-- ===== PANEL IoT ===== -->
-  <section id="panel" class="panel">
-    <div class="section__head">
-      <h2 class="iot-title">Nuestro Panel Interactivo IoT</h2>
-      <p class="section__sub">Visualiza los datos en tiempo real de nuestras estaciones inteligentes.</p>
-    </div>
+<section id="panel" class="panel">
+  <div class="section__head">
+    <h2 class="iot-title">Panel de Monitoreo IoT</h2>
+    <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
+  </div>
 
-    <!-- Bloques IoT -->
-    <div class="panel__intro">
-      <div class="iot-block">
-        <div class="iot-block-title">📊 Últimos datos IoT</div>
-       <p class="panel-text" data-iot="last-log">Conectando con servidor...</p>
+  <!-- Grid de sensores estilo Home Assistant -->
+  <div class="ha-grid" id="panelGrid">
+    
+    <!-- Temperatura -->
+    <div class="ha-card js-sensor-card" data-key="temperature">
+      <div class="ha-card__header">
+        <span class="ha-card__title">Temperatura</span>
+        <span class="ha-card__timestamp" data-iot="temp-time">Hace 2 min</span>
       </div>
+      <div class="ha-card__value">24.5 °C</div>
+      <div class="ha-card__sparkline" id="sparkline-temp"></div>
+    </div>
 
-      <div class="iot-block">
-        <div class="iot-block-title">💬 Tiempo real (WebSocket)</div>
-  <p class="panel-text" data-iot="ws-log">Esperando conexión...</p>
+    <!-- Potencia -->
+    <div class="ha-card js-sensor-card" data-key="power">
+      <div class="ha-card__header">
+        <span class="ha-card__title">Potencia</span>
+        <span class="ha-card__timestamp" data-iot="power-time">Hace 2 min</span>
+      </div>
+      <div class="ha-card__value">1.47 kW</div>
+      <div class="ha-card__sparkline" id="sparkline-power"></div>
+    </div>
 
+    <!-- Voltaje -->
+    <div class="ha-card js-sensor-card" data-key="voltage">
+      <div class="ha-card__header">
+        <span class="ha-card__title">Voltaje</span>
+        <span class="ha-card__timestamp" data-iot="voltage-time">Hace 2 min</span>
+      </div>
+      <div class="ha-card__value">220 V</div>
+      <div class="ha-card__sparkline" id="sparkline-voltage"></div>
+    </div>
+
+    <!-- Batería -->
+    <div class="ha-card js-sensor-card" data-key="battery">
+      <div class="ha-card__header">
+        <span class="ha-card__title">Batería</span>
+        <span class="ha-card__timestamp" data-iot="battery-time">Hace 2 min</span>
+      </div>
+      <div class="ha-card__value">77 %</div>
+      <div class="ha-card__sparkline" id="sparkline-battery"></div>
+      <div class="ha-card__actions">
+        <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
       </div>
     </div>
-<div class="panel__grid" id="panelGrid">
 
-  <!-- Temperatura -->
-  <div class="slot js-sensor-card" data-key="temperature">
-    <div class="slot__title">
-      <span class="dot dot--cyan"></span> Temperatura
+    <!-- Última Carga -->
+    <div class="ha-card js-sensor-card" data-key="lastCharge">
+      <div class="ha-card__header">
+        <span class="ha-card__title">Última carga</span>
+        <span class="ha-card__timestamp" data-iot="charge-time">Hace 2 min</span>
+      </div>
+      <div class="ha-card__value">41 min</div>
+      <div class="ha-card__sparkline" id="sparkline-charge"></div>
     </div>
-    <div class="slot__body">
-      <span class="skeleton slot__value" data-iot="temp">-- °C</span>
-      <!-- NUEVO: contenedor sparkline -->
-      <div class="slot__sparkline"></div>
-    </div>
+
   </div>
-
-  <!-- Potencia -->
-  <div class="slot js-sensor-card" data-key="power">
-    <div class="slot__title">
-      <span class="dot dot--violet"></span> Potencia
-    </div>
-    <div class="slot__body">
-      <span class="skeleton slot__value" data-iot="power">-- kW</span>
-      <!-- NUEVO -->
-      <div class="slot__sparkline"></div>
-    </div>
-  </div>
-
-  <div class="slot js-sensor-card" data-key="voltage">
-    <div class="slot__title">
-      <span class="dot dot--yellow"></span> Voltaje
-    </div>
-    <div class="slot__body">
-      <span class="skeleton slot__value" data-iot="voltage">-- V</span>
-      <div class="slot__sparkline"></div>
-    </div>
-  </div>
-
-  <div class="slot js-sensor-card" data-key="last-charge">
-    <div class="slot__title">
-      <span class="dot dot--green"></span> Última carga
-    </div>
-    <div class="slot__body">
-      <span class="skeleton slot__value" data-iot="last-charge">-- min</span>
-      <div class="slot__sparkline"></div>
-    </div>
-  </div>
-
-  <div class="slot js-sensor-card" data-key="battery">
-    <div class="slot__title">
-      <span class="dot dot--blue"></span> Batería
-    </div>
-    <div class="slot__body">
-      <span class="skeleton slot__value" data-iot="battery">-- %</span>
-      <div class="slot__sparkline"></div>
-    </div>
-  </div>
-
-</div>
+</section>
 
 
   <!-- ===== PRECIOS ===== -->
@@ -599,6 +587,7 @@
   </footer>
 
 </html>
+
 
 
 
