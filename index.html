@@ -302,6 +302,230 @@
     </div>
   </div>
 </div>
+    <script>
+  // ===============================
+  // 1. "Base de datos" en memoria
+  // ===============================
+  const sensors = {
+    "spot-1": {
+      name: "Puesto 1 – Estación Norte",
+      unit: "%",
+      history: [],
+      statusLabel: "Libre"
+    },
+    "spot-2": {
+      name: "Puesto 2 – Estación Norte",
+      unit: "%",
+      history: [],
+      statusLabel: "Ocupado"
+    },
+    "energy-1": {
+      name: "Estación Solar A",
+      unit: "W",
+      history: [],
+      statusLabel: "Operativa"
+    }
+    // 👉 Agrega más sensores según tus tarjetas
+  };
+
+  // Crear valores iniciales aleatorios
+  Object.keys(sensors).forEach(id => {
+    const base = Math.random() * 50 + 30; // 30–80
+    for (let i = 0; i < 24; i++) {
+      const jitter = (Math.random() - 0.5) * 10;
+      sensors[id].history.push(Math.max(0, base + jitter));
+    }
+  });
+
+  // ========================================
+  // 2. Renderizar sparkline en un contenedor
+  // ========================================
+  function renderSparkline(container, data) {
+    if (!container || !data || data.length === 0) return;
+
+    const width = container.clientWidth || 160;
+    const height = 40;
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1 || 1)) * width;
+        const y = height - ((value - min) / range) * height;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    const svg = `
+      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <polyline
+          points="${points}"
+          fill="none"
+          stroke="url(#sparkGradient)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <defs>
+          <linearGradient id="sparkGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#22d3ee"/>
+            <stop offset="100%" stop-color="#0ea5e9"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    `;
+    container.innerHTML = svg;
+  }
+
+  // ===============================================
+  // 3. Modal: abrir con historial del sensor
+  // ===============================================
+  const modalBackdrop = document.getElementById("iot-modal-backdrop");
+  const modalTitle = document.getElementById("iot-modal-title");
+  const modalChart = document.getElementById("iot-modal-chart");
+  const modalClose = document.getElementById("iot-modal-close");
+
+  function openHistoryModal(sensorId) {
+    const sensor = sensors[sensorId];
+    if (!sensor) return;
+
+    modalTitle.textContent = sensor.name || "Historial del sensor";
+    renderHistoryChart(sensorId, modalChart);
+    modalBackdrop.classList.remove("is-hidden");
+  }
+
+  function closeHistoryModal() {
+    modalBackdrop.classList.add("is-hidden");
+  }
+
+  if (modalBackdrop && modalClose) {
+    modalClose.addEventListener("click", closeHistoryModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeHistoryModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeHistoryModal();
+    });
+  }
+
+  function renderHistoryChart(sensorId, container) {
+    const sensor = sensors[sensorId];
+    if (!sensor || !container) return;
+
+    const data = sensor.history;
+    const width = container.clientWidth || 320;
+    const height = 160;
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+
+    const points = data
+      .map((value, index) => {
+        const x = (index / (data.length - 1 || 1)) * width;
+        const y = height - ((value - min) / range) * height;
+        return `${x},${y}`;
+      })
+      .join(" ");
+
+    const svg = `
+      <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(34,211,238,0.4)"/>
+            <stop offset="100%" stop-color="rgba(14,165,233,0)"/>
+          </linearGradient>
+        </defs>
+        <path
+          d="M0,${height} L${points.replace(/ /g, " L")} L${width},${height} Z"
+          fill="url(#historyGradient)"
+          stroke="none"
+        ></path>
+        <polyline
+          points="${points}"
+          fill="none"
+          stroke="#22d3ee"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    `;
+    container.innerHTML = svg;
+  }
+
+  // =========================================
+  // 4. Vincular tarjetas reales de tu panel
+  // =========================================
+  function initIoTCards() {
+    const cards = document.querySelectorAll(".js-sensor-card");
+    cards.forEach(card => {
+      const sensorId = card.getAttribute("data-sensor-id");
+      const sensor = sensors[sensorId];
+      if (!sensor) return;
+
+      // Sparkline
+      const sparkContainer = card.querySelector(".iot-sparkline");
+      if (sparkContainer) {
+        renderSparkline(sparkContainer, sensor.history);
+      }
+
+      // Click para abrir historial
+      card.style.cursor = "pointer";
+      card.addEventListener("click", () => openHistoryModal(sensorId));
+    });
+  }
+
+  // =========================================
+  // 5. Simular actualización "en vivo"
+  // =========================================
+  function simulateLiveUpdates() {
+    setInterval(() => {
+      Object.keys(sensors).forEach(sensorId => {
+        const sensor = sensors[sensorId];
+        const last = sensor.history[sensor.history.length - 1] || 50;
+        const jitter = (Math.random() - 0.5) * 8;
+        const next = Math.max(0, Math.min(100, last + jitter));
+
+        sensor.history.push(next);
+        if (sensor.history.length > 24) {
+          sensor.history.shift();
+        }
+
+        // Actualizar sparkline en la tarjeta
+        const card = document.querySelector(
+          `.js-sensor-card[data-sensor-id="${sensorId}"]`
+        );
+        if (card) {
+          const sparkContainer = card.querySelector(".iot-sparkline");
+          if (sparkContainer) {
+            renderSparkline(sparkContainer, sensor.history);
+          }
+
+          const valueEl = card.querySelector(".iot-current-value");
+          if (valueEl) {
+            valueEl.textContent = `${next.toFixed(0)} ${sensor.unit}`;
+          }
+        }
+
+        // Si el modal está abierto para este sensor, refrescar la gráfica grande
+        if (!modalBackdrop.classList.contains("is-hidden")) {
+          const currentTitle = modalTitle.textContent;
+          if (currentTitle === sensor.name) {
+            renderHistoryChart(sensorId, modalChart);
+          }
+        }
+      });
+    }, 4000); // cada 4 segundos
+  }
+
+  // Inicializar cuando cargue la página
+  window.addEventListener("DOMContentLoaded", () => {
+    initIoTCards();
+    simulateLiveUpdates();
+  });
+</script>
+
 
 </body>
   
@@ -356,6 +580,7 @@
   </footer>
 
 </html>
+
 
 
 
