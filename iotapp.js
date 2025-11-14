@@ -66,119 +66,70 @@ window.ECOVOLT_PANEL_MOUNT = function mount(htmlByKey){
     if (cell) cell.innerHTML = html;
   });
 };
-// ========== INTEGRACIÓN CON BACKEND IOT ECOVOLT ==========
+// ===========================
+// 🔌 INTEGRACIÓN CON BACKEND IOT
+// ===========================
 
-// Tomar los endpoints desde config.js
-const { ENDPOINTS } = window.ECOVOLT_CONFIG || {};
+const { ENDPOINTS } = window.ECOVOLT_CONFIG;
 
-// 1. Cargar estado actual (tarjetas principales)
+// Helpers para actualizar tarjetas UI
+function updateCard(key, value, timestamp) {
+  // Card principal con data-key="temperature", "power", etc.
+  const card = document.querySelector(`.ha-card[data-key="${key}"]`);
+  if (!card) return;
+
+  // Valor principal
+  const valueEl = card.querySelector(".ha-card__value");
+  if (valueEl) valueEl.textContent = value;
+
+  // Timestamp tipo “Hace 2 min”
+  const timeEl = card.querySelector(".ha-card__timestamp");
+  if (timeEl) {
+    const date = new Date(timestamp);
+    timeEl.textContent = `Actualizado: ${date.toLocaleTimeString()}`;
+  }
+}
+
+// 1️⃣ Cargar estado actual desde el backend
 async function cargarEstadoActual() {
-  if (!ENDPOINTS?.STATE) return;
-
   try {
     const res = await fetch(ENDPOINTS.STATE);
-    if (!res.ok) throw new Error("Error al obtener estado");
-    const data = await res.json();
+    if (!res.ok) throw new Error("Error cargando /api/state");
 
-    // Ejemplo de estructura del backend:
+    const data = await res.json(); 
+    // Data esperada:
     // { temperature, power, voltage, battery, lastChargeMinutes, timestamp }
 
-    // Construimos el HTML para cada "slot" usando la llave data-key
-    const cards = {
-      temperature: `
-        <p class="slot__label">Temperatura ambiente</p>
-        <p class="slot__value">${data.temperature.toFixed(1)} °C</p>
-        <p class="slot__meta">Actualizado: ${new Date(data.timestamp).toLocaleTimeString()}</p>
-      `,
-      power: `
-        <p class="slot__label">Consumo energético</p>
-        <p class="slot__value">${data.power.toFixed(2)} kW</p>
-        <p class="slot__meta">Voltaje: ${data.voltage.toFixed(1)} V</p>
-      `,
-      battery: `
-        <p class="slot__label">Nivel de batería</p>
-        <p class="slot__value">${data.battery.toFixed(1)} %</p>
-        <p class="slot__meta">Minutos desde última carga: ${data.lastChargeMinutes}</p>
-      `
-      // Si tienes más slots (ej. "general", "status", etc.) puedes agregarlos aquí.
-    };
+    // ==========================
+    // Temperatura
+    // ==========================
+    updateCard(
+      "temperature",
+      `${data.temperature.toFixed(1)} °C`,
+      data.timestamp
+    );
 
-    // Usamos el helper que ya creaste para inyectar el HTML en las tarjetas
-    if (window.ECOVOLT_PANEL_MOUNT) {
-      window.ECOVOLT_PANEL_MOUNT(cards);
-    }
+    // ==========================
+    // Potencia
+    // ==========================
+    updateCard(
+      "power",
+      `${data.power.toFixed(2)} kW`,
+      data.timestamp
+    );
 
+    // ⚡ Si luego agregas “voltaje”, “batería”, los conectamos igual.
+    
   } catch (err) {
-    console.error("Error cargando estado actual:", err);
+    console.error("Error en cargarEstadoActual:", err);
   }
 }
 
-// 2. Cargar clima real
-async function cargarClima() {
-  if (!ENDPOINTS?.WEATHER) return;
+// Llamar al cargar la página
+cargarEstadoActual();
 
-  try {
-    const res = await fetch(ENDPOINTS.WEATHER);
-    if (!res.ok) throw new Error("Error al obtener clima");
-    const w = await res.json();
+// Actualizar cada 5 segundos
+setInterval(cargarEstadoActual, 5000);
 
-    // Esperado del backend:
-    // { temperature, humidity, pressure, description, windSpeed, ... }
-
-    const html = `
-      <p class="slot__label">Clima en tiempo real</p>
-      <p class="slot__value">${w.temperature.toFixed(1)} °C</p>
-      <p class="slot__meta">${w.description || "Condiciones actuales"}</p>
-      <p class="slot__meta">Humedad: ${w.humidity?.toFixed ? w.humidity.toFixed(0) : w.humidity}%</p>
-    `;
-
-    const cell = document.querySelector('.slot[data-key="weather"] .slot__body');
-    if (cell) cell.innerHTML = html;
-
-  } catch (err) {
-    console.error("Error cargando clima:", err);
-  }
-}
-
-// 3. Cargar lista de dispositivos IoT
-async function cargarDispositivos() {
-  if (!ENDPOINTS?.DEVICES) return;
-
-  try {
-    const res = await fetch(ENDPOINTS.DEVICES);
-    if (!res.ok) throw new Error("Error al obtener dispositivos");
-    const payload = await res.json();
-
-    const list = Object.values(payload.devices || {});
-    const cell = document.querySelector('.slot[data-key="devices"] .slot__body');
-    if (!cell) return;
-
-    cell.innerHTML = `
-      <p class="slot__label">Fuentes IoT conectadas</p>
-      <ul class="device-list">
-        ${list.map(d => `
-          <li class="device-list__item">
-            <strong>${d.id}</strong><br>
-            <span>${d.description}</span><br>
-            <span>Protocolo: ${d.protocol}</span>
-          </li>
-        `).join('')}
-      </ul>
-    `;
-  } catch (err) {
-    console.error("Error cargando dispositivos:", err);
-  }
-}
-
-// 4. Inicialización: llamar todo cuando cargue la página
-document.addEventListener("DOMContentLoaded", () => {
-  cargarEstadoActual();
-  cargarClima();
-  cargarDispositivos();
-
-  // Refrescar estado y clima cada 5 segundos
-  setInterval(cargarEstadoActual, 5000);
-  setInterval(cargarClima, 60000); // clima cada 1 minuto
-});
 
 
