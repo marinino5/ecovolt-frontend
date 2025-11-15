@@ -376,6 +376,33 @@ document.querySelectorAll(".js-sensor-card").forEach(card => {
   });
 });
 
+// ===========================
+// 🔁 RETROCESO: Forzar carga de batería
+// ===========================
+window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
+  if (!EP.CONTROL) return;
+  try {
+    const res = await fetch(EP.CONTROL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        deviceId: "ecovolt_digital_twin", // o "smart_plug_01" / "esp32_station_01" si quieres
+        action: "force_charge",
+        value: 100 // forzar a 100 %
+      })
+    });
+
+    const data = await res.json();
+    console.log("Respuesta control:", data);
+
+    // refrescar estado para que se vea el cambio en la tarjeta
+    await cargarEstadoActual();
+  } catch (err) {
+    console.error("Error aplicando retroceso de carga:", err);
+  }
+};
+
+
 
 
 
