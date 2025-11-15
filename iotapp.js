@@ -203,6 +203,179 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(cargarEstadoActual, 5000);
 });
 
+// ===========================
+// 📈 HISTÓRICOS Y GRÁFICAS
+// ===========================
+
+const ECO_CONFIG = window.ECOVOLT_CONFIG || {};
+const EP = ECO_CONFIG.ENDPOINTS || {};
+
+// Mapeo entre data-key del front y nombre del sensor en backend
+const SENSOR_MAP = {
+  temperature: "temperature",
+  power: "power",
+  voltage: "voltage",
+  battery: "battery",
+  lastCharge: "lastChargeMinutes"
+};
+
+// ------ Utilidad para pedir histórico ------
+async function fetchHistory(sensorKey, hours = 24) {
+  const sensorName = SENSOR_MAP[sensorKey];
+  if (!sensorName || !EP.HISTORY) return null;
+
+  const url = `${EP.HISTORY}/${sensorName}?hours=${hours}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Error en historial ${sensorName}`);
+  const payload = await res.json(); // { sensor, data:[{t,v}], ... }
+  return payload.data || [];
+}
+
+// ------ Dibujar sparkline simple en SVG ------
+function renderSparkline(containerId, points) {
+  const container = document.getElementById(containerId);
+  if (!container || !points.length) return;
+
+  container.innerHTML = ""; // limpiar
+
+  const width = container.clientWidth || 220;
+  const height = container.clientHeight || 60;
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  const values = points.map(p => p.v);
+  const min = Math.min(...values);
+  const max = Math.max(...values) || 1;
+
+  const pathPoints = points.map((p, i) => {
+    const x = (i / (points.length - 1 || 1)) * width;
+    const norm = (p.v - min) / (max - min || 1);
+    const y = height - norm * (height - 4) - 2;
+    return `${x},${y}`;
+  }).join(" ");
+
+  const poly = document.createElementNS(svgNS, "polyline");
+  poly.setAttribute("points", pathPoints);
+  poly.setAttribute("fill", "none");
+  poly.setAttribute("stroke", "currentColor");
+  poly.setAttribute("stroke-width", "2");
+
+  svg.appendChild(poly);
+  container.appendChild(svg);
+}
+
+// ------ Estadísticos básicos ------
+function statsFromHistory(points) {
+  if (!points.length) return null;
+  const vals = points.map(p => p.v);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const avg = vals.reduce((a,b)=>a+b,0) / vals.length;
+  const last = vals[vals.length - 1];
+  return { min, max, avg, last };
+}
+
+// ===========================
+// Modal de detalle por sensor
+// ===========================
+
+// Asumimos que ya tienes un modal en HTML con estos IDs.
+// Si tienen otros, solo cambia los ids aquí:
+const modal = document.getElementById("sensorModal");
+const modalTitle = document.getElementById("modal-title");
+const modalSubtitle = document.getElementById("modal-subtitle");
+const modalCurrent = document.getElementById("modal-current");
+const modalMin = document.getElementById("modal-min");
+const modalMax = document.getElementById("modal-max");
+const modalAvg = document.getElementById("modal-avg");
+const modalChart = document.getElementById("modal-sparkline");
+
+function openSensorModal(key, historyPoints) {
+  if (!modal) return;
+  const st = statsFromHistory(historyPoints);
+  if (!st) return;
+
+  // Títulos según sensor
+  const titles = {
+    temperature: "Temperatura",
+    power: "Potencia",
+    voltage: "Voltaje",
+    battery: "Batería",
+    lastCharge: "Última carga"
+  };
+
+  if (modalTitle) modalTitle.textContent = titles[key] || key;
+  if (modalSubtitle) {
+    modalSubtitle.textContent = "Comportamiento en las últimas 24 horas";
+  }
+
+  // Formatear unidades
+  const formatters = {
+    temperature: v => `${v.toFixed(1)} °C`,
+    power: v => `${v.toFixed(2)} kW`,
+    voltage: v => `${v.toFixed(1)} V`,
+    battery: v => `${v.toFixed(1)} %`,
+    lastCharge: v => `${v.toFixed(0)} min`
+  };
+  const fmt = formatters[key] || (v => v.toFixed(2));
+
+  if (modalCurrent) modalCurrent.textContent = fmt(st.last);
+  if (modalMin) modalMin.textContent = fmt(st.min);
+  if (modalMax) modalMax.textContent = fmt(st.max);
+  if (modalAvg) modalAvg.textContent = fmt(st.avg);
+
+  // Gráfica principal dentro del modal
+  if (modalChart) {
+    modalChart.innerHTML = "";
+    const backup = document.createElement("div");
+    backup.id = "modal-sparkline-inner";
+    backup.style.width = "100%";
+    backup.style.height = "160px";
+    modalChart.appendChild(backup);
+    renderSparkline("modal-sparkline-inner", historyPoints);
+  }
+
+  modal.classList.add("is-open");
+}
+
+// Cerrar modal (asumiendo un botón con id close-sensor-modal)
+const closeBtn = document.getElementById("close-sensor-modal");
+if (closeBtn && modal) {
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("is-open");
+  });
+}
+
+// ===========================
+// Click en tarjetas para abrir modal + sparkline pequeño
+// ===========================
+document.querySelectorAll(".js-sensor-card").forEach(card => {
+  card.addEventListener("click", async () => {
+    const key = card.dataset.key;
+    try {
+      const history = await fetchHistory(key, 24);
+      // sparkline pequeño
+      const sparkId = {
+        temperature: "sparkline-temp",
+        power: "sparkline-power",
+        voltage: "sparkline-voltage",
+        battery: "sparkline-battery",
+        lastCharge: "sparkline-charge"
+      }[key];
+      if (sparkId) renderSparkline(sparkId, history);
+
+      // abrir modal con misma data
+      openSensorModal(key, history);
+    } catch (e) {
+      console.error("Error al cargar historial para", key, e);
+    }
+  });
+});
+
 
 
 
