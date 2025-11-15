@@ -496,15 +496,15 @@ const sensorsConfig = {
         max: 100,
         normalRange: [20, 90]
     },
-    lastCharge: { 
-        name: "Última carga", 
-        unit: "min", 
-        color: "#3b82f6", 
-        description: "Tiempo desde la última carga completa",
-        min: 0,
-        max: 1440,
-        normalRange: [0, 120]
-    }
+ lastCharge: { 
+    name: "Última carga", 
+    unit: "min", 
+    color: "#3b82f6", 
+    description: "Tiempo desde la última carga completa",
+    min: 0,
+    max: 240, // 4 horas máximo
+    normalRange: [0, 120] // Normal: 0-2 horas
+}
 };
 
 // Almacenamiento de datos históricos del backend
@@ -1042,3 +1042,4 @@ window.updateSensorData = function(sensorId, dataPoints) {
 
 </body>
 </html>
+
