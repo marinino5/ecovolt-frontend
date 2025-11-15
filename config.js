@@ -13,6 +13,6 @@ window.ECOVOLT_CONFIG = {
         CONTROL: `${BACKEND_HTTP}/api/control`,
         WEATHER: `${BACKEND_HTTP}/api/weather`
     },
-    // WebSocket (más adelante lo conectamos si lo necesitas)
+    // WebSocket para datos en tiempo real
     WS_URL: "ws://iotunab.eastus2.cloudapp.azure.com:30081"
 };
