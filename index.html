@@ -812,37 +812,119 @@
       });
     }
 
-    // Render sparkline function
-    function renderSparkline(container, data, color) {
-      if (!container || data.length < 2) return;
-      
-      const width = container.clientWidth || 200;
-      const height = 40;
-      const min = Math.min(...data);
-      const max = Math.max(...data);
-      const range = max - min || 1;
-      
-      const points = data.map((value, index) => {
-        const x = (index / (data.length - 1)) * width;
-        const y = height - ((value - min) / range) * height;
-        return `${x},${y}`;
-      }).join(' ');
-      
-      container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="grad-${color}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${color}" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="${color}" stop-opacity="0.1"/>
-            </linearGradient>
-          </defs>
-          <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" 
-                fill="url(#grad-${color})"/>
-          <polyline points="${points}" fill="none" stroke="${color}" 
-                    stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `;
+   function renderSparkline(container, data, color, options = {}) {
+  if (!container || !data || data.length < 2) return;
+
+  const big = options.big || false;          // false = mini sparkline en la tarjeta
+  const unit = options.unit || "";           // para las etiquetas del eje Y
+
+  const width = container.clientWidth || (big ? 500 : 200);
+  const height = big ? 180 : 40;
+
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+
+  // ----- Ejes y grid solo para el gráfico grande (modal) -----
+  if (big) {
+    const paddingLeft = 40;
+    const paddingBottom = 20;
+    const paddingTop = 10;
+    const chartWidth = width - paddingLeft - 10;
+    const chartHeight = height - paddingTop - paddingBottom;
+
+    // Fondo
+    const bg = document.createElementNS(svgNS, "rect");
+    bg.setAttribute("x", paddingLeft);
+    bg.setAttribute("y", paddingTop);
+    bg.setAttribute("width", chartWidth);
+    bg.setAttribute("height", chartHeight);
+    bg.setAttribute("fill", "#f8fafc");
+    svg.appendChild(bg);
+
+    // Grid + etiquetas eje Y (4 líneas)
+    const steps = 4;
+    for (let i = 0; i <= steps; i++) {
+      const y = paddingTop + (chartHeight / steps) * i;
+      const val = max - (range / steps) * i;
+
+      const line = document.createElementNS(svgNS, "line");
+      line.setAttribute("x1", paddingLeft);
+      line.setAttribute("y1", y);
+      line.setAttribute("x2", paddingLeft + chartWidth);
+      line.setAttribute("y2", y);
+      line.setAttribute("stroke", "#e2e8f0");
+      line.setAttribute("stroke-width", "1");
+      line.setAttribute("stroke-dasharray", "4 4");
+      svg.appendChild(line);
+
+      const label = document.createElementNS(svgNS, "text");
+      label.setAttribute("x", paddingLeft - 6);
+      label.setAttribute("y", y + 4);
+      label.setAttribute("text-anchor", "end");
+      label.setAttribute("font-size", "10");
+      label.setAttribute("fill", "#64748b");
+      label.textContent = `${val.toFixed(1)}${unit ? " " + unit : ""}`;
+      svg.appendChild(label);
     }
+
+    // Construir puntos escalados al área interna
+    const points = data.map((value, index) => {
+      const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
+      const y = paddingTop + chartHeight - ((value - min) / range) * chartHeight;
+      return `${x},${y}`;
+    }).join(" ");
+
+    // Relleno
+    const pathFill = document.createElementNS(svgNS, "path");
+    pathFill.setAttribute(
+      "d",
+      `M${paddingLeft},${paddingTop + chartHeight} L${points.replace(/ /g, " L")} L${paddingLeft + chartWidth},${paddingTop + chartHeight} Z`
+    );
+    pathFill.setAttribute("fill", color + "20"); // color con algo de transparencia
+    svg.appendChild(pathFill);
+
+    // Línea
+    const poly = document.createElementNS(svgNS, "polyline");
+    poly.setAttribute("points", points);
+    poly.setAttribute("fill", "none");
+    poly.setAttribute("stroke", color);
+    poly.setAttribute("stroke-width", "2");
+    poly.setAttribute("stroke-linecap", "round");
+    svg.appendChild(poly);
+
+    container.innerHTML = "";
+    container.appendChild(svg);
+    return;
+  }
+
+  // ----- Modo mini sparkline (tarjetas) -----
+  const miniHeight = height;
+  const miniWidth = width;
+  const miniPoints = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * miniWidth;
+    const y = miniHeight - ((value - min) / range) * miniHeight;
+    return `${x},${y}`;
+  }).join(" ");
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${miniWidth} ${miniHeight}" preserveAspectRatio="none">
+      <path d="M0,${miniHeight} L${miniPoints.replace(/ /g, " L")} L${miniWidth},${miniHeight} Z"
+            fill="${color}20"/>
+      <polyline points="${miniPoints}" fill="none" stroke="${color}"
+                stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+ 
 
     // Función para abrir modal
     function openTelemetryModal(sensorId) {
@@ -1254,6 +1336,7 @@
   </script>
 </body>
 </html>
+
 
 
 
