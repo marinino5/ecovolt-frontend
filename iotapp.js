@@ -431,7 +431,12 @@ document.addEventListener("keydown", function(e) {
 // Click en tarjetas para abrir modal + sparkline pequeño
 // ===========================
 document.querySelectorAll(".js-sensor-card").forEach(card => {
-  card.addEventListener("click", async () => {
+  card.addEventListener("click", async (e) => {
+    // ⛔ EVITAR que los clicks en botones abran el modal
+    if (e.target.closest('.ha-card__actions') || e.target.classList.contains('ha-btn')) {
+      return; // No hacer nada si el click viene de un botón
+    }
+    
     const key = card.dataset.key;
     try {
       const history = await fetchHistory(key, 24);
@@ -512,3 +517,4 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }, 1000);
 });
+
