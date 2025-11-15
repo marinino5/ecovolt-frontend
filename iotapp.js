@@ -1,3 +1,4 @@
+// iotapp.js - VERSIÓN COMPLETA CORREGIDA
 // Smooth scroll + resaltado de sección actual
 const links = [...document.querySelectorAll('.menu a')];
 const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
@@ -68,7 +69,7 @@ window.ECOVOLT_PANEL_MOUNT = function mount(htmlByKey){
 };
 
 // ===========================
-// 🔌 INTEGRACIÓN CON BACKEND IOT ECOVOLT
+// 🔌 INTEGRACIÓN CON BACKEND IOT ECOVOLT - VERSIÓN CORREGIDA
 // ===========================
 
 // Asegurarnos de que la config exista
@@ -99,7 +100,81 @@ function formatTimestamp(ts) {
   }
 }
 
-// 1️⃣ Estado actual (todas las tarjetas numéricas)
+// ✅ VALIDACIÓN ROBUSTA DE DATOS DE BATERÍA (NUEVO)
+function validateBatteryData(data) {
+  const validated = { ...data };
+  
+  // Validar lastChargeMinutes (NUNCA negativo)
+  if (validated.lastChargeMinutes < 0) {
+    console.warn('⚠️ Minutos negativos detectados:', validated.lastChargeMinutes, '-> corrigiendo a 0');
+    validated.lastChargeMinutes = 0;
+  }
+  
+  // Validar batería (0-100%)
+  if (validated.battery < 0) {
+    validated.battery = 0;
+  } else if (validated.battery > 100) {
+    validated.battery = 100;
+  }
+  
+  // Limitar lastChargeMinutes a máximo 480 min (8 horas)
+  if (validated.lastChargeMinutes > 480) {
+    validated.lastChargeMinutes = 480;
+  }
+  
+  return validated;
+}
+
+// ✅ FORMATEO INTELIGENTE DEL TIEMPO DE CARGA (NUEVO)
+function formatLastChargeTime(minutes, batteryLevel) {
+  // Si está cargando o la batería está llena, mostrar estado especial
+  if (minutes < 5) {
+    return batteryLevel >= 95 ? 'Completa' : 'Cargando...';
+  }
+  
+  // Si son más de 60 minutos, mostrar en horas
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+  }
+  
+  // Menos de 60 minutos, mostrar solo minutos
+  return `${Math.round(minutes)} min`;
+}
+
+// ✅ DETECTAR Y MOSTRAR TENDENCIA DE BATERÍA (NUEVO)
+let lastBatteryLevel = null;
+
+function updateBatteryTrend(currentBattery) {
+  if (lastBatteryLevel === null) {
+    lastBatteryLevel = currentBattery;
+    return;
+  }
+  
+  const trendElement = document.querySelector('.battery-trend');
+  if (!trendElement) return;
+  
+  const difference = currentBattery - lastBatteryLevel;
+  
+  if (difference > 0.1) {
+    // Batería subiendo
+    trendElement.textContent = 'Tendencia: subiendo ↗';
+    trendElement.style.color = '#22c55e';
+  } else if (difference < -0.1) {
+    // Batería bajando
+    trendElement.textContent = 'Tendencia: bajando ↘';
+    trendElement.style.color = '#ef4444';
+  } else {
+    // Batería estable
+    trendElement.textContent = 'Tendencia: estable →';
+    trendElement.style.color = '#6b7280';
+  }
+  
+  lastBatteryLevel = currentBattery;
+}
+
+// 1️⃣ ESTADO ACTUAL (TODAS LAS TARJETAS NUMÉRICAS) - VERSIÓN CORREGIDA
 async function cargarEstadoActual() {
   if (!ENDPOINTS.STATE) {
     console.log('🌐 Modo estático - Backend no configurado');
@@ -116,22 +191,30 @@ async function cargarEstadoActual() {
     if (!res.ok) throw new Error(`Backend respondió con error: ${res.status}`);
 
     const data = await res.json();
-    const tsText = formatTimestamp(data.timestamp);
+    
+    // ✅ VALIDACIÓN CRÍTICA DE DATOS
+    const validatedData = validateBatteryData(data);
+    
+    const tsText = formatTimestamp(validatedData.timestamp);
 
     // Temperatura
-    updateCard("temperature", `${data.temperature.toFixed(1)} °C`, tsText);
+    updateCard("temperature", `${validatedData.temperature.toFixed(1)} °C`, tsText);
 
     // Potencia
-    updateCard("power", `${data.power.toFixed(2)} kW`, tsText);
+    updateCard("power", `${validatedData.power.toFixed(2)} kW`, tsText);
 
     // Voltaje
-    updateCard("voltage", `${data.voltage.toFixed(1)} V`, tsText);
+    updateCard("voltage", `${validatedData.voltage.toFixed(1)} V`, tsText);
 
     // Batería
-    updateCard("battery", `${data.battery.toFixed(1)} %`, tsText);
+    updateCard("battery", `${validatedData.battery.toFixed(1)} %`, tsText);
 
-    // Última carga (en minutos)
-    updateCard("lastCharge", `${data.lastChargeMinutes} min`, tsText);
+    // ✅ ÚLTIMA CARGA CORREGIDA (sin negativos, con lógica inteligente)
+    const chargeDisplay = formatLastChargeTime(validatedData.lastChargeMinutes, validatedData.battery);
+    updateCard("lastCharge", chargeDisplay, tsText);
+
+    // ✅ ACTUALIZAR TENDENCIA DE BATERÍA
+    updateBatteryTrend(validatedData.battery);
 
     // Indicador de conexión exitosa
     document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
@@ -150,7 +233,7 @@ async function cargarEstadoActual() {
   }
 }
 
-// 2️⃣ Inicializar cuando cargue el DOM
+// 2️⃣ INICIALIZAR CUANDO CARGUE EL DOM
 document.addEventListener("DOMContentLoaded", () => {
   cargarEstadoActual();
   // Actualizar cada 5 s
@@ -323,7 +406,15 @@ function openSensorModal(key, historyPoints) {
     power: v => `${v.toFixed(2)} kW`,
     voltage: v => `${v.toFixed(1)} V`,
     battery: v => `${v.toFixed(1)} %`,
-    lastCharge: v => `${Math.round(v)} min`
+    lastCharge: v => {
+      if (v < 5) return 'Cargando...';
+      if (v >= 60) {
+        const hours = Math.floor(v / 60);
+        const mins = v % 60;
+        return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+      }
+      return `${Math.round(v)} min`;
+    }
   };
   const fmt = formatters[key] || (v => v.toFixed(2));
 
@@ -454,7 +545,7 @@ document.querySelectorAll(".js-sensor-card").forEach(card => {
 });
 
 // ===========================
-// 🔁 RETROCESO: Forzar carga de batería MEJORADO
+// 🔁 RETROCESO: Forzar carga de batería MEJORADO Y CORREGIDO
 // ===========================
 window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
   console.log('⚡ Iniciando carga forzada...');
@@ -465,8 +556,9 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
     // Efecto visual mejorado
     const batteryCard = document.querySelector('[data-key="battery"]');
     const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
+    const lastChargeCard = document.querySelector('[data-key="lastCharge"] .ha-card__value');
     
-    if (batteryCard && batteryValue) {
+    if (batteryCard && batteryValue && lastChargeCard) {
       // Animación de carga
       batteryCard.style.transition = 'all 0.5s ease';
       batteryCard.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
@@ -477,12 +569,24 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
       batteryValue.style.color = '#16a34a';
       batteryValue.style.fontWeight = 'bold';
       
+      // ✅ RESETEAR LAST CHARGE A "CARGANDO..."
+      lastChargeCard.textContent = 'Cargando...';
+      lastChargeCard.style.color = '#16a34a';
+      
+      // ✅ ACTUALIZAR TENDENCIA
+      const trendElement = document.querySelector('.battery-trend');
+      if (trendElement) {
+        trendElement.textContent = 'Tendencia: subiendo ↗';
+        trendElement.style.color = '#22c55e';
+      }
+      
       // Restaurar después de 3 segundos
       setTimeout(() => {
         batteryCard.style.background = '';
         batteryCard.style.boxShadow = '';
         batteryValue.style.color = '';
         batteryValue.style.fontWeight = '';
+        lastChargeCard.style.color = '';
         console.log('✅ Carga simulada completada');
       }, 3000);
     }
@@ -509,11 +613,23 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
       // Efecto visual de éxito
       const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
       const batteryCard = document.querySelector('[data-key="battery"]');
+      const lastChargeCard = document.querySelector('[data-key="lastCharge"] .ha-card__value');
+      const trendElement = document.querySelector('.battery-trend');
       
-      if (batteryValue && batteryCard) {
+      if (batteryValue && batteryCard && lastChargeCard) {
         batteryValue.textContent = '100 %';
         batteryValue.style.color = '#16a34a';
         batteryValue.style.fontWeight = 'bold';
+        
+        // ✅ RESETEAR LAST CHARGE
+        lastChargeCard.textContent = 'Cargando...';
+        lastChargeCard.style.color = '#16a34a';
+        
+        // ✅ ACTUALIZAR TENDENCIA
+        if (trendElement) {
+          trendElement.textContent = 'Tendencia: subiendo ↗';
+          trendElement.style.color = '#22c55e';
+        }
         
         batteryCard.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
         batteryCard.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.3)';
@@ -523,6 +639,7 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
           batteryValue.style.fontWeight = '';
           batteryCard.style.background = '';
           batteryCard.style.boxShadow = '';
+          lastChargeCard.style.color = '';
         }, 3000);
       }
       
@@ -557,4 +674,17 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
   }
 };
 
-
+// ===========================
+// ✅ INICIALIZACIÓN DE TENDENCIA AL CARGAR
+// ===========================
+document.addEventListener("DOMContentLoaded", function() {
+  // Asegurarse de que exista el elemento de tendencia
+  const lastChargeCard = document.querySelector('[data-key="lastCharge"] .ha-card__header');
+  if (lastChargeCard && !document.querySelector('.battery-trend')) {
+    const trendElement = document.createElement('span');
+    trendElement.className = 'battery-trend';
+    trendElement.style.cssText = 'font-size: 12px; color: #6b7280; margin-left: 8px;';
+    trendElement.textContent = 'Tendencia: estable →';
+    lastChargeCard.appendChild(trendElement);
+  }
+});
