@@ -954,10 +954,12 @@
         max.textContent = `${maxValue.toFixed(1)} ${sensor.unit}`;
         avg.textContent = `${avgValue.toFixed(1)} ${sensor.unit}`;
 
-        renderSparkline(chart, sensor.history, sensor.color);
-        modal.classList.remove('is-hidden');
-      }
-    }
+        if (chart) {
+  renderSparkline(chart, sensor.history, sensor.color, {
+    big: true,
+    unit: sensor.unit
+  });
+}
 
     // Función para cerrar modal
     function closeTelemetryModal() {
@@ -1336,6 +1338,7 @@
   </script>
 </body>
 </html>
+
 
 
 
