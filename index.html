@@ -21,6 +21,91 @@
         .ha-card { cursor: pointer; transition: all 0.3s ease; }
         .ha-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
         #realtime-indicator { font-family: Inter, system-ui, sans-serif; }
+        
+        /* Grid de tarjetas IoT */
+        .ha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .ha-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .ha-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .ha-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .ha-card__title {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .ha-card__timestamp {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .ha-card__value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .ha-card__sparkline {
+            height: 40px;
+            width: 100%;
+            min-height: 40px;
+            margin-top: 8px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .ha-card__sparkline svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .ha-card__actions {
+            margin-top: 12px;
+        }
+
+        .ha-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .ha-btn:hover {
+            background: #2563eb;
+        }
     </style>
 </head>
 
@@ -158,78 +243,78 @@
         </div>
     </section>
 
-<!-- ===== PANEL IoT ===== -->
-<section id="panel" class="panel">
-    <div class="section__head">
-        <h2 class="iot-title">Panel de Monitoreo IoT</h2>
-        <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
-    </div>
-    
-    <!-- Grid de sensores estilo Home Assistant -->
-    <div class="ha-grid" id="panelGrid">
-        <!-- Temperatura -->
-        <div class="ha-card js-sensor-card" data-key="temperature">
-            <div class="ha-card__header">
-                <span class="ha-card__title">Temperatura</span>
-                <span class="ha-card__timestamp">Hace 2 min</span>
-            </div>
-            <div class="ha-card__value">24.5 °C</div>
-            <div class="ha-card__sparkline" id="sparkline-temperature">  <!-- CAMBIADO: temp → temperature -->
-                <!-- Sparkline se insertará aquí -->
-            </div>
+    <!-- ===== PANEL IoT ===== -->
+    <section id="panel" class="panel">
+        <div class="section__head">
+            <h2 class="iot-title">Panel de Monitoreo IoT</h2>
+            <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
         </div>
         
-        <!-- Potencia -->
-        <div class="ha-card js-sensor-card" data-key="power">
-            <div class="ha-card__header">
-                <span class="ha-card__title">Potencia</span>
-                <span class="ha-card__timestamp">Hace 2 min</span>
+        <!-- Grid de sensores estilo Home Assistant -->
+        <div class="ha-grid" id="panelGrid">
+            <!-- Temperatura -->
+            <div class="ha-card js-sensor-card" data-key="temperature">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Temperatura</span>
+                    <span class="ha-card__timestamp">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">24.5 °C</div>
+                <div class="ha-card__sparkline" id="sparkline-temperature">
+                    <!-- Sparkline se insertará aquí -->
+                </div>
             </div>
-            <div class="ha-card__value">1.47 kW</div>
-            <div class="ha-card__sparkline" id="sparkline-power">
-                <!-- Sparkline se insertará aquí -->
+            
+            <!-- Potencia -->
+            <div class="ha-card js-sensor-card" data-key="power">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Potencia</span>
+                    <span class="ha-card__timestamp">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">1.47 kW</div>
+                <div class="ha-card__sparkline" id="sparkline-power">
+                    <!-- Sparkline se insertará aquí -->
+                </div>
+            </div>
+            
+            <!-- Voltaje -->
+            <div class="ha-card js-sensor-card" data-key="voltage">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Voltaje</span>
+                    <span class="ha-card__timestamp">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">220 V</div>
+                <div class="ha-card__sparkline" id="sparkline-voltage">
+                    <!-- Sparkline se insertará aquí -->
+                </div>
+            </div>
+            
+            <!-- Batería -->
+            <div class="ha-card js-sensor-card" data-key="battery">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Batería</span>
+                    <span class="ha-card__timestamp">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">77 %</div>
+                <div class="ha-card__sparkline" id="sparkline-battery">
+                    <!-- Sparkline se insertará aquí -->
+                </div>
+                <div class="ha-card__actions">
+                    <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
+                </div>
+            </div>
+            
+            <!-- Última Carga -->
+            <div class="ha-card js-sensor-card" data-key="lastCharge">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Última carga</span>
+                    <span class="ha-card__timestamp">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">41 min</div>
+                <div class="ha-card__sparkline" id="sparkline-lastCharge">
+                    <!-- Sparkline se insertará aquí -->
+                </div>
             </div>
         </div>
-        
-        <!-- Voltaje -->
-        <div class="ha-card js-sensor-card" data-key="voltage">
-            <div class="ha-card__header">
-                <span class="ha-card__title">Voltaje</span>
-                <span class="ha-card__timestamp">Hace 2 min</span>
-            </div>
-            <div class="ha-card__value">220 V</div>
-            <div class="ha-card__sparkline" id="sparkline-voltage">
-                <!-- Sparkline se insertará aquí -->
-            </div>
-        </div>
-        
-        <!-- Batería -->
-        <div class="ha-card js-sensor-card" data-key="battery">
-            <div class="ha-card__header">
-                <span class="ha-card__title">Batería</span>
-                <span class="ha-card__timestamp">Hace 2 min</span>
-            </div>
-            <div class="ha-card__value">77 %</div>
-            <div class="ha-card__sparkline" id="sparkline-battery">
-                <!-- Sparkline se insertará aquí -->
-            </div>
-            <div class="ha-card__actions">
-                <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
-            </div>
-        </div>
-        
-        <!-- Última Carga -->
-        <div class="ha-card js-sensor-card" data-key="lastCharge">
-            <div class="ha-card__header">
-                <span class="ha-card__title">Última carga</span>
-                <span class="ha-card__timestamp">Hace 2 min</span>
-            </div>
-            <div class="ha-card__value">41 min</div>
-            <div class="ha-card__sparkline" id="sparkline-lastCharge">  <!-- CAMBIADO: charge → lastCharge -->
-                <!-- Sparkline se insertará aquí -->
-            </div>
-        </div>
-    </div>
         
         <!-- Tabla de datos históricos -->
         <div id="historical-data-container" style="max-width: 1200px; margin: 40px auto; padding: 0 20px;"></div>
@@ -370,7 +455,6 @@
     <script src="./main.js"></script>
 
 <script>
-<script>
 // =====================================================
 // SISTEMA DE GRÁFICAS CONECTADO AL BACKEND REAL
 // =====================================================
@@ -435,8 +519,16 @@ let sensorData = {
 // WebSocket para datos en tiempo real
 let wsConnection = null;
 
-// ===== CONEXIÓN WEBSOCKET =====
+// ===== CONEXIÓN WEBSOCKET MEJORADA =====
 function connectWebSocket() {
+    // Si estamos en GitHub Pages, no intentar conectar WebSocket
+    if (window.location.hostname.includes('github.io')) {
+        console.log('🌐 Modo GitHub Pages - Usando datos simulados');
+        generarDatosInicialesReales();
+        simularActualizacionesEnTiempoReal();
+        return;
+    }
+
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}`;
     
@@ -445,6 +537,10 @@ function connectWebSocket() {
         
         wsConnection.onopen = function() {
             console.log('✅ WebSocket conectado al backend');
+            document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+                ts.textContent = 'En tiempo real';
+                ts.style.color = '#22c55e';
+            });
         };
         
         wsConnection.onmessage = function(event) {
@@ -457,17 +553,78 @@ function connectWebSocket() {
         };
         
         wsConnection.onclose = function() {
-            console.log('🔌 WebSocket desconectado, reconectando...');
-            setTimeout(connectWebSocket, 3000);
+            console.log('🔌 WebSocket desconectado, usando modo simulación');
+            document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+                ts.textContent = 'Modo simulación';
+                ts.style.color = '#eab308';
+            });
+            generarDatosInicialesReales();
+            simularActualizacionesEnTiempoReal();
         };
         
         wsConnection.onerror = function(error) {
-            console.error('❌ Error WebSocket:', error);
+            console.error('❌ Error WebSocket, usando modo simulación:', error);
+            generarDatosInicialesReales();
+            simularActualizacionesEnTiempoReal();
         };
         
     } catch (error) {
-        console.log('WebSocket no disponible, usando polling');
+        console.log('WebSocket no disponible, usando modo simulación');
+        generarDatosInicialesReales();
+        simularActualizacionesEnTiempoReal();
     }
+}
+
+// ===== SIMULACIÓN DE DATOS EN TIEMPO REAL =====
+function simularActualizacionesEnTiempoReal() {
+    setInterval(() => {
+        Object.keys(sensorsConfig).forEach(sensorId => {
+            if (sensorData[sensorId] && sensorData[sensorId].length > 0) {
+                const lastValue = sensorData[sensorId][sensorData[sensorId].length - 1];
+                const config = sensorsConfig[sensorId];
+                
+                // Simular cambios realistas
+                let newValue;
+                switch(sensorId) {
+                    case 'temperature':
+                        newValue = lastValue + (Math.random() - 0.5) * 0.3;
+                        break;
+                    case 'power':
+                        newValue = lastValue + (Math.random() - 0.5) * 0.1;
+                        break;
+                    case 'voltage':
+                        newValue = lastValue + (Math.random() - 0.5) * 0.5;
+                        break;
+                    case 'battery':
+                        newValue = Math.max(10, lastValue - 0.1 + (Math.random() - 0.5) * 0.2);
+                        break;
+                    case 'lastCharge':
+                        newValue = lastValue + 1;
+                        break;
+                    default:
+                        newValue = lastValue + (Math.random() - 0.5) * 0.2;
+                }
+                
+                // Aplicar límites
+                newValue = Math.max(config.min, Math.min(config.max, newValue));
+                
+                actualizarDatosSensor(sensorId, newValue);
+                
+                // Actualizar valor principal en la tarjeta
+                const valorElemento = document.querySelector(`[data-key="${sensorId}"] .ha-card__value`);
+                if (valorElemento) {
+                    valorElemento.textContent = `${newValue.toFixed(sensorId === 'power' ? 2 : 1)} ${config.unit}`;
+                }
+            }
+        });
+        
+        // Actualizar timestamp
+        document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+            ts.textContent = 'Modo simulación';
+            ts.style.color = '#eab308';
+        });
+        
+    }, 3000); // Actualizar cada 3 segundos
 }
 
 // ===== PROCESAR DATOS DEL BACKEND =====
@@ -885,5 +1042,3 @@ window.updateSensorData = function(sensorId, dataPoints) {
 
 </body>
 </html>
-
-
