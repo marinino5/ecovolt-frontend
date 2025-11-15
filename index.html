@@ -812,11 +812,11 @@
       });
     }
 
-   function renderSparkline(container, data, color, options = {}) {
+ function renderSparkline(container, data, color, options = {}) {
   if (!container || !data || data.length < 2) return;
 
-  const big = options.big || false;          // false = mini sparkline en la tarjeta
-  const unit = options.unit || "";           // para las etiquetas del eje Y
+  const big = options.big || false;          // false = mini sparkline en tarjeta
+  const unit = options.unit || "";
 
   const width = container.clientWidth || (big ? 500 : 200);
   const height = big ? 180 : 40;
@@ -832,12 +832,16 @@
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.setAttribute("preserveAspectRatio", "none");
 
-  // ----- Ejes y grid solo para el gráfico grande (modal) -----
+  // ==========================
+  // MODO GRANDE (MODAL)
+  // ==========================
   if (big) {
-    const paddingLeft = 40;
-    const paddingBottom = 20;
+    const paddingLeft = 40;      // espacio para números
+    const paddingRight = 10;
     const paddingTop = 10;
-    const chartWidth = width - paddingLeft - 10;
+    const paddingBottom = 20;
+
+    const chartWidth = width - paddingLeft - paddingRight;
     const chartHeight = height - paddingTop - paddingBottom;
 
     // Fondo
@@ -846,10 +850,11 @@
     bg.setAttribute("y", paddingTop);
     bg.setAttribute("width", chartWidth);
     bg.setAttribute("height", chartHeight);
+    bg.setAttribute("rx", 8);
     bg.setAttribute("fill", "#f8fafc");
     svg.appendChild(bg);
 
-    // Grid + etiquetas eje Y (4 líneas)
+    // Grid + etiquetas Y (4 niveles)
     const steps = 4;
     for (let i = 0; i <= steps; i++) {
       const y = paddingTop + (chartHeight / steps) * i;
@@ -866,48 +871,51 @@
       svg.appendChild(line);
 
       const label = document.createElementNS(svgNS, "text");
-      label.setAttribute("x", paddingLeft - 6);
+      label.setAttribute("x", 6);              // bien adentro del gráfico
       label.setAttribute("y", y + 4);
-      label.setAttribute("text-anchor", "end");
+      label.setAttribute("text-anchor", "start");
       label.setAttribute("font-size", "10");
       label.setAttribute("fill", "#64748b");
       label.textContent = `${val.toFixed(1)}${unit ? " " + unit : ""}`;
       svg.appendChild(label);
     }
 
-    // Construir puntos escalados al área interna
+    // Puntos escalados al área interna
     const points = data.map((value, index) => {
       const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
       const y = paddingTop + chartHeight - ((value - min) / range) * chartHeight;
       return `${x},${y}`;
     }).join(" ");
 
-    // Relleno
-    const pathFill = document.createElementNS(svgNS, "path");
-    pathFill.setAttribute(
+    // Área de relleno
+    const fillPath = document.createElementNS(svgNS, "path");
+    fillPath.setAttribute(
       "d",
       `M${paddingLeft},${paddingTop + chartHeight} L${points.replace(/ /g, " L")} L${paddingLeft + chartWidth},${paddingTop + chartHeight} Z`
     );
-    pathFill.setAttribute("fill", color + "20"); // color con algo de transparencia
-    svg.appendChild(pathFill);
+    fillPath.setAttribute("fill", color + "20");
+    svg.appendChild(fillPath);
 
     // Línea
-    const poly = document.createElementNS(svgNS, "polyline");
-    poly.setAttribute("points", points);
-    poly.setAttribute("fill", "none");
-    poly.setAttribute("stroke", color);
-    poly.setAttribute("stroke-width", "2");
-    poly.setAttribute("stroke-linecap", "round");
-    svg.appendChild(poly);
+    const linePath = document.createElementNS(svgNS, "polyline");
+    linePath.setAttribute("points", points);
+    linePath.setAttribute("fill", "none");
+    linePath.setAttribute("stroke", color);
+    linePath.setAttribute("stroke-width", "2");
+    linePath.setAttribute("stroke-linecap", "round");
+    svg.appendChild(linePath);
 
     container.innerHTML = "";
     container.appendChild(svg);
     return;
   }
 
-  // ----- Modo mini sparkline (tarjetas) -----
-  const miniHeight = height;
+  // ==========================
+  // MODO MINI (tarjetas)
+  // ==========================
   const miniWidth = width;
+  const miniHeight = height;
+
   const miniPoints = data.map((value, index) => {
     const x = (index / (data.length - 1)) * miniWidth;
     const y = miniHeight - ((value - min) / range) * miniHeight;
@@ -1338,6 +1346,7 @@
   </script>
 </body>
 </html>
+
 
 
 
