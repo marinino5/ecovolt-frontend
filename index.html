@@ -1,1378 +1,567 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Ecovolt – Micromovilidad Inteligente</title>
-
-  <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- Scripts -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Ecovolt – Micromovilidad Inteligente</title>
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 
 <body>
-
-  <!-- ===== NAVBAR ===== -->
-  <header class="nav">
-    <div class="nav__inner">
-      <a class="brand" href="#home" aria-label="Ecovolt Home">
-        <span class="brand__logo" aria-hidden="true">
-          <svg viewBox="0 0 64 64">
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stop-color="#2dd4bf"/>
-                <stop offset="1" stop-color="#22d3ee"/>
-              </linearGradient>
-            </defs>
-            <circle cx="32" cy="32" r="28" fill="url(#g1)" opacity=".18"/>
-            <path d="M32 8 L16 36 h12 v20 L48 28 H36 V8 Z" fill="url(#g1)"/>
-          </svg>
-        </span>
-        <span class="brand__text"><b>Eco</b>Volt</span>
-      </a>
-
-      <nav class="menu" id="menu">
-        <a href="#home" class="is-active">Inicio</a>
-        <a href="#how">Cómo Funciona</a>
-        <a href="#panel">Panel</a>
-        <a href="#precios">Precios</a>
-      </nav>
-
-      <div class="nav__cta">
-        <button class="btn btn--ghost">Iniciar Sesión</button>
-        <button class="btn btn--pill">Registrarse</button>
-        <button class="hamb" id="hamb" aria-label="Abrir menú">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- ===== HERO ===== -->
-  <section id="home" class="hero">
-    <div class="blob blob--a"></div>
-    <div class="blob blob--b"></div>
-
-    <div class="hero__inner">
-      <div class="hero__copy">
-        <h1>
-          Movilidad <span class="grad">Sostenible</span> para un 
-          <span class="grad">Futuro Mejor</span>
-        </h1>
-        <p>
-          Descubre la red de vehículos eléctricos más amplia de la ciudad. 
-          Reserva, usa y contribuye al medio ambiente en cada viaje.
-        </p>
-
-        <div class="hero__actions">
-          <a class="btn btn--outline" href="#how">Ver Cómo Funciona</a>
+    <!-- ===== NAVBAR ===== -->
+    <header class="nav">
+        <div class="nav__inner">
+            <a class="brand" href="#home" aria-label="Ecovolt Home">
+                <span class="brand__logo" aria-hidden="true">
+                    <svg viewBox="0 0 64 64">
+                        <defs>
+                            <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0" stop-color="#2dd4bf"/>
+                                <stop offset="1" stop-color="#22d3ee"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="32" cy="32" r="28" fill="url(#g1)" opacity=".18"/>
+                        <path d="M32 8 L16 36 h12 v20 L48 28 H36 V8 Z" fill="url(#g1)"/>
+                    </svg>
+                </span>
+                <span class="brand__text"><b>Eco</b>Volt</span>
+            </a>
+            
+            <nav class="menu" id="menu">
+                <a href="#home" class="is-active">Inicio</a>
+                <a href="#how">Cómo Funciona</a>
+                <a href="#panel">Panel</a>
+                <a href="#precios">Precios</a>
+            </nav>
+            
+            <div class="nav__cta">
+                <button class="btn btn--ghost">Iniciar Sesión</button>
+                <button class="btn btn--pill">Registrarse</button>
+                <button class="hamb" id="hamb" aria-label="Abrir menú">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
-      </div>
-
-      <!-- Ilustración -->
-      <div class="hero__art" aria-hidden="true">
-        <svg viewBox="0 0 520 320" width="100%" height="100%" style="max-width:520px; display:block; margin-inline:auto; filter: drop-shadow(0 28px 60px rgba(0,0,0,.28));">
-          <defs>
-            <radialGradient id="halo" cx="50%" cy="45%" r="55%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
-              <stop offset="100%" stop-color="rgba(255,255,255,0)" />
-            </radialGradient>
-          </defs>
-
-          <ellipse cx="260" cy="160" rx="220" ry="120" fill="url(#halo)" />
-
-          <g transform="translate(150,60)" fill="#ffffff">
-            <rect x="0" y="30" width="160" height="170" rx="26" opacity="0.92"/>
-            <rect x="-8" y="195" width="176" height="18" rx="9" opacity="0.92"/>
-            <path d="M90 70 L60 120 H85 L70 160 L120 105 H95 L110 70 Z" fill="#0ea5e9" opacity="0.95"/>
-            <path d="M160 120 C210 120, 210 170, 175 170 L150 170 L150 145 L172 145 C185 145, 185 130, 172 130 L160 130 Z" />
-            <circle cx="194" cy="136" r="11"/>
-            <circle cx="194" cy="160" r="11"/>
-            <path d="M175 115 h35 a18 18 0 0 1 18 18 v35 a18 18 0 0 1 -18 18 h-35 a0 0 0 0 1 0 0 v-71 a0 0 0 0 1 0 0 z" fill="#ffffff" opacity="0.92"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CÓMO FUNCIONA ===== -->
-  <section id="how" class="how2">
-    <div class="how2__head">
-      <h2>¿Cómo Funciona?</h2>
-      <div class="how2__line"></div>
-      <p class="how2__sub">Empieza en minutos y muévete con micromovilidad eléctrica de forma segura y sostenible.</p>
-    </div>
-
-    <div class="how2__grid">
-      <!-- Paso 1 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">1</span>
-
-        <div class="step2__icon step2__icon--a">
-          <span class="step2__icon-glyph">👤</span>
-        </div>
-
-        <h3>Regístrate</h3>
-        <p>Crea tu cuenta y accede a toda nuestra red de vehículos eléctricos disponibles 24/7.</p>
-      </article>
-
-      <!-- Paso 2 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">2</span>
-
-        <div class="step2__icon step2__icon--b">
-          <span class="step2__icon-glyph">📍</span>
-        </div>
-
-        <h3>Encuentra</h3>
-        <p>Localiza la estación más cercana usando nuestra app y revisa la disponibilidad en tiempo real.</p>
-      </article>
-
-      <!-- Paso 3 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">3</span>
-
-        <div class="step2__icon step2__icon--c">
-          <span class="step2__icon-glyph">🔓</span>
-        </div>
-
-        <h3>Desbloquea</h3>
-        <p>Escanea el código QR o usa tu smartphone para desbloquear tu vehículo de forma segura e instantánea.</p>
-      </article>
-
-      <!-- Paso 4 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">4</span>
-
-        <div class="step2__icon step2__icon--d">
-          <span class="step2__icon-glyph">🛵</span>
-        </div>
-
-        <h3>Viaja</h3>
-        <p>Disfruta tu viaje ecológico y devuelve el vehículo en cualquier estación habilitada.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== PANEL IoT ===== -->
-  <section id="panel" class="panel">
-    <div class="section__head">
-      <h2 class="iot-title">Panel de Monitoreo IoT</h2>
-      <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
-    </div>
-
-    <!-- Grid de sensores estilo Home Assistant -->
-    <div class="ha-grid" id="panelGrid">
-      
-      <!-- Temperatura -->
-      <div class="ha-card js-sensor-card" data-key="temperature">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Temperatura</span>
-          <span class="ha-card__timestamp" data-iot="temp-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">24.5 °C</div>
-        <div class="ha-card__sparkline" id="sparkline-temp"></div>
-      </div>
-
-      <!-- Potencia -->
-      <div class="ha-card js-sensor-card" data-key="power">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Potencia</span>
-          <span class="ha-card__timestamp" data-iot="power-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">1.47 kW</div>
-        <div class="ha-card__sparkline" id="sparkline-power"></div>
-      </div>
-
-      <!-- Voltaje -->
-      <div class="ha-card js-sensor-card" data-key="voltage">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Voltaje</span>
-          <span class="ha-card__timestamp" data-iot="voltage-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">220 V</div>
-        <div class="ha-card__sparkline" id="sparkline-voltage"></div>
-      </div>
-
-      <!-- Batería -->
-      <div class="ha-card js-sensor-card" data-key="battery">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Batería</span>
-          <span class="ha-card__timestamp" data-iot="battery-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">77 %</div>
-        <div class="ha-card__sparkline" id="sparkline-battery"></div>
-        <div class="ha-card__actions">
-          <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
-        </div>
-      </div>
-
-      <!-- Última Carga -->
-      <div class="ha-card js-sensor-card" data-key="lastCharge">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Última carga</span>
-          <span class="ha-card__timestamp" data-iot="charge-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">41 min</div>
-        <div class="ha-card__sparkline" id="sparkline-charge"></div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===== PRECIOS ===== -->
-  <section id="precios" class="pricing">
-    <div class="section__head">
-      <h2>Precios</h2>
-      <div class="underline"></div>
-    </div>
-
-    <div class="pricing__grid">
-      <article class="price">
-        <h3>Básico</h3>
-        <div class="price__num">$9<span>/mes</span></div>
-        <ul>
-          <li>30 min gratis diarios</li>
-          <li>Acceso a bicicletas</li>
-          <li>Soporte básico</li>
-          <li>App móvil</li>
-        </ul>
-        <button class="btn btn--light">Elegir Plan</button>
-      </article>
-
-      <article class="price price--featured">
-        <div class="badge">Más popular</div>
-        <h3>Premium</h3>
-        <div class="price__num">$19<span>/mes</span></div>
-        <ul>
-          <li>60 min gratis diarios</li>
-          <li>Acceso a bicicletas y scooters</li>
-          <li>Reservas prioritarias</li>
-          <li>Soporte 24/7</li>
-        </ul>
-        <button class="btn btn--cta">Elegir Plan</button>
-      </article>
-
-      <article class="price">
-        <h3>Enterprise</h3>
-        <div class="price__num">$49<span>/mes</span></div>
-        <ul>
-          <li>Viajes ilimitados</li>
-          <li>Gestión de equipos</li>
-          <li>Reportes detallados</li>
-          <li>Soporte dedicado</li>
-        </ul>
-        <button class="btn btn--light">Contactar Ventas</button>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer class="footerX">
-    <div class="footerX__wrap">
-      <div class="footerX__grid">
-
-        <div class="fcol fcol--brand">
-          <h4 class="fcol__title">EcoVolt</h4>
-          <span class="fcol__line"></span>
-          <p>
-            Revolucionando la movilidad urbana con soluciones sostenibles 
-            y tecnología de vanguardia.
-          </p>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Enlaces Rápidos</h4>
-          <ul class="flist">
-            <li><a href="#home">Inicio</a></li>
-            <li><a href="#how">Cómo Funciona</a></li>
-            <li><a href="#precios">Precios</a></li>
-          </ul>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Soporte</h4>
-          <ul class="flist">
-            <li><a href="#">Centro de Ayuda</a></li>
-            <li><a href="#">Términos y Condiciones</a></li>
-            <li><a href="#">Política de Privacidad</a></li>
-          </ul>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Contacto</h4>
-          <ul class="flist flist--contact">
-            <li>+57 304 2129 602</li>
-            <li>info@ecovolt.com</li>
-            <li>Universidad Autónoma, Bucaramanga</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <hr class="fsep" />
-
-      <div class="fcopy">© 2025 EcoVolt. Todos los derechos reservados.</div>
-
-    </div>
-  </footer>
-
-  <!-- Modal Home Assistant -->
-  <div id="ha-modal" class="iot-modal-backdrop is-hidden">
-    <div class="ha-modal">
-      <div class="ha-modal__header">
-        <div>
-          <h3 class="ha-modal__title" id="ha-modal-title">Sensor</h3>
-          <p class="ha-modal__subtitle" id="ha-modal-subtitle">Descripción del sensor</p>
-        </div>
-        <button class="ha-modal__close" id="ha-modal-close">×</button>
-      </div>
-      <div class="ha-modal__body">
-        <div class="ha-modal__stats">
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Actual</span>
-            <span class="ha-modal__stat-value" id="ha-modal-current">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Mínimo</span>
-            <span class="ha-modal__stat-value" id="ha-modal-min">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Máximo</span>
-            <span class="ha-modal__stat-value" id="ha-modal-max">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Promedio</span>
-            <span class="ha-modal__stat-value" id="ha-modal-avg">--</span>
-          </div>
-        </div>
-        <div class="ha-modal__chart" id="ha-modal-chart"></div>
-      </div>
-    </div>
-  </div>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Ecovolt – Micromovilidad Inteligente</title>
-
-  <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Estilos -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- Scripts -->
-  <script src="./config.js" defer></script>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-
-<body>
-
-  <!-- ===== NAVBAR ===== -->
-  <header class="nav">
-    <div class="nav__inner">
-      <a class="brand" href="#home" aria-label="Ecovolt Home">
-        <span class="brand__logo" aria-hidden="true">
-          <svg viewBox="0 0 64 64">
-            <defs>
-              <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stop-color="#2dd4bf"/>
-                <stop offset="1" stop-color="#22d3ee"/>
-              </linearGradient>
-            </defs>
-            <circle cx="32" cy="32" r="28" fill="url(#g1)" opacity=".18"/>
-            <path d="M32 8 L16 36 h12 v20 L48 28 H36 V8 Z" fill="url(#g1)"/>
-          </svg>
-        </span>
-        <span class="brand__text"><b>Eco</b>Volt</span>
-      </a>
-
-      <nav class="menu" id="menu">
-        <a href="#home" class="is-active">Inicio</a>
-        <a href="#how">Cómo Funciona</a>
-        <a href="#panel">Panel</a>
-        <a href="#precios">Precios</a>
-      </nav>
-
-      <div class="nav__cta">
-        <button class="btn btn--ghost">Iniciar Sesión</button>
-        <button class="btn btn--pill">Registrarse</button>
-        <button class="hamb" id="hamb" aria-label="Abrir menú">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- ===== HERO ===== -->
-  <section id="home" class="hero">
-    <div class="blob blob--a"></div>
-    <div class="blob blob--b"></div>
-
-    <div class="hero__inner">
-      <div class="hero__copy">
-        <h1>
-          Movilidad <span class="grad">Sostenible</span> para un 
-          <span class="grad">Futuro Mejor</span>
-        </h1>
-        <p>
-          Descubre la red de vehículos eléctricos más amplia de la ciudad. 
-          Reserva, usa y contribuye al medio ambiente en cada viaje.
-        </p>
-
-        <div class="hero__actions">
-          <a class="btn btn--outline" href="#how">Ver Cómo Funciona</a>
-        </div>
-      </div>
-
-      <!-- Ilustración -->
-      <div class="hero__art" aria-hidden="true">
-        <svg viewBox="0 0 520 320" width="100%" height="100%" style="max-width:520px; display:block; margin-inline:auto; filter: drop-shadow(0 28px 60px rgba(0,0,0,.28));">
-          <defs>
-            <radialGradient id="halo" cx="50%" cy="45%" r="55%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
-              <stop offset="100%" stop-color="rgba(255,255,255,0)" />
-            </radialGradient>
-          </defs>
-
-          <ellipse cx="260" cy="160" rx="220" ry="120" fill="url(#halo)" />
-
-          <g transform="translate(150,60)" fill="#ffffff">
-            <rect x="0" y="30" width="160" height="170" rx="26" opacity="0.92"/>
-            <rect x="-8" y="195" width="176" height="18" rx="9" opacity="0.92"/>
-            <path d="M90 70 L60 120 H85 L70 160 L120 105 H95 L110 70 Z" fill="#0ea5e9" opacity="0.95"/>
-            <path d="M160 120 C210 120, 210 170, 175 170 L150 170 L150 145 L172 145 C185 145, 185 130, 172 130 L160 130 Z" />
-            <circle cx="194" cy="136" r="11"/>
-            <circle cx="194" cy="160" r="11"/>
-            <path d="M175 115 h35 a18 18 0 0 1 18 18 v35 a18 18 0 0 1 -18 18 h-35 a0 0 0 0 1 0 0 v-71 a0 0 0 0 1 0 0 z" fill="#ffffff" opacity="0.92"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CÓMO FUNCIONA ===== -->
-  <section id="how" class="how2">
-    <div class="how2__head">
-      <h2>¿Cómo Funciona?</h2>
-      <div class="how2__line"></div>
-      <p class="how2__sub">Empieza en minutos y muévete con micromovilidad eléctrica de forma segura y sostenible.</p>
-    </div>
-
-    <div class="how2__grid">
-      <!-- Paso 1 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">1</span>
-
-        <div class="step2__icon step2__icon--a">
-          <span class="step2__icon-glyph">👤</span>
-        </div>
-
-        <h3>Regístrate</h3>
-        <p>Crea tu cuenta y accede a toda nuestra red de vehículos eléctricos disponibles 24/7.</p>
-      </article>
-
-      <!-- Paso 2 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">2</span>
-
-        <div class="step2__icon step2__icon--b">
-          <span class="step2__icon-glyph">📍</span>
-        </div>
-
-        <h3>Encuentra</h3>
-        <p>Localiza la estación más cercana usando nuestra app y revisa la disponibilidad en tiempo real.</p>
-      </article>
-
-      <!-- Paso 3 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">3</span>
-
-        <div class="step2__icon step2__icon--c">
-          <span class="step2__icon-glyph">🔓</span>
-        </div>
-
-        <h3>Desbloquea</h3>
-        <p>Escanea el código QR o usa tu smartphone para desbloquear tu vehículo de forma segura e instantánea.</p>
-      </article>
-
-      <!-- Paso 4 -->
-      <article class="step2">
-        <div class="step2__bar"></div>
-        <span class="step2__num">4</span>
-
-        <div class="step2__icon step2__icon--d">
-          <span class="step2__icon-glyph">🛵</span>
-        </div>
-
-        <h3>Viaja</h3>
-        <p>Disfruta tu viaje ecológico y devuelve el vehículo en cualquier estación habilitada.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== PANEL IoT ===== -->
-  <section id="panel" class="panel">
-    <div class="section__head">
-      <h2 class="iot-title">Panel de Monitoreo IoT</h2>
-      <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
-    </div>
-
-    <!-- Grid de sensores estilo Home Assistant -->
-    <div class="ha-grid" id="panelGrid">
-      
-      <!-- Temperatura -->
-      <div class="ha-card js-sensor-card" data-key="temperature">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Temperatura</span>
-          <span class="ha-card__timestamp" data-iot="temp-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">24.5 °C</div>
-        <div class="ha-card__sparkline" id="sparkline-temp"></div>
-      </div>
-
-      <!-- Potencia -->
-      <div class="ha-card js-sensor-card" data-key="power">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Potencia</span>
-          <span class="ha-card__timestamp" data-iot="power-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">1.47 kW</div>
-        <div class="ha-card__sparkline" id="sparkline-power"></div>
-      </div>
-
-      <!-- Voltaje -->
-      <div class="ha-card js-sensor-card" data-key="voltage">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Voltaje</span>
-          <span class="ha-card__timestamp" data-iot="voltage-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">220 V</div>
-        <div class="ha-card__sparkline" id="sparkline-voltage"></div>
-      </div>
-
-      <!-- Batería -->
-      <div class="ha-card js-sensor-card" data-key="battery">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Batería</span>
-          <span class="ha-card__timestamp" data-iot="battery-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">77 %</div>
-        <div class="ha-card__sparkline" id="sparkline-battery"></div>
-        <div class="ha-card__actions">
-          <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
-        </div>
-      </div>
-
-      <!-- Última Carga -->
-      <div class="ha-card js-sensor-card" data-key="lastCharge">
-        <div class="ha-card__header">
-          <span class="ha-card__title">Última carga</span>
-          <span class="ha-card__timestamp" data-iot="charge-time">Hace 2 min</span>
-        </div>
-        <div class="ha-card__value">41 min</div>
-        <div class="ha-card__sparkline" id="sparkline-charge"></div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===== PRECIOS ===== -->
-  <section id="precios" class="pricing">
-    <div class="section__head">
-      <h2>Precios</h2>
-      <div class="underline"></div>
-    </div>
-
-    <div class="pricing__grid">
-      <article class="price">
-        <h3>Básico</h3>
-        <div class="price__num">$9<span>/mes</span></div>
-        <ul>
-          <li>30 min gratis diarios</li>
-          <li>Acceso a bicicletas</li>
-          <li>Soporte básico</li>
-          <li>App móvil</li>
-        </ul>
-        <button class="btn btn--light">Elegir Plan</button>
-      </article>
-
-      <article class="price price--featured">
-        <div class="badge">Más popular</div>
-        <h3>Premium</h3>
-        <div class="price__num">$19<span>/mes</span></div>
-        <ul>
-          <li>60 min gratis diarios</li>
-          <li>Acceso a bicicletas y scooters</li>
-          <li>Reservas prioritarias</li>
-          <li>Soporte 24/7</li>
-        </ul>
-        <button class="btn btn--cta">Elegir Plan</button>
-      </article>
-
-      <article class="price">
-        <h3>Enterprise</h3>
-        <div class="price__num">$49<span>/mes</span></div>
-        <ul>
-          <li>Viajes ilimitados</li>
-          <li>Gestión de equipos</li>
-          <li>Reportes detallados</li>
-          <li>Soporte dedicado</li>
-        </ul>
-        <button class="btn btn--light">Contactar Ventas</button>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer class="footerX">
-    <div class="footerX__wrap">
-      <div class="footerX__grid">
-
-        <div class="fcol fcol--brand">
-          <h4 class="fcol__title">EcoVolt</h4>
-          <span class="fcol__line"></span>
-          <p>
-            Revolucionando la movilidad urbana con soluciones sostenibles 
-            y tecnología de vanguardia.
-          </p>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Enlaces Rápidos</h4>
-          <ul class="flist">
-            <li><a href="#home">Inicio</a></li>
-            <li><a href="#how">Cómo Funciona</a></li>
-            <li><a href="#precios">Precios</a></li>
-          </ul>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Soporte</h4>
-          <ul class="flist">
-            <li><a href="#">Centro de Ayuda</a></li>
-            <li><a href="#">Términos y Condiciones</a></li>
-            <li><a href="#">Política de Privacidad</a></li>
-          </ul>
-        </div>
-
-        <div class="fcol">
-          <h4 class="fcol__title">Contacto</h4>
-          <ul class="flist flist--contact">
-            <li>+57 304 2129 602</li>
-            <li>info@ecovolt.com</li>
-            <li>Universidad Autónoma, Bucaramanga</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <hr class="fsep" />
-
-      <div class="fcopy">© 2025 EcoVolt. Todos los derechos reservados.</div>
-
-    </div>
-  </footer>
-
-  <!-- Modal Home Assistant -->
-  <div id="ha-modal" class="iot-modal-backdrop is-hidden">
-    <div class="ha-modal">
-      <div class="ha-modal__header">
-        <div>
-          <h3 class="ha-modal__title" id="ha-modal-title">Sensor</h3>
-          <p class="ha-modal__subtitle" id="ha-modal-subtitle">Descripción del sensor</p>
-        </div>
-        <button class="ha-modal__close" id="ha-modal-close">×</button>
-      </div>
-      <div class="ha-modal__body">
-        <div class="ha-modal__stats">
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Actual</span>
-            <span class="ha-modal__stat-value" id="ha-modal-current">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Mínimo</span>
-            <span class="ha-modal__stat-value" id="ha-modal-min">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Máximo</span>
-            <span class="ha-modal__stat-value" id="ha-modal-max">--</span>
-          </div>
-          <div class="ha-modal__stat">
-            <span class="ha-modal__stat-label">Promedio</span>
-            <span class="ha-modal__stat-value" id="ha-modal-avg">--</span>
-          </div>
-        </div>
-        <div class="ha-modal__chart" id="ha-modal-chart"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="./main.js" defer></script>
-  <script src="./config.js" defer></script>
-<script src="iotapp.js"></script>
-
-  
-  <script>
-    // Configuración de sensores
-    const sensors = {
-      temperature: {
-        name: "Temperatura",
-        unit: "°C",
-        description: "Temperatura ambiente de la estación",
-        history: [],
-        color: "#ef4444"
-      },
-      power: {
-        name: "Potencia", 
-        unit: "kW",
-        description: "Potencia consumida por la estación",
-        history: [],
-        color: "#8b5cf6"
-      },
-      voltage: {
-        name: "Voltaje",
-        unit: "V", 
-        description: "Voltaje del sistema de carga",
-        history: [],
-        color: "#eab308"
-      },
-      battery: {
-        name: "Batería",
-        unit: "%",
-        description: "Nivel de batería disponible",
-        history: [],
-        color: "#22c55e"
-      },
-      lastCharge: {
-        name: "Última carga",
-        unit: "min",
-        description: "Tiempo desde la última carga completa",
-        history: [],
-        color: "#3b82f6"
-      }
-    };
-
-    // Inicializar con datos de ejemplo
-    Object.keys(sensors).forEach(sensorId => {
-      const base = { 
-        temperature: 24.5, 
-        power: 1.47, 
-        voltage: 220, 
-        battery: 77, 
-        lastCharge: 41 
-      }[sensorId];
-      
-      for (let i = 0; i < 24; i++) {
-        const jitter = (Math.random() - 0.5) * 2;
-        sensors[sensorId].history.push(Math.max(0, base + jitter));
-      }
-    });
-
-    // Actualizar UI en tiempo real
-    function updateSensorUI() {
-      Object.keys(sensors).forEach(sensorId => {
-        const sensor = sensors[sensorId];
-        const card = document.querySelector(`.ha-card[data-key="${sensorId}"]`);
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section id="home" class="hero">
+        <div class="blob blob--a"></div>
+        <div class="blob blob--b"></div>
         
-        if (card) {
-          // Actualizar valor principal
-          const valueEl = card.querySelector('.ha-card__value');
-          const currentValue = sensor.history[sensor.history.length - 1];
-          valueEl.textContent = `${currentValue.toFixed(1)} ${sensor.unit}`;
-          
-          // Actualizar timestamp
-          const timeEl = card.querySelector('.ha-card__timestamp');
-          timeEl.textContent = 'Hace 2 min';
-          
-          // Actualizar sparkline
-          const sparklineEl = card.querySelector('.ha-card__sparkline');
-          renderSparkline(sparklineEl, sensor.history, sensor.color);
-        }
-      });
-    }
+        <div class="hero__inner">
+            <div class="hero__copy">
+                <h1>
+                    Movilidad <span class="grad">Sostenible</span> para un <span class="grad">Futuro Mejor</span>
+                </h1>
+                <p>
+                    Descubre la red de vehículos eléctricos más amplia de la ciudad. Reserva, usa y contribuye al medio ambiente en cada viaje.
+                </p>
+                <div class="hero__actions">
+                    <a class="btn btn--outline" href="#how">Ver Cómo Funciona</a>
+                </div>
+            </div>
+            
+            <!-- Ilustración -->
+            <div class="hero__art" aria-hidden="true">
+                <svg viewBox="0 0 520 320" width="100%" height="100%" style="max-width:520px; display:block; margin-inline:auto; filter: drop-shadow(0 28px 60px rgba(0,0,0,.28));">
+                    <defs>
+                        <radialGradient id="halo" cx="50%" cy="45%" r="55%">
+                            <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
+                            <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="260" cy="160" rx="220" ry="120" fill="url(#halo)" />
+                    <g transform="translate(150,60)" fill="#ffffff">
+                        <rect x="0" y="30" width="160" height="170" rx="26" opacity="0.92"/>
+                        <rect x="-8" y="195" width="176" height="18" rx="9" opacity="0.92"/>
+                        <path d="M90 70 L60 120 H85 L70 160 L120 105 H95 L110 70 Z" fill="#0ea5e9" opacity="0.95"/>
+                        <path d="M160 120 C210 120, 210 170, 175 170 L150 170 L150 145 L172 145 C185 145, 185 130, 172 130 L160 130 Z" />
+                        <circle cx="194" cy="136" r="11"/>
+                        <circle cx="194" cy="160" r="11"/>
+                        <path d="M175 115 h35 a18 18 0 0 1 18 18 v35 a18 18 0 0 1 -18 18 h-35 a0 0 0 0 1 0 0 v-71 a0 0 0 0 1 0 0 z" fill="#ffffff" opacity="0.92"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
 
- function renderSparkline(container, data, color, options = {}) {
-  if (!container || !data || data.length < 2) return;
-
-  const big = options.big || false;          // false = mini sparkline en tarjeta
-  const unit = options.unit || "";
-
-  const width = container.clientWidth || (big ? 500 : 200);
-  const height = big ? 180 : 40;
-
-  const min = Math.min(...data);
-  const max = Math.max(...data);
-  const range = max - min || 1;
-
-  const svgNS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", width);
-  svg.setAttribute("height", height);
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  svg.setAttribute("preserveAspectRatio", "none");
-
-  // ==========================
-  // MODO GRANDE (MODAL)
-  // ==========================
-  if (big) {
-    const paddingLeft = 40;      // espacio para números
-    const paddingRight = 10;
-    const paddingTop = 10;
-    const paddingBottom = 20;
-
-    const chartWidth = width - paddingLeft - paddingRight;
-    const chartHeight = height - paddingTop - paddingBottom;
-
-    // Fondo
-    const bg = document.createElementNS(svgNS, "rect");
-    bg.setAttribute("x", paddingLeft);
-    bg.setAttribute("y", paddingTop);
-    bg.setAttribute("width", chartWidth);
-    bg.setAttribute("height", chartHeight);
-    bg.setAttribute("rx", 8);
-    bg.setAttribute("fill", "#f8fafc");
-    svg.appendChild(bg);
-
-    // Grid + etiquetas Y (4 niveles)
-    const steps = 4;
-    for (let i = 0; i <= steps; i++) {
-      const y = paddingTop + (chartHeight / steps) * i;
-      const val = max - (range / steps) * i;
-
-      const line = document.createElementNS(svgNS, "line");
-      line.setAttribute("x1", paddingLeft);
-      line.setAttribute("y1", y);
-      line.setAttribute("x2", paddingLeft + chartWidth);
-      line.setAttribute("y2", y);
-      line.setAttribute("stroke", "#e2e8f0");
-      line.setAttribute("stroke-width", "1");
-      line.setAttribute("stroke-dasharray", "4 4");
-      svg.appendChild(line);
-
-      const label = document.createElementNS(svgNS, "text");
-      label.setAttribute("x", 6);              // bien adentro del gráfico
-      label.setAttribute("y", y + 4);
-      label.setAttribute("text-anchor", "start");
-      label.setAttribute("font-size", "10");
-      label.setAttribute("fill", "#64748b");
-      label.textContent = `${val.toFixed(1)}${unit ? " " + unit : ""}`;
-      svg.appendChild(label);
-    }
-
-    // Puntos escalados al área interna
-    const points = data.map((value, index) => {
-      const x = paddingLeft + (index / (data.length - 1)) * chartWidth;
-      const y = paddingTop + chartHeight - ((value - min) / range) * chartHeight;
-      return `${x},${y}`;
-    }).join(" ");
-
-    // Área de relleno
-    const fillPath = document.createElementNS(svgNS, "path");
-    fillPath.setAttribute(
-      "d",
-      `M${paddingLeft},${paddingTop + chartHeight} L${points.replace(/ /g, " L")} L${paddingLeft + chartWidth},${paddingTop + chartHeight} Z`
-    );
-    fillPath.setAttribute("fill", color + "20");
-    svg.appendChild(fillPath);
-
-    // Línea
-    const linePath = document.createElementNS(svgNS, "polyline");
-    linePath.setAttribute("points", points);
-    linePath.setAttribute("fill", "none");
-    linePath.setAttribute("stroke", color);
-    linePath.setAttribute("stroke-width", "2");
-    linePath.setAttribute("stroke-linecap", "round");
-    svg.appendChild(linePath);
-
-    container.innerHTML = "";
-    container.appendChild(svg);
-    return;
-  }
-
-  // ==========================
-  // MODO MINI (tarjetas)
-  // ==========================
-  const miniWidth = width;
-  const miniHeight = height;
-
-  const miniPoints = data.map((value, index) => {
-    const x = (index / (data.length - 1)) * miniWidth;
-    const y = miniHeight - ((value - min) / range) * miniHeight;
-    return `${x},${y}`;
-  }).join(" ");
-
-  container.innerHTML = `
-    <svg viewBox="0 0 ${miniWidth} ${miniHeight}" preserveAspectRatio="none">
-      <path d="M0,${miniHeight} L${miniPoints.replace(/ /g, " L")} L${miniWidth},${miniHeight} Z"
-            fill="${color}20"/>
-      <polyline points="${miniPoints}" fill="none" stroke="${color}"
-                stroke-width="2" stroke-linecap="round"/>
-    </svg>
-  `;
-}
-
- 
-
-    // Función para abrir modal
-    function openTelemetryModal(sensorId) {
-      const sensor = sensors[sensorId];
-      if (!sensor) return;
-
-      const modal = document.getElementById('ha-modal');
-      const title = document.getElementById('ha-modal-title');
-      const subtitle = document.getElementById('ha-modal-subtitle');
-      const current = document.getElementById('ha-modal-current');
-      const min = document.getElementById('ha-modal-min');
-      const max = document.getElementById('ha-modal-max');
-      const avg = document.getElementById('ha-modal-avg');
-      const chart = document.getElementById('ha-modal-chart');
-
-      if (modal && title && subtitle && current && min && max && avg && chart) {
-        title.textContent = sensor.name;
-        subtitle.textContent = sensor.description;
+    <!-- ===== CÓMO FUNCIONA ===== -->
+    <section id="how" class="how2">
+        <div class="how2__head">
+            <h2>¿Cómo Funciona?</h2>
+            <div class="how2__line"></div>
+            <p class="how2__sub">Empieza en minutos y muévete con micromovilidad eléctrica de forma segura y sostenible.</p>
+        </div>
         
-        const currentValue = sensor.history[sensor.history.length - 1];
-        const minValue = Math.min(...sensor.history);
-        const maxValue = Math.max(...sensor.history);
-        const avgValue = sensor.history.reduce((a, b) => a + b, 0) / sensor.history.length;
+        <div class="how2__grid">
+            <!-- Paso 1 -->
+            <article class="step2">
+                <div class="step2__bar"></div>
+                <span class="step2__num">1</span>
+                <div class="step2__icon step2__icon--a">
+                    <span class="step2__icon-glyph">👤</span>
+                </div>
+                <h3>Regístrate</h3>
+                <p>Crea tu cuenta y accede a toda nuestra red de vehículos eléctricos disponibles 24/7.</p>
+            </article>
+            
+            <!-- Paso 2 -->
+            <article class="step2">
+                <div class="step2__bar"></div>
+                <span class="step2__num">2</span>
+                <div class="step2__icon step2__icon--b">
+                    <span class="step2__icon-glyph">📍</span>
+                </div>
+                <h3>Encuentra</h3>
+                <p>Localiza la estación más cercana usando nuestra app y revisa la disponibilidad en tiempo real.</p>
+            </article>
+            
+            <!-- Paso 3 -->
+            <article class="step2">
+                <div class="step2__bar"></div>
+                <span class="step2__num">3</span>
+                <div class="step2__icon step2__icon--c">
+                    <span class="step2__icon-glyph">🔓</span>
+                </div>
+                <h3>Desbloquea</h3>
+                <p>Escanea el código QR o usa tu smartphone para desbloquear tu vehículo de forma segura e instantánea.</p>
+            </article>
+            
+            <!-- Paso 4 -->
+            <article class="step2">
+                <div class="step2__bar"></div>
+                <span class="step2__num">4</span>
+                <div class="step2__icon step2__icon--d">
+                    <span class="step2__icon-glyph">🛵</span>
+                </div>
+                <h3>Viaja</h3>
+                <p>Disfruta tu viaje ecológico y devuelve el vehículo en cualquier estación habilitada.</p>
+            </article>
+        </div>
+    </section>
 
-        current.textContent = `${currentValue.toFixed(1)} ${sensor.unit}`;
-        min.textContent = `${minValue.toFixed(1)} ${sensor.unit}`;
-        max.textContent = `${maxValue.toFixed(1)} ${sensor.unit}`;
-        avg.textContent = `${avgValue.toFixed(1)} ${sensor.unit}`;
-
-        if (chart) {
-  renderSparkline(chart, sensor.history, sensor.color, {
-    big: true,
-    unit: sensor.unit
-  });
-}
-
-    // Función para cerrar modal
-    function closeTelemetryModal() {
-      const modal = document.getElementById('ha-modal');
-      if (modal) {
-        modal.classList.add('is-hidden');
-      }
-    }
-
-    // Agregar event listeners para los clicks
-    document.addEventListener('DOMContentLoaded', () => {
-      updateSensorUI();
-
-      // Agregar event listeners a las tarjetas
-      document.querySelectorAll('.js-sensor-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const sensorId = card.getAttribute('data-key');
-          openTelemetryModal(sensorId);
-        });
-      });
-
-      // Agregar event listener para cerrar modal
-      const closeBtn = document.getElementById('ha-modal-close');
-      const modal = document.getElementById('ha-modal');
-      
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeTelemetryModal);
-      }
-      
-      if (modal) {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            closeTelemetryModal();
-          }
-        });
-      }
-
-      // Cerrar modal con ESC
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeTelemetryModal();
-        }
-      });
-    });
-
-    // Simular datos en tiempo real
-    setInterval(() => {
-      Object.keys(sensors).forEach(sensorId => {
-        const sensor = sensors[sensorId];
-        const lastValue = sensor.history[sensor.history.length - 1];
-        const change = (Math.random() - 0.5) * 0.5;
-        const newValue = Math.max(0, lastValue + change);
+    <!-- ===== PANEL IoT ===== -->
+    <section id="panel" class="panel">
+        <div class="section__head">
+            <h2 class="iot-title">Panel de Monitoreo IoT</h2>
+            <p class="section__sub">Datos en tiempo real de las estaciones EcoVolt</p>
+        </div>
         
-        sensor.history.push(newValue);
-        if (sensor.history.length > 24) sensor.history.shift();
-      });
-      
-      updateSensorUI();
-    }, 5000);
+        <!-- Grid de sensores estilo Home Assistant -->
+        <div class="ha-grid" id="panelGrid">
+            <!-- Temperatura -->
+            <div class="ha-card js-sensor-card" data-key="temperature">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Temperatura</span>
+                    <span class="ha-card__timestamp" data-iot="temp-time">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">24.5 °C</div>
+                <div class="ha-card__sparkline" id="sparkline-temp"></div>
+            </div>
+            
+            <!-- Potencia -->
+            <div class="ha-card js-sensor-card" data-key="power">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Potencia</span>
+                    <span class="ha-card__timestamp" data-iot="power-time">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">1.47 kW</div>
+                <div class="ha-card__sparkline" id="sparkline-power"></div>
+            </div>
+            
+            <!-- Voltaje -->
+            <div class="ha-card js-sensor-card" data-key="voltage">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Voltaje</span>
+                    <span class="ha-card__timestamp" data-iot="voltage-time">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">220 V</div>
+                <div class="ha-card__sparkline" id="sparkline-voltage"></div>
+            </div>
+            
+            <!-- Batería -->
+            <div class="ha-card js-sensor-card" data-key="battery">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Batería</span>
+                    <span class="ha-card__timestamp" data-iot="battery-time">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">77 %</div>
+                <div class="ha-card__sparkline" id="sparkline-battery"></div>
+                <div class="ha-card__actions">
+                    <button class="ha-btn" onclick="aplicarRetrocesoCarga()">Forzar carga</button>
+                </div>
+            </div>
+            
+            <!-- Última Carga -->
+            <div class="ha-card js-sensor-card" data-key="lastCharge">
+                <div class="ha-card__header">
+                    <span class="ha-card__title">Última carga</span>
+                    <span class="ha-card__timestamp" data-iot="charge-time">Hace 2 min</span>
+                </div>
+                <div class="ha-card__value">41 min</div>
+                <div class="ha-card__sparkline" id="sparkline-charge"></div>
+            </div>
+        </div>
+    </section>
 
-    // Función para el botón de carga
-    function aplicarRetrocesoCarga() {
-      const batterySensor = sensors.battery;
-      if (batterySensor) {
-        batterySensor.history.push(100);
-        if (batterySensor.history.length > 24) batterySensor.history.shift();
-        updateSensorUI();
-        alert('Carga forzada aplicada - Batería al 100%');
-      }
-    }
-  </script>
+    <!-- ===== PRECIOS ===== -->
+    <section id="precios" class="pricing">
+        <div class="section__head">
+            <h2>Precios</h2>
+            <div class="underline"></div>
+        </div>
+        
+        <div class="pricing__grid">
+            <article class="price">
+                <h3>Básico</h3>
+                <div class="price__num">$9<span>/mes</span></div>
+                <ul>
+                    <li>30 min gratis diarios</li>
+                    <li>Acceso a bicicletas</li>
+                    <li>Soporte básico</li>
+                    <li>App móvil</li>
+                </ul>
+                <button class="btn btn--light">Elegir Plan</button>
+            </article>
+            
+            <article class="price price--featured">
+                <div class="badge">Más popular</div>
+                <h3>Premium</h3>
+                <div class="price__num">$19<span>/mes</span></div>
+                <ul>
+                    <li>60 min gratis diarios</li>
+                    <li>Acceso a bicicletas y scooters</li>
+                    <li>Reservas prioritarias</li>
+                    <li>Soporte 24/7</li>
+                </ul>
+                <button class="btn btn--cta">Elegir Plan</button>
+            </article>
+            
+            <article class="price">
+                <h3>Enterprise</h3>
+                <div class="price__num">$49<span>/mes</span></div>
+                <ul>
+                    <li>Viajes ilimitados</li>
+                    <li>Gestión de equipos</li>
+                    <li>Reportes detallados</li>
+                    <li>Soporte dedicado</li>
+                </ul>
+                <button class="btn btn--light">Contactar Ventas</button>
+            </article>
+        </div>
+    </section>
 
-  <!-- Scripts -->
-  <script src="./config.js" defer></script>
-  <script src="./main.js" defer></script>
-  <script src="./iotapp.js" defer></script>
+    <!-- ===== FOOTER ===== -->
+    <footer class="footerX">
+        <div class="footerX__wrap">
+            <div class="footerX__grid">
+                <div class="fcol fcol--brand">
+                    <h4 class="fcol__title">EcoVolt</h4>
+                    <span class="fcol__line"></span>
+                    <p>
+                        Revolucionando la movilidad urbana con soluciones sostenibles y tecnología de vanguardia.
+                    </p>
+                </div>
+                
+                <div class="fcol">
+                    <h4 class="fcol__title">Enlaces Rápidos</h4>
+                    <ul class="flist">
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#how">Cómo Funciona</a></li>
+                        <li><a href="#precios">Precios</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fcol">
+                    <h4 class="fcol__title">Soporte</h4>
+                    <ul class="flist">
+                        <li><a href="#">Centro de Ayuda</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fcol">
+                    <h4 class="fcol__title">Contacto</h4>
+                    <ul class="flist flist--contact">
+                        <li>+57 304 2129 602</li>
+                        <li>info@ecovolt.com</li>
+                        <li>Universidad Autónoma, Bucaramanga</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="fsep" />
+            
+            <div class="fcopy">© 2025 EcoVolt. Todos los derechos reservados.</div>
+        </div>
+    </footer>
 
+    <!-- Modal Home Assistant -->
+    <div id="ha-modal" class="iot-modal-backdrop is-hidden">
+        <div class="ha-modal">
+            <div class="ha-modal__header">
+                <div>
+                    <h3 class="ha-modal__title" id="ha-modal-title">Sensor</h3>
+                    <p class="ha-modal__subtitle" id="ha-modal-subtitle">Descripción del sensor</p>
+                </div>
+                <button class="ha-modal__close" id="ha-modal-close">×</button>
+            </div>
+            
+            <div class="ha-modal__body">
+                <div class="ha-modal__stats">
+                    <div class="ha-modal__stat">
+                        <span class="ha-modal__stat-label">Actual</span>
+                        <span class="ha-modal__stat-value" id="ha-modal-current">--</span>
+                    </div>
+                    <div class="ha-modal__stat">
+                        <span class="ha-modal__stat-label">Mínimo</span>
+                        <span class="ha-modal__stat-value" id="ha-modal-min">--</span>
+                    </div>
+                    <div class="ha-modal__stat">
+                        <span class="ha-modal__stat-label">Máximo</span>
+                        <span class="ha-modal__stat-value" id="ha-modal-max">--</span>
+                    </div>
+                    <div class="ha-modal__stat">
+                        <span class="ha-modal__stat-label">Promedio</span>
+                        <span class="ha-modal__stat-value" id="ha-modal-avg">--</span>
+                    </div>
+                </div>
+                
+                <div class="ha-modal__chart" id="ha-modal-chart"></div>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    // ============================
-    // 🔗 Conexión con backend Ecovolt
-    // ============================
-    const ECOVOLT = window.ECOVOLT_CONFIG || {};
-    const ENDPOINTS = ECOVOLT.ENDPOINTS || {};
-
-    // Configuración de sensores (mismo diseño que ya tenías)
-    const sensors = {
-      temperature: {
-        name: "Temperatura",
-        unit: "°C",
-        description: "Temperatura ambiente de la estación",
-        history: [],
-        color: "#ef4444"
-      },
-      power: {
-        name: "Potencia",
-        unit: "kW",
-        description: "Potencia consumida por la estación",
-        history: [],
-        color: "#8b5cf6"
-      },
-      voltage: {
-        name: "Voltaje",
-        unit: "V",
-        description: "Voltaje del sistema de carga",
-        history: [],
-        color: "#eab308"
-      },
-      battery: {
-        name: "Batería",
-        unit: "%",
-        description: "Nivel de batería disponible",
-        history: [],
-        color: "#22c55e"
-      },
-      lastCharge: {
-        name: "Última carga",
-        unit: "min",
-        description: "Tiempo desde la última carga completa",
-        history: [],
-        color: "#3b82f6"
-      }
-    };
-
-    // Mapeo entre id de tarjeta y nombre de sensor en el backend
-    const BACKEND_SENSOR_KEY = {
-      temperature: "temperature",
-      power: "power",
-      voltage: "voltage",
-      battery: "battery",
-      lastCharge: "lastChargeMinutes"
-    };
-
-    let lastStateTimestamp = null;
-
-    // ============================
-    // 📊 Funciones de UI
-    // ============================
-    function renderSparkline(container, data, color) {
-      if (!container || !data || data.length < 2) return;
-
-      const width = container.clientWidth || 200;
-      const height = 40;
-      const min = Math.min(...data);
-      const max = Math.max(...data);
-      const range = max - min || 1;
-
-      const points = data.map((value, index) => {
-        const x = (index / (data.length - 1)) * width;
-        const y = height - ((value - min) / range) * height;
-        return `${x},${y}`;
-      }).join(" ");
-
-      container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="grad-${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${color}" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="${color}" stop-opacity="0.1"/>
-            </linearGradient>
-          </defs>
-          <path d="M0,${height} L${points.replace(/ /g, " L")} L${width},${height} Z"
-                fill="url(#grad-${color.replace('#','')} )"/>
-          <polyline points="${points}" fill="none" stroke="${color}"
-                    stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `;
-    }
-
-    function updateSensorUI() {
-      Object.keys(sensors).forEach(sensorId => {
-        const sensor = sensors[sensorId];
-        const card = document.querySelector(`.ha-card[data-key="${sensorId}"]`);
-        if (!card || !sensor.history.length) return;
-
-        const valueEl = card.querySelector(".ha-card__value");
-        const timeEl = card.querySelector(".ha-card__timestamp");
-        const sparklineEl = card.querySelector(".ha-card__sparkline");
-
-        const currentValue = sensor.history[sensor.history.length - 1];
-
-        if (valueEl) {
-          const decimals = sensorId === "lastCharge" ? 0 : 1;
-          valueEl.textContent = `${currentValue.toFixed(decimals)} ${sensor.unit}`;
-        }
-
-        if (timeEl) {
-          if (lastStateTimestamp) {
-            timeEl.textContent = `Actualizado: ${new Date(lastStateTimestamp).toLocaleTimeString()}`;
-          } else {
-            timeEl.textContent = "Actualizando...";
-          }
-        }
-
-        if (sparklineEl) {
-          renderSparkline(sparklineEl, sensor.history, sensor.color);
-        }
-      });
-    }
-
-    // ============================
-    // 🧮 Modal de detalle
-    // ============================
-    function openTelemetryModal(sensorId) {
-      const sensor = sensors[sensorId];
-      if (!sensor || !sensor.history.length) return;
-
-      const modal = document.getElementById("ha-modal");
-      const title = document.getElementById("ha-modal-title");
-      const subtitle = document.getElementById("ha-modal-subtitle");
-      const current = document.getElementById("ha-modal-current");
-      const min = document.getElementById("ha-modal-min");
-      const max = document.getElementById("ha-modal-max");
-      const avg = document.getElementById("ha-modal-avg");
-      const chart = document.getElementById("ha-modal-chart");
-
-      const vals = sensor.history;
-      const currentValue = vals[vals.length - 1];
-      const minValue = Math.min(...vals);
-      const maxValue = Math.max(...vals);
-      const avgValue = vals.reduce((a, b) => a + b, 0) / vals.length;
-
-      const decimals = sensorId === "lastCharge" ? 0 : 1;
-
-      if (title) title.textContent = sensor.name;
-      if (subtitle) subtitle.textContent = sensor.description;
-      if (current) current.textContent = `${currentValue.toFixed(decimals)} ${sensor.unit}`;
-      if (min) min.textContent = `${minValue.toFixed(decimals)} ${sensor.unit}`;
-      if (max) max.textContent = `${maxValue.toFixed(decimals)} ${sensor.unit}`;
-      if (avg) avg.textContent = `${avgValue.toFixed(decimals)} ${sensor.unit}`;
-
-      if (chart) {
-        renderSparkline(chart, sensor.history, sensor.color);
-      }
-
-      if (modal) modal.classList.remove("is-hidden");
-    }
-
-    function closeTelemetryModal() {
-      const modal = document.getElementById("ha-modal");
-      if (modal) modal.classList.add("is-hidden");
-    }
-
-    // ============================
-    // 🌐 Llamadas al backend
-    // ============================
-
-    // 1) Cargar historial inicial desde /api/history/:sensor
-    async function cargarHistorialInicial(hours = 24) {
-      if (!ENDPOINTS.HISTORY) {
-        console.warn("ENDPOINTS.HISTORY no definido (revisa config.js)");
-        return;
-      }
-
-      for (const sensorId of Object.keys(sensors)) {
-        const backendKey = BACKEND_SENSOR_KEY[sensorId];
-        if (!backendKey) continue;
-
-        try {
-          const url = `${ENDPOINTS.HISTORY}/${backendKey}?hours=${hours}`;
-          const res = await fetch(url);
-          if (!res.ok) throw new Error(`Error historial ${backendKey}`);
-
-          const payload = await res.json(); // {sensor, data:[{t,v}]}
-          const points = (payload.data || []).map(p => p.v);
-          if (points.length) {
-            sensors[sensorId].history = points;
-          }
-        } catch (err) {
-          console.error("Error cargando historial de", sensorId, err);
-        }
-      }
-
-      updateSensorUI();
-    }
-
-    // 2) Cargar estado actual desde /api/state y actualizar últimos puntos
-    async function cargarEstadoActual() {
-      if (!ENDPOINTS.STATE) {
-        console.warn("ENDPOINTS.STATE no definido (revisa config.js)");
-        return;
-      }
-
-      try {
-        const res = await fetch(ENDPOINTS.STATE);
-        if (!res.ok) throw new Error("Error en /api/state");
-
-        const data = await res.json();
-        lastStateTimestamp = data.timestamp;
-
-        // Añadir nuevo punto a cada sensor
-        Object.keys(sensors).forEach(sensorId => {
-          const backendKey = BACKEND_SENSOR_KEY[sensorId];
-          const value = data[backendKey];
-          if (typeof value === "number") {
-            sensors[sensorId].history.push(value);
-            // limitar tamaño (ej. últimas 200 muestras)
-            if (sensors[sensorId].history.length > 200) {
-              sensors[sensorId].history.shift();
+    <!-- Scripts -->
+    <script src="./config.js" defer></script>
+    <script src="./main.js" defer></script>
+    <script src="./iotapp.js"></script>
+    
+    <script>
+        // Configuración de sensores
+        const sensors = {
+            temperature: {
+                name: "Temperatura",
+                unit: "°C",
+                description: "Temperatura ambiente de la estación",
+                history: [],
+                color: "#ef4444"
+            },
+            power: {
+                name: "Potencia",
+                unit: "kW",
+                description: "Potencia consumida por la estación",
+                history: [],
+                color: "#8b5cf6"
+            },
+            voltage: {
+                name: "Voltaje",
+                unit: "V",
+                description: "Voltaje del sistema de carga",
+                history: [],
+                color: "#eab308"
+            },
+            battery: {
+                name: "Batería",
+                unit: "%",
+                description: "Nivel de batería disponible",
+                history: [],
+                color: "#22c55e"
+            },
+            lastCharge: {
+                name: "Última carga",
+                unit: "min",
+                description: "Tiempo desde la última carga completa",
+                history: [],
+                color: "#3b82f6"
             }
-          }
+        };
+
+        // Inicializar con datos de ejemplo
+        Object.keys(sensors).forEach(sensorId => {
+            const base = {
+                temperature: 24.5,
+                power: 1.47,
+                voltage: 220,
+                battery: 77,
+                lastCharge: 41
+            }[sensorId];
+            
+            for (let i = 0; i < 24; i++) {
+                const jitter = (Math.random() - 0.5) * 2;
+                sensors[sensorId].history.push(Math.max(0, base + jitter));
+            }
         });
 
-        updateSensorUI();
-      } catch (err) {
-        console.error("Error cargando estado actual:", err);
-      }
-    }
+        // Actualizar UI en tiempo real
+        function updateSensorUI() {
+            Object.keys(sensors).forEach(sensorId => {
+                const sensor = sensors[sensorId];
+                const card = document.querySelector(`.ha-card[data-key="${sensorId}"]`);
+                
+                if (card) {
+                    // Actualizar valor principal
+                    const valueEl = card.querySelector('.ha-card__value');
+                    const currentValue = sensor.history[sensor.history.length - 1];
+                    valueEl.textContent = `${currentValue.toFixed(1)} ${sensor.unit}`;
+                    
+                    // Actualizar timestamp
+                    const timeEl = card.querySelector('.ha-card__timestamp');
+                    timeEl.textContent = 'Hace 2 min';
+                    
+                    // Actualizar sparkline
+                    const sparklineEl = card.querySelector('.ha-card__sparkline');
+                    renderSparkline(sparklineEl, sensor.history, sensor.color);
+                }
+            });
+        }
 
-    // 3) Retroceso: forzar carga vía /api/control
-    window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
-      if (!ENDPOINTS.CONTROL) {
-        alert("Endpoint de control no configurado");
-        return;
-      }
+        // Render sparkline function
+        function renderSparkline(container, data, color) {
+            if (!container || data.length < 2) return;
+            
+            const width = container.clientWidth || 200;
+            const height = 40;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
+            
+            const points = data.map((value, index) => {
+                const x = (index / (data.length - 1)) * width;
+                const y = height - ((value - min) / range) * height;
+                return `${x},${y}`;
+            }).join(' ');
+            
+            container.innerHTML = `
+                <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="grad-${color}" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="${color}" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="${color}" stop-opacity="0.1"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" fill="url(#grad-${color})"/>
+                    <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            `;
+        }
 
-      try {
-        const res = await fetch(ENDPOINTS.CONTROL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            deviceId: "ecovolt_digital_twin",
-            action: "force_charge",
-            value: 100
-          })
+        // Función para abrir modal
+        function openTelemetryModal(sensorId) {
+            const sensor = sensors[sensorId];
+            if (!sensor) return;
+            
+            const modal = document.getElementById('ha-modal');
+            const title = document.getElementById('ha-modal-title');
+            const subtitle = document.getElementById('ha-modal-subtitle');
+            const current = document.getElementById('ha-modal-current');
+            const min = document.getElementById('ha-modal-min');
+            const max = document.getElementById('ha-modal-max');
+            const avg = document.getElementById('ha-modal-avg');
+            const chart = document.getElementById('ha-modal-chart');
+            
+            if (modal && title && subtitle && current && min && max && avg && chart) {
+                title.textContent = sensor.name;
+                subtitle.textContent = sensor.description;
+                
+                const currentValue = sensor.history[sensor.history.length - 1];
+                const minValue = Math.min(...sensor.history);
+                const maxValue = Math.max(...sensor.history);
+                const avgValue = sensor.history.reduce((a, b) => a + b, 0) / sensor.history.length;
+                
+                current.textContent = `${currentValue.toFixed(1)} ${sensor.unit}`;
+                min.textContent = `${minValue.toFixed(1)} ${sensor.unit}`;
+                max.textContent = `${maxValue.toFixed(1)} ${sensor.unit}`;
+                avg.textContent = `${avgValue.toFixed(1)} ${sensor.unit}`;
+                
+                renderSparkline(chart, sensor.history, sensor.color);
+                modal.classList.remove('is-hidden');
+            }
+        }
+
+        // Función para cerrar modal
+        function closeTelemetryModal() {
+            const modal = document.getElementById('ha-modal');
+            if (modal) {
+                modal.classList.add('is-hidden');
+            }
+        }
+
+        // Agregar event listeners para los clicks
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSensorUI();
+            
+            // Agregar event listeners a las tarjetas
+            document.querySelectorAll('.js-sensor-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const sensorId = card.getAttribute('data-key');
+                    openTelemetryModal(sensorId);
+                });
+            });
+            
+            // Agregar event listener para cerrar modal
+            const closeBtn = document.getElementById('ha-modal-close');
+            const modal = document.getElementById('ha-modal');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeTelemetryModal);
+            }
+            
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeTelemetryModal();
+                    }
+                });
+            }
+            
+            // Cerrar modal con ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeTelemetryModal();
+                }
+            });
         });
 
-        const payload = await res.json();
-        console.log("Respuesta control:", payload);
+        // Simular datos en tiempo real
+        setInterval(() => {
+            Object.keys(sensors).forEach(sensorId => {
+                const sensor = sensors[sensorId];
+                const lastValue = sensor.history[sensor.history.length - 1];
+                const change = (Math.random() - 0.5) * 0.5;
+                const newValue = Math.max(0, lastValue + change);
+                
+                sensor.history.push(newValue);
+                if (sensor.history.length > 24) sensor.history.shift();
+            });
+            
+            updateSensorUI();
+        }, 5000);
 
-        // Volver a cargar estado para reflejar cambio
-        await cargarEstadoActual();
-        alert("Carga forzada enviada al backend - batería al 100% (simulada)");
-      } catch (err) {
-        console.error("Error aplicando retroceso de carga:", err);
-        alert("Error al enviar comando de carga");
-      }
-    };
-
-    // ============================
-    // 🧷 Inicialización y eventos
-    // ============================
-    document.addEventListener("DOMContentLoaded", async () => {
-      // 1. Cargar historial inicial
-      await cargarHistorialInicial(24);
-
-      // 2. Cargar primer estado actual
-      await cargarEstadoActual();
-
-      // 3. Listeners para abrir/cerrar modal
-      document.querySelectorAll(".js-sensor-card").forEach(card => {
-        card.addEventListener("click", () => {
-          const sensorId = card.getAttribute("data-key");
-          openTelemetryModal(sensorId);
-        });
-      });
-
-      const closeBtn = document.getElementById("ha-modal-close");
-      const modal = document.getElementById("ha-modal");
-
-      if (closeBtn) {
-        closeBtn.addEventListener("click", closeTelemetryModal);
-      }
-      if (modal) {
-        modal.addEventListener("click", e => {
-          if (e.target === modal) closeTelemetryModal();
-        });
-      }
-      document.addEventListener("keydown", e => {
-        if (e.key === "Escape") closeTelemetryModal();
-      });
-
-      // 4. Actualizar estado periódicamente (digital twin en vivo)
-      setInterval(cargarEstadoActual, 5000);
-    });
-  </script>
+        // Función para el botón de carga
+        function aplicarRetrocesoCarga() {
+            const batterySensor = sensors.battery;
+            if (batterySensor) {
+                batterySensor.history.push(100);
+                if (batterySensor.history.length > 24) batterySensor.history.shift();
+                updateSensorUI();
+                alert('Carga forzada aplicada - Batería al 100%');
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
