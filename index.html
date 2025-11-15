@@ -370,49 +370,279 @@
     <script src="./main.js"></script>
 
 <script>
+<script>
 // =====================================================
-// SISTEMA DE GRÁFICAS Y MODAL (COMPATIBLE CON main.js)
+// SISTEMA DE GRÁFICAS CONECTADO AL BACKEND REAL
 // =====================================================
 
 const sensorsConfig = {
-    temperature: { name: "Temperatura", unit: "°C", color: "#ef4444", description: "Temperatura ambiente de la estación" },
-    power: { name: "Potencia", unit: "kW", color: "#8b5cf6", description: "Potencia consumida por la estación" },
-    voltage: { name: "Voltaje", unit: "V", color: "#eab308", description: "Voltaje del sistema de carga" },
-    battery: { name: "Batería", unit: "%", color: "#22c55e", description: "Nivel de batería disponible" },
-    lastCharge: { name: "Última carga", unit: "min", color: "#3b82f6", description: "Tiempo desde la última carga completa" }
+    temperature: { 
+        name: "Temperatura", 
+        unit: "°C", 
+        color: "#ef4444", 
+        description: "Temperatura ambiente de la estación",
+        min: 20,
+        max: 40,
+        normalRange: [22, 30]
+    },
+    power: { 
+        name: "Potencia", 
+        unit: "kW", 
+        color: "#8b5cf6", 
+        description: "Potencia consumida por la estación",
+        min: 0.4,
+        max: 3.0,
+        normalRange: [0.5, 2.5]
+    },
+    voltage: { 
+        name: "Voltaje", 
+        unit: "V", 
+        color: "#eab308", 
+        description: "Voltaje del sistema de carga",
+        min: 210,
+        max: 240,
+        normalRange: [215, 225]
+    },
+    battery: { 
+        name: "Batería", 
+        unit: "%", 
+        color: "#22c55e", 
+        description: "Nivel de batería disponible",
+        min: 5,
+        max: 100,
+        normalRange: [20, 90]
+    },
+    lastCharge: { 
+        name: "Última carga", 
+        unit: "min", 
+        color: "#3b82f6", 
+        description: "Tiempo desde la última carga completa",
+        min: 0,
+        max: 1440,
+        normalRange: [0, 120]
+    }
 };
 
-// Generar datos iniciales para las gráficas
-function generarDatosIniciales() {
-    const datos = {};
-    Object.keys(sensorsConfig).forEach(sensorId => {
-        const base = {
-            temperature: 24.5,
-            power: 1.47,
-            voltage: 220,
-            battery: 77,
-            lastCharge: 41
-        }[sensorId];
+// Almacenamiento de datos históricos del backend
+let sensorData = {
+    temperature: [],
+    power: [],
+    voltage: [],
+    battery: [],
+    lastCharge: []
+};
+
+// WebSocket para datos en tiempo real
+let wsConnection = null;
+
+// ===== CONEXIÓN WEBSOCKET =====
+function connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}`;
+    
+    try {
+        wsConnection = new WebSocket(wsUrl);
         
-        datos[sensorId] = Array.from({length: 20}, (_, i) => {
-            const jitter = (Math.random() - 0.5) * 2;
-            return Math.max(0, base + jitter);
-        });
-    });
-    return datos;
+        wsConnection.onopen = function() {
+            console.log('✅ WebSocket conectado al backend');
+        };
+        
+        wsConnection.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                procesarMensajeWebSocket(data);
+            } catch (error) {
+                console.error('Error procesando mensaje WebSocket:', error);
+            }
+        };
+        
+        wsConnection.onclose = function() {
+            console.log('🔌 WebSocket desconectado, reconectando...');
+            setTimeout(connectWebSocket, 3000);
+        };
+        
+        wsConnection.onerror = function(error) {
+            console.error('❌ Error WebSocket:', error);
+        };
+        
+    } catch (error) {
+        console.log('WebSocket no disponible, usando polling');
+    }
 }
 
-let sensorData = generarDatosIniciales();
+// ===== PROCESAR DATOS DEL BACKEND =====
+function procesarMensajeWebSocket(data) {
+    switch(data.type) {
+        case 'sensor_update':
+            // Actualizar datos en tiempo real
+            actualizarDatosRealtime(data.data);
+            break;
+            
+        case 'connection_established':
+            console.log('🔗 Conectado al backend IoT');
+            break;
+            
+        case 'control_update':
+            console.log('🔄 Actualización de control:', data);
+            break;
+    }
+}
 
-// Renderizar sparkline
-function renderSparkline(container, data, color) {
-    if (!container || !data || data.length < 2) return;
+function actualizarDatosRealtime(realData) {
+    // Actualizar valores principales en las tarjetas
+    const elementos = {
+        temperature: document.querySelector('[data-key="temperature"] .ha-card__value'),
+        power: document.querySelector('[data-key="power"] .ha-card__value'),
+        voltage: document.querySelector('[data-key="voltage"] .ha-card__value'),
+        battery: document.querySelector('[data-key="battery"] .ha-card__value'),
+        lastCharge: document.querySelector('[data-key="lastCharge"] .ha-card__value')
+    };
+
+    if (elementos.temperature && realData.temperature !== undefined) {
+        elementos.temperature.textContent = `${realData.temperature.toFixed(1)} °C`;
+        actualizarDatosSensor('temperature', realData.temperature);
+    }
+    if (elementos.power && realData.power !== undefined) {
+        elementos.power.textContent = `${realData.power.toFixed(2)} kW`;
+        actualizarDatosSensor('power', realData.power);
+    }
+    if (elementos.voltage && realData.voltage !== undefined) {
+        elementos.voltage.textContent = `${realData.voltage.toFixed(1)} V`;
+        actualizarDatosSensor('voltage', realData.voltage);
+    }
+    if (elementos.battery && realData.battery !== undefined) {
+        elementos.battery.textContent = `${realData.battery.toFixed(1)} %`;
+        actualizarDatosSensor('battery', realData.battery);
+    }
+    if (elementos.lastCharge && realData.lastChargeMinutes !== undefined) {
+        elementos.lastCharge.textContent = `${realData.lastChargeMinutes} min`;
+        actualizarDatosSensor('lastCharge', realData.lastChargeMinutes);
+    }
+
+    // Actualizar timestamp
+    document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+        ts.textContent = 'En tiempo real';
+        ts.style.color = '#22c55e';
+    });
+}
+
+// ===== CARGAR DATOS HISTÓRICOS DEL BACKEND =====
+async function cargarDatosHistoricos() {
+    try {
+        const response = await fetch('/api/history/temperature?hours=24');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('📊 Datos históricos cargados:', data.totalPoints, 'puntos');
+            
+            // Procesar datos históricos para cada sensor
+            await Promise.all(
+                Object.keys(sensorsConfig).map(async sensorId => {
+                    const histResponse = await fetch(`/api/history/${sensorId}?hours=24`);
+                    if (histResponse.ok) {
+                        const histData = await histResponse.json();
+                        sensorData[sensorId] = histData.data.map(item => item.v).slice(-20);
+                    }
+                })
+            );
+            
+            actualizarTodasSparklines();
+        }
+    } catch (error) {
+        console.log('⚠️ Usando datos simulados hasta que el backend esté disponible');
+        generarDatosInicialesReales();
+    }
+}
+
+// ===== GENERAR DATOS INICIALES REALISTAS =====
+function generarDatosInicialesReales() {
+    const valoresBase = {
+        temperature: 24.5,
+        power: 1.47,
+        voltage: 220.0,
+        battery: 77.0,
+        lastCharge: 41
+    };
+
+    Object.keys(sensorsConfig).forEach(sensorId => {
+        const base = valoresBase[sensorId];
+        const config = sensorsConfig[sensorId];
+        
+        // Generar 20 puntos con variación realista basada en rangos del backend
+        sensorData[sensorId] = Array.from({length: 20}, (_, i) => {
+            const progreso = i / 19;
+            const variacion = (Math.random() - 0.5) * (config.max - config.min) * 0.08;
+            
+            // Patrones específicos para cada sensor
+            switch(sensorId) {
+                case 'temperature':
+                    // Ciclo diurno de temperatura
+                    const cicloDia = Math.sin(progreso * Math.PI * 2) * 2;
+                    return base + cicloDia + variacion;
+                
+                case 'power':
+                    // Patrón de uso con picos
+                    const pico = Math.sin(progreso * Math.PI * 4) > 0.7 ? Math.random() * 1.5 : 0;
+                    return Math.max(0.4, base + pico + variacion);
+                
+                case 'voltage':
+                    // Voltaje estable con pequeñas fluctuaciones
+                    return base + (Math.random() - 0.5) * 4;
+                
+                case 'battery':
+                    // Descarga gradual con pequeñas recuperaciones
+                    const tendencia = -progreso * 15;
+                    const recuperacion = Math.random() > 0.8 ? 5 : 0;
+                    return Math.max(15, base + tendencia + recuperacion + variacion);
+                
+                case 'lastCharge':
+                    // Tiempo acumulativo con reset ocasional
+                    const acumulado = progreso * 180;
+                    const reset = Math.random() > 0.9 ? -acumulado : 0;
+                    return (acumulado + reset + variacion) % 200;
+                
+                default:
+                    return base + variacion;
+            }
+        });
+    });
+    
+    actualizarTodasSparklines();
+}
+
+// ===== ACTUALIZAR DATOS DE SENSOR =====
+function actualizarDatosSensor(sensorId, nuevoValor) {
+    if (!sensorData[sensorId]) sensorData[sensorId] = [];
+    
+    // Agregar nuevo dato manteniendo coherencia con rangos
+    const config = sensorsConfig[sensorId];
+    const valorLimitado = Math.max(config.min, Math.min(config.max, nuevoValor));
+    
+    sensorData[sensorId].push(valorLimitado);
+    
+    // Mantener solo los últimos 20 puntos para las sparklines
+    if (sensorData[sensorId].length > 20) {
+        sensorData[sensorId] = sensorData[sensorId].slice(-20);
+    }
+    
+    // Actualizar sparkline
+    const container = document.getElementById(`sparkline-${sensorId}`);
+    if (container && config) {
+        renderSparkline(container, sensorData[sensorId], config.color, config.min, config.max);
+    }
+}
+
+// ===== RENDERIZAR SPARKLINE MEJORADA =====
+function renderSparkline(container, data, color, minRange, maxRange) {
+    if (!container || !data || data.length < 2) {
+        container.innerHTML = '<div style="color: #666; text-align: center; padding: 10px; font-size: 12px;">Cargando datos...</div>';
+        return;
+    }
     
     const width = container.clientWidth || 200;
     const height = 40;
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const range = max - min || 1;
+    const min = minRange !== undefined ? minRange : Math.min(...data);
+    const max = maxRange !== undefined ? maxRange : Math.max(...data);
+    const range = Math.max(1, max - min);
     
     const points = data.map((value, index) => {
         const x = (index / (data.length - 1)) * width;
@@ -420,40 +650,89 @@ function renderSparkline(container, data, color) {
         return `${x},${y}`;
     }).join(' ');
     
+    // Determinar color basado en valores actuales
+    const lastValue = data[data.length - 1];
+    const config = Object.values(sensorsConfig).find(c => c.color === color);
+    let lineColor = color;
+    let status = 'normal';
+    
+    if (config && config.normalRange) {
+        if (lastValue < config.normalRange[0]) {
+            lineColor = '#eab308'; // amarillo - alerta
+            status = 'bajo';
+        } else if (lastValue > config.normalRange[1]) {
+            lineColor = '#ef4444'; // rojo - peligro
+            status = 'alto';
+        }
+    }
+    
     container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%; height:100%;">
             <defs>
                 <linearGradient id="grad-${color.replace('#', '')}" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="${color}" stop-opacity="0.6"/>
-                    <stop offset="100%" stop-color="${color}" stop-opacity="0.1"/>
+                    <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="${lineColor}" stop-opacity="0.05"/>
                 </linearGradient>
             </defs>
-            <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" fill="url(#grad-${color.replace('#', '')})"/>
-            <polyline points="${points}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+            <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" 
+                  fill="url(#grad-${color.replace('#', '')})"/>
+            <polyline points="${points}" fill="none" stroke="${lineColor}" 
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             
-            <!-- Último punto -->
-            <circle cx="${width}" cy="${height - ((data[data.length - 1] - min) / range) * height}" r="3" fill="${color}" stroke="#ffffff" stroke-width="1.5"/>
+            <!-- Último punto destacado -->
+            <circle cx="${width}" cy="${height - ((lastValue - min) / range) * height}" 
+                   r="3" fill="${lineColor}" stroke="#ffffff" stroke-width="1.5"/>
         </svg>
     `;
+    
+    // Agregar tooltip con información del estado
+    container.title = `Último valor: ${lastValue.toFixed(1)} | Estado: ${status}`;
 }
 
-// Actualizar todas las sparklines
-function actualizarSparklines() {
+// ===== ACTUALIZAR TODAS LAS SPARKLINES =====
+function actualizarTodasSparklines() {
     Object.keys(sensorsConfig).forEach(sensorId => {
         const container = document.getElementById(`sparkline-${sensorId}`);
         const config = sensorsConfig[sensorId];
-        if (container && sensorData[sensorId]) {
-            renderSparkline(container, sensorData[sensorId], config.color);
+        if (container && sensorData[sensorId] && sensorData[sensorId].length > 0) {
+            renderSparkline(container, sensorData[sensorId], config.color, config.min, config.max);
         }
     });
 }
 
-// Modal functions
+// ===== ANÁLISIS DE TENDENCIAS =====
+function analizarTendencias(sensorId, datos) {
+    if (!datos || datos.length < 5) return null;
+    
+    const ultimos5 = datos.slice(-5);
+    const tendencia = ultimos5[ultimos5.length - 1] - ultimos5[0];
+    const config = sensorsConfig[sensorId];
+    const valorActual = datos[datos.length - 1];
+    
+    let estado = 'normal';
+    if (config && config.normalRange) {
+        if (valorActual < config.normalRange[0]) estado = 'bajo';
+        else if (valorActual > config.normalRange[1]) estado = 'alto';
+    }
+    
+    return {
+        tendencia: tendencia,
+        direccion: tendencia > 0 ? 'subiendo' : tendencia < 0 ? 'bajando' : 'estable',
+        velocidad: Math.abs(tendencia) / 5,
+        estado: estado,
+        valorActual: valorActual
+    };
+}
+
+// ===== MODAL CON ANÁLISIS COMPLETO =====
 function openTelemetryModal(sensorId) {
     const config = sensorsConfig[sensorId];
     const data = sensorData[sensorId];
     
-    if (!config || !data) return;
+    if (!config || !data || data.length === 0) {
+        alert('No hay datos disponibles para este sensor');
+        return;
+    }
     
     const modal = document.getElementById('ha-modal');
     const title = document.getElementById('ha-modal-title');
@@ -464,37 +743,41 @@ function openTelemetryModal(sensorId) {
     const avg = document.getElementById('ha-modal-avg');
     const chart = document.getElementById('ha-modal-chart');
     
-    if (!modal || !title || !subtitle || !current || !min || !max || !avg || !chart) return;
+    if (!modal || !title) return;
     
     // Calcular estadísticas
     const currentValue = data[data.length - 1];
     const minValue = Math.min(...data);
     const maxValue = Math.max(...data);
     const avgValue = data.reduce((a, b) => a + b, 0) / data.length;
+    const tendencia = analizarTendencias(sensorId, data);
     
     // Actualizar modal
     title.textContent = config.name;
-    subtitle.textContent = config.description;
+    subtitle.textContent = `${config.description} | Tendencia: ${tendencia ? tendencia.direccion : 'N/A'}`;
     current.textContent = `${currentValue.toFixed(config.unit === 'kW' ? 2 : 1)} ${config.unit}`;
     min.textContent = `${minValue.toFixed(config.unit === 'kW' ? 2 : 1)} ${config.unit}`;
     max.textContent = `${maxValue.toFixed(config.unit === 'kW' ? 2 : 1)} ${config.unit}`;
     avg.textContent = `${avgValue.toFixed(config.unit === 'kW' ? 2 : 1)} ${config.unit}`;
     
     // Renderizar gráfica del modal
-    renderModalChart(chart, data, config.color, config.unit);
+    renderModalChart(chart, data, config.color, config.unit, config.min, config.max);
     
     // Mostrar modal
     modal.classList.remove('is-hidden');
 }
 
-function renderModalChart(container, data, color, unit) {
-    if (!container || !data || data.length < 2) return;
+function renderModalChart(container, data, color, unit, minRange, maxRange) {
+    if (!container || !data || data.length < 2) {
+        container.innerHTML = '<div style="color: #666; text-align: center; padding: 40px;">No hay datos suficientes para mostrar</div>';
+        return;
+    }
     
     const width = 400;
     const height = 200;
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const range = max - min || 1;
+    const min = minRange !== undefined ? minRange : Math.min(...data);
+    const max = maxRange !== undefined ? maxRange : Math.max(...data);
+    const range = Math.max(1, max - min);
     
     const points = data.map((value, index) => {
         const x = (index / (data.length - 1)) * width;
@@ -503,13 +786,23 @@ function renderModalChart(container, data, color, unit) {
     }).join(' ');
     
     container.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%; height:200px;">
             <defs>
                 <linearGradient id="modal-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="${color}" stop-opacity="0.4"/>
                     <stop offset="100%" stop-color="${color}" stop-opacity="0.05"/>
                 </linearGradient>
             </defs>
+            
+            <!-- Línea de referencia de rango normal -->
+            <line x1="0" y1="${height - ((sensorsConfig[Object.keys(sensorsConfig).find(k => sensorsConfig[k].color === color)]?.normalRange?.[0] - min) / range) * height || height/2}" 
+                  x2="${width}" y2="${height - ((sensorsConfig[Object.keys(sensorsConfig).find(k => sensorsConfig[k].color === color)]?.normalRange?.[0] - min) / range) * height || height/2}" 
+                  stroke="#22c55e" stroke-width="1" stroke-dasharray="4,2" opacity="0.6"/>
+                  
+            <line x1="0" y1="${height - ((sensorsConfig[Object.keys(sensorsConfig).find(k => sensorsConfig[k].color === color)]?.normalRange?.[1] - min) / range) * height || height/2}" 
+                  x2="${width}" y2="${height - ((sensorsConfig[Object.keys(sensorsConfig).find(k => sensorsConfig[k].color === color)]?.normalRange?.[1] - min) / range) * height || height/2}" 
+                  stroke="#22c55e" stroke-width="1" stroke-dasharray="4,2" opacity="0.6"/>
+            
             <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" fill="url(#modal-grad)"/>
             <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
             
@@ -538,10 +831,15 @@ function closeTelemetryModal() {
     }
 }
 
-// Event listeners
+// ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar sparklines
-    actualizarSparklines();
+    console.log('🎯 Sistema de gráficas IoT inicializado');
+    
+    // Conectar WebSocket para datos en tiempo real
+    connectWebSocket();
+    
+    // Cargar datos históricos del backend
+    cargarDatosHistoricos();
     
     // Agregar event listeners a las tarjetas
     document.querySelectorAll('.js-sensor-card').forEach(card => {
@@ -573,51 +871,18 @@ document.addEventListener('DOMContentLoaded', function() {
             closeTelemetryModal();
         }
     });
-    
-    // Simular actualización de datos cada 5 segundos
-    setInterval(() => {
-        Object.keys(sensorsConfig).forEach(sensorId => {
-            if (sensorData[sensorId]) {
-                const lastValue = sensorData[sensorId][sensorData[sensorId].length - 1];
-                const change = (Math.random() - 0.5) * 0.8;
-                const newValue = Math.max(0, lastValue + change);
-                
-                sensorData[sensorId].push(newValue);
-                if (sensorData[sensorId].length > 20) {
-                    sensorData[sensorId].shift();
-                }
-            }
-        });
-        
-        actualizarSparklines();
-        
-        // Actualizar valores principales si están visibles
-        const visibleModal = !document.getElementById('ha-modal').classList.contains('is-hidden');
-        if (visibleModal) {
-            const activeSensor = document.querySelector('.ha-card:hover')?.getAttribute('data-key');
-            if (activeSensor) {
-                openTelemetryModal(activeSensor);
-            }
-        }
-    }, 5000);
 });
 
 // Función global para actualizar desde main.js
 window.updateSensorData = function(sensorId, dataPoints) {
     if (sensorData[sensorId] && dataPoints && dataPoints.length > 0) {
-        // Convertir {t, v} a array de valores
         const values = dataPoints.map(point => point.v);
-        sensorData[sensorId] = values;
-        actualizarSparklines();
+        sensorData[sensorId] = values.slice(-20); // Mantener últimos 20 puntos
+        actualizarTodasSparklines();
     }
-};
-
-// Función global para el botón de carga (será sobreescrita por main.js si existe)
-window.aplicarRetrocesoCarga = function() {
-    alert('🔄 Función de carga forzada - Conectando con backend...');
-    // main.js sobreescribirá esta función si está disponible
 };
 </script>
 
 </body>
 </html>
+
