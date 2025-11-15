@@ -1,4 +1,4 @@
-// main.js - Versión simplificada y funcional
+// main.js - Versión sin alerts molestos
 console.log('🚀 main.js cargado - Panel IoT EcoVolt');
 
 const ECOVOLT_CONFIG = window.ECOVOLT_CONFIG || {};
@@ -7,7 +7,7 @@ const ENDPOINTS = ECOVOLT_CONFIG.ENDPOINTS || {};
 // Función para cargar datos del backend
 async function cargarDatosBackend() {
     if (!ENDPOINTS.STATE) {
-        console.log('⚠️  Backend no configurado, usando datos locales');
+        console.log('🌐 Modo estático - Backend no configurado');
         return;
     }
 
@@ -19,9 +19,11 @@ async function cargarDatosBackend() {
             
             // Actualizar la UI con datos reales
             actualizarUIconDatosReales(data);
+        } else {
+            console.log('⚠️ Backend respondió con error:', response.status);
         }
     } catch (error) {
-        console.log('❌ Error conectando al backend:', error);
+        console.log('🌐 Backend no disponible - Modo simulación:', error.message);
     }
 }
 
@@ -61,7 +63,15 @@ function actualizarUIconDatosReales(data) {
 // Sobrescribir la función de carga forzada
 window.aplicarRetrocesoCarga = async function() {
     if (!ENDPOINTS.CONTROL) {
-        alert('🎯 Función de carga forzada activada (modo simulación)');
+        console.log('⚡ Carga forzada simulada - Backend no configurado');
+        // Efecto visual en lugar de alert
+        const batteryCard = document.querySelector('[data-key="battery"]');
+        if (batteryCard) {
+            batteryCard.style.animation = 'pulse 0.5s ease-in-out';
+            setTimeout(() => {
+                batteryCard.style.animation = '';
+            }, 500);
+        }
         return;
     }
 
@@ -77,10 +87,20 @@ window.aplicarRetrocesoCarga = async function() {
         });
 
         const result = await response.json();
-        alert(result.ok ? '✅ Carga forzada exitosa' : '❌ Error en carga forzada');
+        console.log(result.ok ? '✅ Carga forzada exitosa' : '❌ Error en carga forzada');
+        
+        // Efecto visual en lugar de alert
+        const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
+        if (batteryValue && result.ok) {
+            batteryValue.textContent = '100 %';
+            batteryValue.style.color = '#22c55e';
+            setTimeout(() => {
+                batteryValue.style.color = '';
+            }, 2000);
+        }
         
     } catch (error) {
-        alert('❌ Error de conexión con el backend');
+        console.log('❌ Error de conexión con el backend:', error.message);
     }
 };
 
