@@ -66,70 +66,7 @@ window.ECOVOLT_PANEL_MOUNT = function mount(htmlByKey){
     if (cell) cell.innerHTML = html;
   });
 };
-// ===========================
-// 🔌 INTEGRACIÓN CON BACKEND IOT
-// ===========================
 
-const { ENDPOINTS } = window.ECOVOLT_CONFIG;
-
-// Helpers para actualizar tarjetas UI
-function updateCard(key, value, timestamp) {
-  // Card principal con data-key="temperature", "power", etc.
-  const card = document.querySelector(`.ha-card[data-key="${key}"]`);
-  if (!card) return;
-
-  // Valor principal
-  const valueEl = card.querySelector(".ha-card__value");
-  if (valueEl) valueEl.textContent = value;
-
-  // Timestamp tipo “Hace 2 min”
-  const timeEl = card.querySelector(".ha-card__timestamp");
-  if (timeEl) {
-    const date = new Date(timestamp);
-    timeEl.textContent = `Actualizado: ${date.toLocaleTimeString()}`;
-  }
-}
-
-// 1️⃣ Cargar estado actual desde el backend
-async function cargarEstadoActual() {
-  try {
-    const res = await fetch(ENDPOINTS.STATE);
-    if (!res.ok) throw new Error("Error cargando /api/state");
-
-    const data = await res.json(); 
-    // Data esperada:
-    // { temperature, power, voltage, battery, lastChargeMinutes, timestamp }
-
-    // ==========================
-    // Temperatura
-    // ==========================
-    updateCard(
-      "temperature",
-      `${data.temperature.toFixed(1)} °C`,
-      data.timestamp
-    );
-
-    // ==========================
-    // Potencia
-    // ==========================
-    updateCard(
-      "power",
-      `${data.power.toFixed(2)} kW`,
-      data.timestamp
-    );
-
-    // ⚡ Si luego agregas “voltaje”, “batería”, los conectamos igual.
-    
-  } catch (err) {
-    console.error("Error en cargarEstadoActual:", err);
-  }
-}
-
-// Llamar al cargar la página
-cargarEstadoActual();
-
-// Actualizar cada 5 segundos
-setInterval(cargarEstadoActual, 5000);
 // ===========================
 // 🔌 INTEGRACIÓN CON BACKEND IOT ECOVOLT
 // ===========================
@@ -165,13 +102,18 @@ function formatTimestamp(ts) {
 // 1️⃣ Estado actual (todas las tarjetas numéricas)
 async function cargarEstadoActual() {
   if (!ENDPOINTS.STATE) {
-    console.warn("ENDPOINTS.STATE no definido. ¿config.js se carga antes que iotapp.js?");
+    console.log('🌐 Modo estático - Backend no configurado');
+    // Mostrar modo simulación en la UI
+    document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+      ts.textContent = 'Modo simulación';
+      ts.style.color = '#eab308';
+    });
     return;
   }
 
   try {
     const res = await fetch(ENDPOINTS.STATE);
-    if (!res.ok) throw new Error("Error cargando /api/state");
+    if (!res.ok) throw new Error(`Backend respondió con error: ${res.status}`);
 
     const data = await res.json();
     const tsText = formatTimestamp(data.timestamp);
@@ -191,8 +133,20 @@ async function cargarEstadoActual() {
     // Última carga (en minutos)
     updateCard("lastCharge", `${data.lastChargeMinutes} min`, tsText);
 
+    // Indicador de conexión exitosa
+    document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+      ts.textContent = 'En tiempo real';
+      ts.style.color = '#22c55e';
+    });
+
   } catch (err) {
-    console.error("Error en cargarEstadoActual:", err);
+    console.log('🌐 Backend no disponible - Modo simulación activado:', err.message);
+    
+    // NO usar alert - en su lugar mostrar estado en UI
+    document.querySelectorAll('.ha-card__timestamp').forEach(ts => {
+      ts.textContent = 'Modo simulación';
+      ts.style.color = '#eab308';
+    });
   }
 }
 
@@ -222,19 +176,62 @@ const SENSOR_MAP = {
 // ------ Utilidad para pedir histórico ------
 async function fetchHistory(sensorKey, hours = 24) {
   const sensorName = SENSOR_MAP[sensorKey];
-  if (!sensorName || !EP.HISTORY) return null;
+  if (!sensorName || !EP.HISTORY) {
+    console.log('📊 Modo simulación - Generando datos históricos ficticios');
+    // Generar datos de ejemplo para modo simulación
+    return generateMockHistory(sensorKey, hours);
+  }
 
-  const url = `${EP.HISTORY}/${sensorName}?hours=${hours}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Error en historial ${sensorName}`);
-  const payload = await res.json(); // { sensor, data:[{t,v}], ... }
-  return payload.data || [];
+  try {
+    const url = `${EP.HISTORY}/${sensorName}?hours=${hours}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Error en historial ${sensorName}`);
+    const payload = await res.json(); // { sensor, data:[{t,v}], ... }
+    return payload.data || [];
+  } catch (error) {
+    console.log('📊 Usando datos simulados para histórico:', error.message);
+    return generateMockHistory(sensorKey, hours);
+  }
+}
+
+// Generar datos históricos de ejemplo
+function generateMockHistory(sensorKey, hours = 24) {
+  const baseValues = {
+    temperature: 24.5,
+    power: 1.47,
+    voltage: 220,
+    battery: 77,
+    lastCharge: 41
+  };
+  
+  const points = [];
+  const now = Date.now();
+  const interval = (hours * 60 * 60 * 1000) / 20; // 20 puntos en el rango de tiempo
+  
+  for (let i = 0; i < 20; i++) {
+    const timestamp = now - (hours * 60 * 60 * 1000) + (i * interval);
+    const baseValue = baseValues[sensorKey] || 50;
+    const variation = (Math.random() - 0.5) * 10;
+    const value = Math.max(0, baseValue + variation);
+    
+    points.push({
+      t: timestamp,
+      v: parseFloat(value.toFixed(1))
+    });
+  }
+  
+  return points;
 }
 
 // ------ Dibujar sparkline simple en SVG ------
 function renderSparkline(containerId, points) {
   const container = document.getElementById(containerId);
-  if (!container || !points.length) return;
+  if (!container || !points || points.length === 0) {
+    if (container) {
+      container.innerHTML = '<div style="color: #666; text-align: center; padding: 10px; font-size: 12px;">Sin datos</div>';
+    }
+    return;
+  }
 
   container.innerHTML = ""; // limpiar
 
@@ -270,7 +267,7 @@ function renderSparkline(containerId, points) {
 
 // ------ Estadísticos básicos ------
 function statsFromHistory(points) {
-  if (!points.length) return null;
+  if (!points || points.length === 0) return null;
   const vals = points.map(p => p.v);
   const min = Math.min(...vals);
   const max = Math.max(...vals);
@@ -284,15 +281,14 @@ function statsFromHistory(points) {
 // ===========================
 
 // Asumimos que ya tienes un modal en HTML con estos IDs.
-// Si tienen otros, solo cambia los ids aquí:
-const modal = document.getElementById("sensorModal");
-const modalTitle = document.getElementById("modal-title");
-const modalSubtitle = document.getElementById("modal-subtitle");
-const modalCurrent = document.getElementById("modal-current");
-const modalMin = document.getElementById("modal-min");
-const modalMax = document.getElementById("modal-max");
-const modalAvg = document.getElementById("modal-avg");
-const modalChart = document.getElementById("modal-sparkline");
+const modal = document.getElementById("ha-modal");
+const modalTitle = document.getElementById("ha-modal-title");
+const modalSubtitle = document.getElementById("ha-modal-subtitle");
+const modalCurrent = document.getElementById("ha-modal-current");
+const modalMin = document.getElementById("ha-modal-min");
+const modalMax = document.getElementById("ha-modal-max");
+const modalAvg = document.getElementById("ha-modal-avg");
+const modalChart = document.getElementById("ha-modal-chart");
 
 function openSensorModal(key, historyPoints) {
   if (!modal) return;
@@ -302,15 +298,23 @@ function openSensorModal(key, historyPoints) {
   // Títulos según sensor
   const titles = {
     temperature: "Temperatura",
-    power: "Potencia",
+    power: "Potencia", 
     voltage: "Voltaje",
     battery: "Batería",
     lastCharge: "Última carga"
   };
 
+  const descriptions = {
+    temperature: "Temperatura ambiente de la estación",
+    power: "Potencia consumida por la estación",
+    voltage: "Voltaje del sistema de carga", 
+    battery: "Nivel de batería disponible",
+    lastCharge: "Tiempo desde la última carga completa"
+  };
+
   if (modalTitle) modalTitle.textContent = titles[key] || key;
   if (modalSubtitle) {
-    modalSubtitle.textContent = "Comportamiento en las últimas 24 horas";
+    modalSubtitle.textContent = descriptions[key] || "Datos del sensor";
   }
 
   // Formatear unidades
@@ -319,7 +323,7 @@ function openSensorModal(key, historyPoints) {
     power: v => `${v.toFixed(2)} kW`,
     voltage: v => `${v.toFixed(1)} V`,
     battery: v => `${v.toFixed(1)} %`,
-    lastCharge: v => `${v.toFixed(0)} min`
+    lastCharge: v => `${Math.round(v)} min`
   };
   const fmt = formatters[key] || (v => v.toFixed(2));
 
@@ -329,26 +333,99 @@ function openSensorModal(key, historyPoints) {
   if (modalAvg) modalAvg.textContent = fmt(st.avg);
 
   // Gráfica principal dentro del modal
-  if (modalChart) {
-    modalChart.innerHTML = "";
-    const backup = document.createElement("div");
-    backup.id = "modal-sparkline-inner";
-    backup.style.width = "100%";
-    backup.style.height = "160px";
-    modalChart.appendChild(backup);
-    renderSparkline("modal-sparkline-inner", historyPoints);
+  if (modalChart && historyPoints.length > 0) {
+    renderModalChart(modalChart, historyPoints, key);
   }
 
-  modal.classList.add("is-open");
+  modal.classList.remove("is-hidden");
 }
 
-// Cerrar modal (asumiendo un botón con id close-sensor-modal)
-const closeBtn = document.getElementById("close-sensor-modal");
-if (closeBtn && modal) {
-  closeBtn.addEventListener("click", () => {
-    modal.classList.remove("is-open");
+// Renderizar gráfica del modal mejorada
+function renderModalChart(container, data, sensorKey) {
+  if (!container || !data || data.length < 2) {
+    container.innerHTML = '<div style="color: #666; text-align: center; padding: 40px;">No hay datos suficientes para mostrar</div>';
+    return;
+  }
+  
+  const width = 400;
+  const height = 200;
+  const min = Math.min(...data.map(p => p.v));
+  const max = Math.max(...data.map(p => p.v));
+  const range = Math.max(1, max - min);
+  
+  const points = data.map((point, index) => {
+    const x = (index / (data.length - 1)) * width;
+    const y = height - ((point.v - min) / range) * height;
+    return `${x},${y}`;
+  }).join(' ');
+  
+  const colors = {
+    temperature: '#ef4444',
+    power: '#8b5cf6', 
+    voltage: '#eab308',
+    battery: '#22c55e',
+    lastCharge: '#3b82f6'
+  };
+  
+  const color = colors[sensorKey] || '#3b82f6';
+  
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="width:100%; height:200px;">
+      <defs>
+        <linearGradient id="modal-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0.05"/>
+        </linearGradient>
+      </defs>
+      
+      <path d="M0,${height} L${points.replace(/ /g, ' L')} L${width},${height} Z" fill="url(#modal-grad)"/>
+      <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+      
+      ${data.map((point, index) => {
+        if (index % 4 === 0 || index === data.length - 1) {
+          const x = (index / (data.length - 1)) * width;
+          const y = height - ((point.v - min) / range) * height;
+          return `
+            <circle cx="${x}" cy="${y}" r="4" fill="${color}" stroke="#ffffff" stroke-width="2"/>
+            <text x="${x}" y="${y - 12}" font-size="10" font-weight="600" fill="${color}" text-anchor="middle">
+              ${point.v.toFixed(1)}
+            </text>
+          `;
+        }
+        return '';
+      }).join('')}
+    </svg>
+  `;
+}
+
+// Cerrar modal
+function closeSensorModal() {
+  const modal = document.getElementById("ha-modal");
+  if (modal) {
+    modal.classList.add("is-hidden");
+  }
+}
+
+// Configurar cierre del modal
+const closeBtn = document.getElementById("ha-modal-close");
+if (closeBtn) {
+  closeBtn.addEventListener("click", closeSensorModal);
+}
+
+if (modal) {
+  modal.addEventListener("click", function(e) {
+    if (e.target === this) {
+      closeSensorModal();
+    }
   });
 }
+
+// Cerrar con ESC
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") {
+    closeSensorModal();
+  }
+});
 
 // ===========================
 // Click en tarjetas para abrir modal + sparkline pequeño
@@ -358,20 +435,15 @@ document.querySelectorAll(".js-sensor-card").forEach(card => {
     const key = card.dataset.key;
     try {
       const history = await fetchHistory(key, 24);
-      // sparkline pequeño
-      const sparkId = {
-        temperature: "sparkline-temp",
-        power: "sparkline-power",
-        voltage: "sparkline-voltage",
-        battery: "sparkline-battery",
-        lastCharge: "sparkline-charge"
-      }[key];
+      
+      // sparkline pequeño en la tarjeta
+      const sparkId = `sparkline-${key}`;
       if (sparkId) renderSparkline(sparkId, history);
 
       // abrir modal con misma data
       openSensorModal(key, history);
     } catch (e) {
-      console.error("Error al cargar historial para", key, e);
+      console.log("Error al cargar historial para", key, e);
     }
   });
 });
@@ -380,29 +452,63 @@ document.querySelectorAll(".js-sensor-card").forEach(card => {
 // 🔁 RETROCESO: Forzar carga de batería
 // ===========================
 window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
-  if (!EP.CONTROL) return;
+  if (!EP.CONTROL) {
+    console.log('⚡ Carga forzada simulada - Backend no configurado');
+    // Efecto visual en lugar de alert
+    const batteryCard = document.querySelector('[data-key="battery"]');
+    if (batteryCard) {
+      batteryCard.style.animation = 'pulse 0.5s ease-in-out';
+      setTimeout(() => {
+        batteryCard.style.animation = '';
+      }, 500);
+    }
+    return;
+  }
+
   try {
     const res = await fetch(EP.CONTROL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        deviceId: "ecovolt_digital_twin", // o "smart_plug_01" / "esp32_station_01" si quieres
+        deviceId: "ecovolt_digital_twin",
         action: "force_charge",
-        value: 100 // forzar a 100 %
+        value: 100
       })
     });
 
     const data = await res.json();
     console.log("Respuesta control:", data);
 
+    // Efecto visual en lugar de alert
+    const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
+    if (batteryValue && data.ok) {
+      batteryValue.textContent = '100 %';
+      batteryValue.style.color = '#22c55e';
+      setTimeout(() => {
+        batteryValue.style.color = '';
+      }, 2000);
+    }
+
     // refrescar estado para que se vea el cambio en la tarjeta
     await cargarEstadoActual();
   } catch (err) {
-    console.error("Error aplicando retroceso de carga:", err);
+    console.log("Error aplicando retroceso de carga:", err.message);
   }
 };
 
-
-
-
-
+// Inicializar sparklines al cargar
+document.addEventListener("DOMContentLoaded", function() {
+  // Inicializar sparklines con datos de ejemplo después de un delay
+  setTimeout(async () => {
+    const sensors = ['temperature', 'power', 'voltage', 'battery', 'lastCharge'];
+    for (const sensor of sensors) {
+      try {
+        const history = await fetchHistory(sensor, 24);
+        const sparkId = `sparkline-${sensor}`;
+        renderSparkline(sparkId, history);
+      } catch (e) {
+        console.log("Error inicializando sparkline para", sensor, e);
+      }
+    }
+  }, 1000);
+});
