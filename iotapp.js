@@ -130,6 +130,79 @@ cargarEstadoActual();
 
 // Actualizar cada 5 segundos
 setInterval(cargarEstadoActual, 5000);
+// ===========================
+// 🔌 INTEGRACIÓN CON BACKEND IOT ECOVOLT
+// ===========================
+
+// Asegurarnos de que la config exista
+const ECOVOLT_CONFIG = window.ECOVOLT_CONFIG || {};
+const ENDPOINTS = ECOVOLT_CONFIG.ENDPOINTS || {};
+
+// Helper para actualizar una tarjeta específica
+function updateCard(key, value, timestampText) {
+  const card = document.querySelector(`.ha-card[data-key="${key}"]`);
+  if (!card) return;
+
+  const valueEl = card.querySelector(".ha-card__value");
+  if (valueEl) valueEl.textContent = value;
+
+  const timeEl = card.querySelector(".ha-card__timestamp");
+  if (timeEl && timestampText) {
+    timeEl.textContent = timestampText;
+  }
+}
+
+// Formatear hora bonita
+function formatTimestamp(ts) {
+  try {
+    const d = new Date(ts);
+    return `Actualizado: ${d.toLocaleTimeString()}`;
+  } catch {
+    return "";
+  }
+}
+
+// 1️⃣ Estado actual (todas las tarjetas numéricas)
+async function cargarEstadoActual() {
+  if (!ENDPOINTS.STATE) {
+    console.warn("ENDPOINTS.STATE no definido. ¿config.js se carga antes que iotapp.js?");
+    return;
+  }
+
+  try {
+    const res = await fetch(ENDPOINTS.STATE);
+    if (!res.ok) throw new Error("Error cargando /api/state");
+
+    const data = await res.json();
+    const tsText = formatTimestamp(data.timestamp);
+
+    // Temperatura
+    updateCard("temperature", `${data.temperature.toFixed(1)} °C`, tsText);
+
+    // Potencia
+    updateCard("power", `${data.power.toFixed(2)} kW`, tsText);
+
+    // Voltaje
+    updateCard("voltage", `${data.voltage.toFixed(1)} V`, tsText);
+
+    // Batería
+    updateCard("battery", `${data.battery.toFixed(1)} %`, tsText);
+
+    // Última carga (en minutos)
+    updateCard("lastCharge", `${data.lastChargeMinutes} min`, tsText);
+
+  } catch (err) {
+    console.error("Error en cargarEstadoActual:", err);
+  }
+}
+
+// 2️⃣ Inicializar cuando cargue el DOM
+document.addEventListener("DOMContentLoaded", () => {
+  cargarEstadoActual();
+  // Actualizar cada 5 s
+  setInterval(cargarEstadoActual, 5000);
+});
+
 
 
 
