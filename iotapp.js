@@ -454,23 +454,44 @@ document.querySelectorAll(".js-sensor-card").forEach(card => {
 });
 
 // ===========================
-// 🔁 RETROCESO: Forzar carga de batería
+// 🔁 RETROCESO: Forzar carga de batería MEJORADO
 // ===========================
 window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
+  console.log('⚡ Iniciando carga forzada...');
+  
   if (!EP.CONTROL) {
-    console.log('⚡ Carga forzada simulada - Backend no configurado');
-    // Efecto visual en lugar de alert
+    console.log('🔋 Carga forzada simulada');
+    
+    // Efecto visual mejorado
     const batteryCard = document.querySelector('[data-key="battery"]');
-    if (batteryCard) {
-      batteryCard.style.animation = 'pulse 0.5s ease-in-out';
+    const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
+    
+    if (batteryCard && batteryValue) {
+      // Animación de carga
+      batteryCard.style.transition = 'all 0.5s ease';
+      batteryCard.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
+      batteryCard.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.3)';
+      
+      // Cambiar valor a 100%
+      batteryValue.textContent = '100 %';
+      batteryValue.style.color = '#16a34a';
+      batteryValue.style.fontWeight = 'bold';
+      
+      // Restaurar después de 3 segundos
       setTimeout(() => {
-        batteryCard.style.animation = '';
-      }, 500);
+        batteryCard.style.background = '';
+        batteryCard.style.boxShadow = '';
+        batteryValue.style.color = '';
+        batteryValue.style.fontWeight = '';
+        console.log('✅ Carga simulada completada');
+      }, 3000);
     }
     return;
   }
 
   try {
+    console.log('🔄 Enviando comando de carga al backend...');
+    
     const res = await fetch(EP.CONTROL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -482,39 +503,58 @@ window.aplicarRetrocesoCarga = async function aplicarRetrocesoCarga() {
     });
 
     const data = await res.json();
-    console.log("Respuesta control:", data);
+    console.log("✅ Respuesta del backend:", data);
 
-    // Efecto visual en lugar de alert
-    const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
-    if (batteryValue && data.ok) {
-      batteryValue.textContent = '100 %';
-      batteryValue.style.color = '#22c55e';
+    if (data.ok) {
+      // Efecto visual de éxito
+      const batteryValue = document.querySelector('[data-key="battery"] .ha-card__value');
+      const batteryCard = document.querySelector('[data-key="battery"]');
+      
+      if (batteryValue && batteryCard) {
+        batteryValue.textContent = '100 %';
+        batteryValue.style.color = '#16a34a';
+        batteryValue.style.fontWeight = 'bold';
+        
+        batteryCard.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
+        batteryCard.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.3)';
+        
+        setTimeout(() => {
+          batteryValue.style.color = '';
+          batteryValue.style.fontWeight = '';
+          batteryCard.style.background = '';
+          batteryCard.style.boxShadow = '';
+        }, 3000);
+      }
+      
+      // Refrescar datos después de 2 segundos
       setTimeout(() => {
-        batteryValue.style.color = '';
+        cargarEstadoActual();
       }, 2000);
+      
+    } else {
+      console.log('❌ El backend reportó error:', data.message);
+      // Efecto visual de error
+      const batteryCard = document.querySelector('[data-key="battery"]');
+      if (batteryCard) {
+        batteryCard.style.background = 'linear-gradient(135deg, #fecaca 0%, #fca5a5 100%)';
+        setTimeout(() => {
+          batteryCard.style.background = '';
+        }, 2000);
+      }
     }
 
-    // refrescar estado para que se vea el cambio en la tarjeta
-    await cargarEstadoActual();
   } catch (err) {
-    console.log("Error aplicando retroceso de carga:", err.message);
+    console.log("❌ Error de conexión:", err.message);
+    
+    // Efecto visual de error de conexión
+    const batteryCard = document.querySelector('[data-key="battery"]');
+    if (batteryCard) {
+      batteryCard.style.background = 'linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)';
+      setTimeout(() => {
+        batteryCard.style.background = '';
+      }, 2000);
+    }
   }
 };
 
-// Inicializar sparklines al cargar
-document.addEventListener("DOMContentLoaded", function() {
-  // Inicializar sparklines con datos de ejemplo después de un delay
-  setTimeout(async () => {
-    const sensors = ['temperature', 'power', 'voltage', 'battery', 'lastCharge'];
-    for (const sensor of sensors) {
-      try {
-        const history = await fetchHistory(sensor, 24);
-        const sparkId = `sparkline-${sensor}`;
-        renderSparkline(sparkId, history);
-      } catch (e) {
-        console.log("Error inicializando sparkline para", sensor, e);
-      }
-    }
-  }, 1000);
-});
 
